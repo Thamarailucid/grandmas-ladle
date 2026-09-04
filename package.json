@@ -1,0 +1,23 @@
+{
+  "name": "grandmas-ladle",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Grandma's Ladle — Traditional goodness, from our kitchen to yours.",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean",
+    "dev:web": "turbo dev --filter=@grandmas-ladle/web",
+    "dev:admin": "turbo dev --filter=@grandmas-ladle/admin",
+    "dev:api": "turbo dev --filter=@grandmas-ladle/api",
+    "build:web": "turbo build --filter=@grandmas-ladle/web",
+    "build:admin": "turbo build --filter=@grandmas-ladle/admin",
+    "build:api": "turbo build --filter=@grandmas-ladle/api"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

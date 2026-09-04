@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-warm-cream text-dark-brown;
+  }
+}
+
+/* Custom Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #B8925A #FAF4E6;
+}
+
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 6px !important;
+}
+::-webkit-scrollbar-track {
+  background: #FAF4E6 !important;
+}
+::-webkit-scrollbar-thumb {
+  background: #B8925A !important;
+  border-radius: 4px !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2C4A3B !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for horizontal scrolling containers (like categories) */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
