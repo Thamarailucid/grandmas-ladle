@@ -17,6 +17,8 @@ const envSchema = z.object({
   BUSINESS_EMAIL: z.string().email().optional(),
   WHATSAPP_BUSINESS_NUMBER: z.string().optional(),
   GOOGLE_MAPS_API_KEY: z.string().optional(),
+  SUPABASE_URL: z.string().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
 });
 
 function validateEnv() {
