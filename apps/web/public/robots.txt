@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Author & Developer Credits
+# Developer: NovaCodex Technologies (https://novacodex.in)
+# Lead Developer: Thamaraiselvan A
+
+Sitemap: https://grandma.novacodex.in/sitemap.xml
