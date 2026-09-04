@@ -6,6 +6,7 @@ import { useBusinessSettingsContext } from '../../contexts/BusinessSettingsConte
 import { useCart } from '../../contexts/CartContext';
 import Marquee from 'react-fast-marquee';
 import { createWhatsAppBulkOrderUrl } from '../../lib/whatsapp';
+import logoImg from '@/assets/logo.jpg';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -67,9 +68,16 @@ export function Header() {
           </Marquee>
         </div>
       )}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${isScrolled ? 'py-3' : 'py-5'}`}>
-        <Link to="/" className="text-2xl md:text-3xl font-serif text-brand-green tracking-wide">
-          GRANDMA'S LADLE
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${isScrolled ? 'py-2.5' : 'py-3.5'}`}>
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <img 
+            src={logoImg} 
+            alt="Grandma's Ladle Logo" 
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-sm border border-[#B8925A]/40 group-hover:scale-105 transition-transform"
+          />
+          <span className="text-xl md:text-2xl font-serif text-brand-green tracking-wide">
+            GRANDMA'S LADLE
+          </span>
         </Link>
 
         {/* Desktop Nav */}
@@ -140,7 +148,14 @@ export function Header() {
           width={280}
           styles={{ body: { backgroundColor: '#FAF4E6' }, header: { backgroundColor: '#FAF4E6' } }}
         >
-          <div className="flex flex-col space-y-6 mt-8">
+          <div className="flex flex-col space-y-6 mt-4">
+            <div className="flex items-center gap-3 pb-4 border-b border-antique-brass/20">
+              <img src={logoImg} alt="Grandma's Ladle" className="w-12 h-12 rounded-full object-cover shadow-sm border border-[#B8925A]/40" />
+              <div>
+                <div className="font-serif font-bold text-brand-green text-lg leading-tight">Grandma's Ladle</div>
+                <div className="text-xs text-[#B85C3E] uppercase tracking-wider">Homemade Goodness</div>
+              </div>
+            </div>
             {navLinks.map((link) => (
               <Link
                 key={link.label}

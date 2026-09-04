@@ -114,14 +114,25 @@ export default function DashboardPage() {
       <Row gutter={[16, 16]} className="mt-6">
         <Col xs={24} lg={12}>
           <Card title="Products by Category" bordered={false} className="shadow-sm">
-            <div style={{ height: 300 }}>
+            <div style={{ height: 350 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={categoryData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} interval={0} angle={-45} textAnchor="end" height={60} />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip cursor={{ fill: '#f5f5f5' }} />
-                  <Bar dataKey="products" name="Number of Products" fill="#2C4A3B" radius={[4, 4, 0, 0]} />
+                <BarChart data={categoryData} margin={{ top: 10, right: 20, bottom: 65, left: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 11, fill: '#4A5568' }} 
+                    interval={0} 
+                    angle={-35} 
+                    textAnchor="end" 
+                    height={70}
+                    tickMargin={8}
+                  />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#4A5568' }} />
+                  <Tooltip 
+                    cursor={{ fill: 'rgba(44, 74, 59, 0.06)' }}
+                    contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                  />
+                  <Bar dataKey="products" name="Number of Products" fill="#2C4A3B" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -130,14 +141,16 @@ export default function DashboardPage() {
         
         <Col xs={24} lg={12}>
           <Card title="Enquiry Trends (Last 6 Months)" bordered={false} className="shadow-sm">
-            <div style={{ height: 300 }}>
+            <div style={{ height: 350 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={enquiryTrend} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Legend />
+                <LineChart data={enquiryTrend} margin={{ top: 10, right: 20, bottom: 20, left: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#4A5568' }} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#4A5568' }} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                  />
+                  <Legend wrapperStyle={{ paddingTop: '10px' }} />
                   <Line type="monotone" dataKey="count" name="Total Enquiries" stroke="#B8925A" strokeWidth={3} activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>

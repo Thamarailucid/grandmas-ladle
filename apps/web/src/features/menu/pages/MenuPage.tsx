@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { useBusinessSettingsContext } from '../../../contexts/BusinessSettingsContext';
 import { useCart } from '../../../contexts/CartContext';
 import toast from 'react-hot-toast';
+import { MinimalLoader } from '@/components/common/MinimalLoader';
 
 const fetchCategories = async (): Promise<ProductCategory[]> => {
   const response = await apiClient.get<ApiListResponse<ProductCategory>>('/ProductCategory/GetPublicProductCategories');
@@ -62,7 +63,7 @@ export default function MenuPage() {
         />
 
         {isLoadingCategories ? (
-          <div className="text-center py-8 text-[#2C4A3B]">Loading menu...</div>
+          <MinimalLoader text="Loading Menu..." />
         ) : (
           <>
             <div className="flex overflow-x-auto hide-scrollbar gap-4 py-4 mb-8">
@@ -202,7 +203,7 @@ export default function MenuPage() {
           <BrandButton variant="primary" to="/festivals">View Festival Specials</BrandButton>
         </div>
       ) : isLoadingProducts ? (
-        <div className="text-center py-8 text-gray-500">Loading products...</div>
+        <MinimalLoader text="Loading Products..." />
       ) : displayedItems.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
           No items available in this category right now.

@@ -22,7 +22,7 @@ export default function VisitUsPage() {
           centered 
         />
         
-        <div className="max-w-4xl mx-auto mt-10">
+        <div className="max-w-5xl mx-auto mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100 flex flex-col justify-between">
               <div>
@@ -89,12 +89,6 @@ export default function VisitUsPage() {
                 </div>
               )}
             </div>
-          </div>
-
-          <div className="mt-12 text-center">
-            <span className="inline-block px-6 py-3 bg-[#B8925A] text-white font-bold rounded-full shadow-sm">
-              We're opening soon! Stay tuned for updates.
-            </span>
           </div>
         </div>
       </SectionContainer>

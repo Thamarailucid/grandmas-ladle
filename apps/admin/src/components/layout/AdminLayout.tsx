@@ -18,6 +18,7 @@ import {
   PictureOutlined
 } from '@ant-design/icons';
 import { clearAuth } from '@/stores/authStore';
+import logoImg from '@/assets/logo.jpg';
 
 const { Header, Sider, Content } = Layout;
 
@@ -72,8 +73,9 @@ export function AdminLayout() {
         style={{ height: '100vh', position: 'sticky', top: 0, left: 0, zIndex: 100, display: 'flex', flexDirection: 'column' }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div className="p-4 flex items-center justify-center border-b border-gray-700" style={{ flexShrink: 0 }}>
-            <h1 className="text-white text-lg font-bold truncate m-0">Grandma's Ladle</h1>
+          <div className="p-3.5 flex items-center justify-center gap-2.5 border-b border-gray-700 bg-gray-900/60" style={{ flexShrink: 0 }}>
+            <img src={logoImg} alt="Grandma's Ladle" className="w-8 h-8 rounded-full object-cover border border-[#B8925A] flex-shrink-0" />
+            {!collapsed && <h1 className="text-white text-base font-bold truncate m-0 font-serif tracking-wide">Grandma's Ladle</h1>}
           </div>
           <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
             <Menu

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useBusinessSettingsContext } from '../../contexts/BusinessSettingsContext';
 import { InstagramOutlined, FacebookOutlined, WhatsAppOutlined, PhoneOutlined } from '@ant-design/icons';
+import logoImg from '@/assets/logo.jpg';
 
 export function Footer() {
   const { 
@@ -23,7 +24,17 @@ export function Footer() {
           
           {/* Brand Info */}
           <div className="col-span-1 md:col-span-1">
-            <h2 className="text-2xl font-serif tracking-wide mb-3">GRANDMA'S LADLE</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <img 
+                src={logoImg} 
+                alt="Grandma's Ladle Logo" 
+                className="w-14 h-14 rounded-full object-cover shadow-md border-2 border-antique-brass/50" 
+              />
+              <div>
+                <h2 className="text-xl font-serif tracking-wide leading-tight">GRANDMA'S LADLE</h2>
+                <p className="text-xs uppercase tracking-widest text-antique-brass font-medium">Bengaluru</p>
+              </div>
+            </div>
             <p className="text-sm italic mb-2 text-warm-cream/80">{tagline}</p>
             <p className="text-xs uppercase tracking-widest text-antique-brass">Homemade • Pure • Wholesome</p>
           </div>
