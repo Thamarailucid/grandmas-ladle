@@ -68,12 +68,26 @@ export default function VisitUsPage() {
             </div>
 
             <div className="h-full min-h-[400px] bg-gray-200 rounded-xl flex items-center justify-center border border-gray-300 relative overflow-hidden">
-              {/* Google Maps placeholder div with comment for future embed */}
-              {/* TODO: Embed Google Maps iframe here using googleMapsUrl */}
-              <div className="text-center p-6">
-                <div className="text-[#2C4A3B] font-bold text-xl mb-2">Map View</div>
-                <div className="text-gray-500 text-sm">Google Maps Integration Placeholder</div>
-              </div>
+              {googleMapsUrl ? (
+                googleMapsUrl.includes('<iframe') ? (
+                  <div className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full" dangerouslySetInnerHTML={{ __html: googleMapsUrl }} />
+                ) : (
+                  <iframe 
+                    src={googleMapsUrl} 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                )
+              ) : (
+                <div className="text-center p-6">
+                  <div className="text-[#2C4A3B] font-bold text-xl mb-2">Map View</div>
+                  <div className="text-gray-500 text-sm">Update Google Maps URL in Admin Panel</div>
+                </div>
+              )}
             </div>
           </div>
 
