@@ -1,189 +1,152 @@
-# Complete Production Deployment Guide - Grandma's Ladle
-
-This guide contains every single step, command, and configuration required to deploy the Grandma's Ladle platform from scratch.
-
----
-
-## Phase 1: AWS Database Setup (RDS)
-
-1. Go to **AWS RDS** and click **Create database** -> **Standard create**.
-2. Engine: **PostgreSQL**.
-3. Templates: **Free tier** (`db.t3.micro` or `db.t4g.micro`).
-4. Identifier: `grandmas-ladle-db`, Username: `postgres`, Password: `<YourPassword>`.
-5. Storage: Uncheck "Enable storage autoscaling".
-6. Connectivity: **Public access = Yes**.
-7. Create a new VPC Security Group named `grandmas-db-security`.
-8. Click **Create database** and wait for it to be Available. Copy the **Endpoint** URL.
-
-**Fix the Firewall:**
-1. Click your database in RDS, go to **Connectivity & security**.
-2. Click the blue link for your Security Group under the **Security** column.
-3. Go to the **Inbound rules** tab -> **Edit inbound rules**.
-4. Add a new rule: **Type:** PostgreSQL, **Source:** Anywhere-IPv4 (`0.0.0.0/0`).
-5. Save rules.
+# Complete Production Deployment Guide
+**Architecture:** Node.js (EC2) + PostgreSQL (Local EC2) + Image Storage (AWS S3)
 
 ---
 
-## Phase 2: EC2 Server Setup (Backend)
+## Phase 1: AWS S3 Bucket Setup (Image Storage)
 
-Connect to your Ubuntu EC2 instance via SSH and run these commands:
+1. Log into your **AWS Console** and search for **S3**.
+2. Click **Create bucket**.
+3. **Region:** `Asia Pacific (Mumbai) ap-south-1`
+4. **Bucket name:** `grandmas-ladle-uploads` (or your preferred name).
+5. **Object Ownership:** Keep as `ACLs disabled (recommended)`.
+6. **Block Public Access settings:**
+   * 🛑 **UNCHECK** the box that says "Block all public access" (ensure it is completely empty).
+   * Check the yellow warning box: *"I acknowledge that the current settings might result in this bucket and the objects within becoming public."*
+7. Leave everything else as default and click **Create bucket**.
+8. Click on your new bucket, go to the **Permissions** tab.
+9. Scroll to **Bucket Policy**, click **Edit**, and paste this exact code (if you used a different bucket name, change `grandmas-ladle-uploads` below):
 
-### 1. Install Node.js, PNPM, PM2, and Nginx
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::grandmas-ladle-uploads/*"
+        }
+    ]
+}
+```
+10. Click **Save changes**. Your bucket is now ready to serve images to the public!
+
+---
+
+## Phase 2: AWS IAM User Setup (API Keys)
+
+We need to generate a secure Access Key so your Node.js backend is allowed to upload images to the S3 bucket.
+
+1. At the top of your AWS Console, search for **IAM** and click it.
+2. On the left menu, click **Users** -> **Create user**.
+3. **User name:** `s3-uploader` -> click **Next**.
+4. **Permissions:** Select **"Attach policies directly"**.
+5. Search for `AmazonS3FullAccess`, check the box next to it, click **Next** -> **Create user**.
+6. Click on your new `s3-uploader` user from the list.
+7. Go to the **Security credentials** tab.
+8. Scroll down and click **Create access key**.
+9. Select **"Application running outside AWS"**, click **Next** -> **Create access key**.
+10. **🚨 IMPORTANT:** Copy your **Access key** and **Secret access key** to a notepad immediately. You will need these for your server's `.env` file.
+
+---
+
+## Phase 3: PostgreSQL Database Setup (Local EC2)
+
+By installing the database directly on your EC2 instance, you ensure zero-latency API queries and completely avoid the cost of an AWS RDS server.
+
+Log into your Ubuntu EC2 terminal via SSH and run:
+
 ```bash
-# Install Node.js 20
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs nginx
+# 1. Install PostgreSQL
+sudo apt update
+sudo apt install -y postgresql postgresql-contrib
 
-# Install package managers
-sudo npm install -g pnpm pm2
+# 2. Enter the PostgreSQL Console
+sudo -u postgres psql
 ```
 
-### 2. Add Swap Space (Crucial for 1GB RAM Servers)
-```bash
-sudo fallocate -l 2G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
+Once inside the `postgres=#` prompt, run:
+```sql
+ALTER USER postgres PASSWORD 'Novacodex123!';
+\q
 ```
 
-### 3. Clone Repository
+Back in the normal Ubuntu terminal, create your empty database:
 ```bash
-cd ~
-git clone https://github.com/Thamarailucid/grandmas-ladle.git
-cd grandmas-ladle
-pnpm install
+sudo -u postgres createdb grandmas_ladle
 ```
 
 ---
 
-## Phase 3: Backend Configuration & Building
+## Phase 4: Configure the Node.js API
 
-### 1. Configure Environment Variables
+Update the environment variables on your EC2 server to connect the local database and the AWS S3 bucket.
+
 ```bash
 cd ~/grandmas-ladle/services/api
 nano .env
 ```
-Paste this exact content (Replace `DATABASE_URL` password and endpoint with yours):
+
+Delete everything inside and paste this configuration (Replace the S3 keys at the bottom with your actual IAM keys):
+
 ```text
 NODE_ENV=production
 PORT=5000
 
-# Remember the ?ssl=true at the end!
-DATABASE_URL=postgresql://postgres:<YOUR_PASSWORD>@<YOUR_ENDPOINT>.ap-south-1.rds.amazonaws.com:5432/postgres?ssl=true
+# Local PostgreSQL Database
+DATABASE_URL=postgresql://postgres:Novacodex123!@localhost:5432/grandmas_ladle
 
-JWT_ACCESS_SECRET=random-64-char-string
+# JWT Configuration
+JWT_ACCESS_SECRET=change-this-to-a-random-64-char-string
 JWT_ACCESS_EXPIRES_IN=15m
-JWT_REFRESH_SECRET=random-64-char-string
+JWT_REFRESH_SECRET=change-this-to-a-different-random-64-char-string
 JWT_REFRESH_EXPIRES_IN=7d
 
+# CORS (Allowed Frontends)
 CORS_ORIGINS=https://grandma.novacodex.in,https://grandmadashboard.novacodex.in,http://localhost:5173,http://localhost:5174
 
+# Email (SMTP)
 BUSINESS_EMAIL=grandmasladle1269@gmail.com
+
+# WhatsApp
 WHATSAPP_BUSINESS_NUMBER=9841207516
 
-# Required for AWS DB SSL Connections
-NODE_TLS_REJECT_UNAUTHORIZED=0
+# AWS S3 Image Uploads
+AWS_REGION=ap-south-1
+AWS_BUCKET_NAME=grandmas-ladle-uploads
+AWS_ACCESS_KEY_ID=your-access-key-here
+AWS_SECRET_ACCESS_KEY=your-secret-key-here
 ```
+Press `Ctrl+X`, then `Y`, then `Enter` to save.
 
-### 2. Build the API
+---
+
+## Phase 5: Final Deployment & Sync
+
+To apply updates, generate the database tables, and insert the default admin user, run these final commands on your EC2 server:
+
 ```bash
 cd ~/grandmas-ladle
-pnpm build:api
-```
 
-### 3. Migrate, Seed, and Start
-```bash
-# Create tables and insert default admin users
+# Pull latest code
+git stash
+git pull
+
+# Install dependencies and build
+pnpm install
+pnpm build:api
+
+# Create tables and seed data
 pnpm --filter @grandmas-ladle/api migrate
 pnpm --filter @grandmas-ladle/api seed
 
-# Start server forever
-cd ~/grandmas-ladle/services/api
-pm2 start dist/server.js --name "grandmas-api"
-pm2 save
-pm2 startup
+# Restart the live server
+pm2 restart grandmas-api
 ```
 
----
-
-## Phase 4: DNS, Nginx, and SSL (HTTPS)
-
-1. In **GoDaddy**, add an `A` record pointing `grandmaapi` to your EC2 Public IP.
-2. In your EC2 terminal, create the Nginx proxy:
-```bash
-sudo nano /etc/nginx/sites-available/grandmas-api
-```
-Paste this inside (notice the `client_max_body_size 50M;` which allows large image uploads!):
-```nginx
-server {
-    listen 80;
-    server_name grandmaapi.novacodex.in;
-    
-    client_max_body_size 50M;
-
-    location / {
-        proxy_pass http://localhost:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-3. Enable the proxy and install free SSL:
-```bash
-sudo ln -s /etc/nginx/sites-available/grandmas-api /etc/nginx/sites-enabled/
-sudo apt install certbot python3-certbot-nginx -y
-sudo certbot --nginx -d grandmaapi.novacodex.in
-```
-
-*(If Certbot splits the config file into two blocks, ensure `client_max_body_size 50M;` remains in the top block that handles `listen 443 ssl;`)*.
-
----
-
-## Phase 5: Frontend Build & Hostinger Deployment
-
-Run these steps on your **Local Computer (VS Code)**.
-
-### 1. Set Production API URLs
-Create `apps/web/.env.production`:
-```text
-VITE_API_BASE_URL=https://grandmaapi.novacodex.in/api/v1
-```
-Create `apps/admin/.env.production`:
-```text
-VITE_ADMIN_API_BASE_URL=https://grandmaapi.novacodex.in/api/v1
-```
-
-### 2. Build the Files
-```bash
-pnpm install
-pnpm build:web
-pnpm build:admin
-```
-
-### 3. Upload to Hostinger
-1. Zip the contents of `apps/web/dist` and upload to Hostinger: `/public_html/grandma`
-2. Zip the contents of `apps/admin/dist` and upload to Hostinger: `/public_html/grandmadashboard`
-
-### 4. Create `.htaccess` (Fixes 404 Refresh Errors)
-In Hostinger File Manager, create a file named exactly `.htaccess` inside both the `grandma` folder and the `grandmadashboard` folder. Paste this inside both:
-```apache
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
-</IfModule>
-```
-
----
-
-## Default Admin Credentials
-* **Email:** `admin@novacodex.in`
-* **Password:** `Novacodex@123`
-*(Or `admin@grandmasladle.com` / `admin123`)*
+### ✅ Done!
+Your architecture is fully operational.
+* **Database Data** -> Saved locally on the EC2 drive for maximum speed.
+* **Uploaded Images** -> Automatically compressed, converted to WebP, and offloaded securely to AWS S3.
