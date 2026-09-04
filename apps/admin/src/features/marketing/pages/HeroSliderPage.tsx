@@ -135,7 +135,7 @@ export default function HeroSliderPage() {
   ];
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ padding: '24px 16px', overflowX: 'hidden', width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px' }}>
         <h1 style={{ margin: 0, color: '#2C4A3B' }}>Hero Slider</h1>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => handleOpenModal()} style={{ backgroundColor: '#2C4A3B' }}>
@@ -144,6 +144,7 @@ export default function HeroSliderPage() {
       </div>
 
       <Table 
+        scroll={{ x: 'max-content' }}
         columns={columns} 
         dataSource={slides} 
         rowKey="id" 

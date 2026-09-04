@@ -159,7 +159,7 @@ export default function MarketingPage() {
   ];
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '20px' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px 16px', overflowX: 'hidden', width: '100%' }}>
       <div className="flex justify-between items-center mb-6">
         <Title level={2} style={{ color: '#2C4A3B', margin: 0 }}>Marketing & Sales Campaigns</Title>
         <Button 
@@ -174,6 +174,7 @@ export default function MarketingPage() {
 
       <Card>
         <Table 
+          scroll={{ x: 'max-content' }}
           columns={columns} 
           dataSource={campaigns} 
           rowKey="id" 

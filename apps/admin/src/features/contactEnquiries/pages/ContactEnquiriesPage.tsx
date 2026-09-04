@@ -73,7 +73,7 @@ export default function ContactEnquiryPage() {
   ];
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{ padding: '24px 16px', overflowX: 'hidden', width: '100%' }}>
       <h2 style={{ marginBottom: 16 }}>Contact Enquiries</h2>
       <Table scroll={{ x: 'max-content' }} columns={columns} dataSource={data || []} rowKey="id" loading={isLoading} />
 
