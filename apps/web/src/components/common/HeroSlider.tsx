@@ -48,8 +48,8 @@ export function HeroSlider() {
               Traditional goodness, from our kitchen to yours.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <BrandButton variant="primary" href="/menu">ORDER NOW</BrandButton>
-              <BrandButton variant="outline" href="/our-story" className="text-white border-white hover:bg-white hover:text-brand-green">
+              <BrandButton variant="primary" to="/menu">ORDER NOW</BrandButton>
+              <BrandButton variant="outline" to="/our-story" className="text-white border-white hover:bg-white hover:text-brand-green">
                 OUR STORY
               </BrandButton>
             </div>

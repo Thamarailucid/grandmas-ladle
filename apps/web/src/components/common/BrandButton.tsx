@@ -6,6 +6,7 @@ interface BrandButtonProps {
   variant?: 'primary' | 'secondary' | 'outline';
   href?: string;
   to?: string;
+  target?: string;
   onClick?: () => void;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
@@ -17,6 +18,7 @@ export function BrandButton({
   variant = 'primary',
   href,
   to,
+  target,
   onClick,
   className = '',
   size = 'md',
@@ -39,12 +41,51 @@ export function BrandButton({
   const widthClass = fullWidth ? "w-full" : "";
   const combinedClasses = `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${widthClass} ${className}`;
 
+  // If "to" prop is passed, use React Router Link
   if (to) {
-    return <Link to={to} className={combinedClasses}>{children}</Link>;
+    return <Link to={to} target={target} className={combinedClasses}>{children}</Link>;
   }
 
+  // If "href" is provided, detect internal vs external
   if (href) {
-    return <a href={href} className={combinedClasses} target="_blank" rel="noopener noreferrer">{children}</a>;
+    const cleanHref = href.trim();
+
+    // Check if the URL is internal to the website domain
+    if (typeof window !== 'undefined') {
+      try {
+        const urlObj = new URL(cleanHref, window.location.origin);
+        if (urlObj.origin === window.location.origin) {
+          return (
+            <Link to={urlObj.pathname + urlObj.search + urlObj.hash} target={target} className={combinedClasses}>
+              {children}
+            </Link>
+          );
+        }
+      } catch {
+        // Not a full URL, handled by relative check below
+      }
+    }
+
+    // Relative or internal root routes (/menu, /our-story, /festivals, #id)
+    const isInternal = cleanHref.startsWith('/') || cleanHref.startsWith('#') || cleanHref.startsWith('./');
+    if (isInternal) {
+      return (
+        <Link to={cleanHref} target={target} className={combinedClasses}>
+          {children}
+        </Link>
+      );
+    }
+
+    // External URLs (WhatsApp, Google Maps, tel, etc.)
+    const isExternalHttp = cleanHref.startsWith('http://') || cleanHref.startsWith('https://');
+    const computedTarget = target ?? (isExternalHttp ? '_blank' : undefined);
+    const rel = computedTarget === '_blank' ? 'noopener noreferrer' : undefined;
+
+    return (
+      <a href={cleanHref} className={combinedClasses} target={computedTarget} rel={rel}>
+        {children}
+      </a>
+    );
   }
 
   return (

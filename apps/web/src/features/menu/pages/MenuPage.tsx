@@ -199,7 +199,7 @@ export default function MenuPage() {
       {activeCategoryObj?.name.includes('Festival') || activeCategoryObj?.slug.includes('festival') ? (
         <div className="text-center py-12">
           <h3 className="text-xl text-[#3E2C22] mb-4">See our festival specials</h3>
-          <BrandButton variant="primary" href="/festivals">View Festival Specials</BrandButton>
+          <BrandButton variant="primary" to="/festivals">View Festival Specials</BrandButton>
         </div>
       ) : isLoadingProducts ? (
         <div className="text-center py-8 text-gray-500">Loading products...</div>

@@ -52,7 +52,7 @@ export default function SalePage() {
               <h3 className="text-xl font-serif text-[#2C4A3B] mb-2">No active sales right now</h3>
               <p className="text-gray-600">Please check back later or explore our regular menu.</p>
               <div className="mt-6">
-                <BrandButton variant="primary" href="/menu">Browse Menu</BrandButton>
+                <BrandButton variant="primary" to="/menu">Browse Menu</BrandButton>
               </div>
             </div>
           ) : (

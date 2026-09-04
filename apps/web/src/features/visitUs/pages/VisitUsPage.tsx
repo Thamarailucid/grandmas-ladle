@@ -61,7 +61,7 @@ export default function VisitUsPage() {
                 <BrandButton variant="outline" href={createWhatsAppUrl()} className="text-center">
                   WHATSAPP
                 </BrandButton>
-                <BrandButton variant="primary" href="/menu" className="text-center">
+                <BrandButton variant="primary" to="/menu" className="text-center">
                   ORDER NOW
                 </BrandButton>
               </div>
