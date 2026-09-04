@@ -3,7 +3,7 @@ import argon2 from 'argon2';
 import { v4 as uuidv4 } from 'uuid';
 import { fileURLToPath } from 'node:url';
 
-async function seed() {
+export async function seed() {
   const client = await database.connect();
   try {
     await client.query('BEGIN');

@@ -10,9 +10,9 @@ async function startServer() {
       process.exit(1);
     }
 
-    if (env.NODE_ENV === 'development') {
-      await runMigrations();
-    }
+    await runMigrations();
+    const { seed } = await import('./database/seed.js');
+    await seed();
 
     const server = app.listen(env.PORT, () => {
       console.log(`🚀 Server running on port ${env.PORT} in ${env.NODE_ENV} mode`);
