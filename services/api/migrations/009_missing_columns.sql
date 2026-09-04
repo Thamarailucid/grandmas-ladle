@@ -1,0 +1,1 @@
+ALTER TABLE business_settings ADD COLUMN IF NOT EXISTS tagline VARCHAR(255);

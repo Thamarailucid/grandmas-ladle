@@ -318,6 +318,7 @@ export interface BlogPost {
 export interface BusinessSettings {
   id: string;
   businessName: string;
+  tagline?: string;
   phone: string;
   whatsapp: string;
   email: string;
