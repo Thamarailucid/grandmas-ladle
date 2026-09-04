@@ -1,4 +1,4 @@
-import { PAGINATION_DEFAULTS } from '@grandmas-ladle/shared';
+const PAGINATION_DEFAULTS = { page: 1, pageSize: 20, maxPageSize: 100 };
 
 export function parsePagination(query: { page?: string; pageSize?: string }) {
   const page = Math.max(1, parseInt(query.page || '', 10) || PAGINATION_DEFAULTS.page);

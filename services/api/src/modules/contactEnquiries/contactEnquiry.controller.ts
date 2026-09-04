@@ -17,14 +17,14 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 
 export const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await service.update(req.params.id, req.body);
+    const data = await service.update((req.params.id as string), req.body);
     res.status(200).json({ success: true, data });
   } catch (error) { next(error); }
 };
 
 export const remove = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await service.remove(req.params.id);
+    await service.remove((req.params.id as string));
     res.status(200).json({ success: true, message: 'Deleted successfully' });
   } catch (error) { next(error); }
 };

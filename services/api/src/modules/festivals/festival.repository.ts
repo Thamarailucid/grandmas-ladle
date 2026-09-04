@@ -6,7 +6,7 @@ export const findAll = async () => {
     const dto = {};
     for (const [key, value] of Object.entries(row)) {
       const camelKey = key.replace(/_([a-z])/g, g => g[1].toUpperCase());
-      dto[camelKey] = value;
+      (dto as any)[camelKey] = value;
     }
     return dto;
   });

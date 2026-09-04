@@ -22,7 +22,7 @@ export const getPublicHeroSlides = async (req: Request, res: Response, next: Nex
 
 export const getHeroSlideById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await service.getHeroSlideById(req.params.id);
+    const data = await service.getHeroSlideById((req.params.id as string));
     if (!data) throw AppError.notFound('Hero slide not found');
     res.status(200).json({ success: true, data });
   } catch (error) {
@@ -41,7 +41,7 @@ export const createHeroSlide = async (req: Request, res: Response, next: NextFun
 
 export const updateHeroSlide = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await service.updateHeroSlide(req.params.id, req.body);
+    const data = await service.updateHeroSlide((req.params.id as string), req.body);
     if (!data) throw AppError.notFound('Hero slide not found');
     res.status(200).json({ success: true, data });
   } catch (error) {
@@ -51,7 +51,7 @@ export const updateHeroSlide = async (req: Request, res: Response, next: NextFun
 
 export const deleteHeroSlide = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const success = await service.deleteHeroSlide(req.params.id);
+    const success = await service.deleteHeroSlide((req.params.id as string));
     if (!success) throw AppError.notFound('Hero slide not found');
     res.status(200).json({ success: true, message: 'Hero slide deleted' });
   } catch (error) {
