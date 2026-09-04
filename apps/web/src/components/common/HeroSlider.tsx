@@ -32,11 +32,11 @@ export function HeroSlider() {
   // Fallback if no slides exist
   if (slides.length === 0) {
     return (
-      <div className="relative w-full aspect-[16/9] max-h-[80vh] overflow-hidden">
+      <div className="relative w-full aspect-[16/9] overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=2070"
           alt="Grandma's Ladle"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-6">
@@ -60,7 +60,7 @@ export function HeroSlider() {
   }
 
   return (
-    <div className="relative w-full aspect-[16/9] max-h-[80vh] overflow-hidden">
+    <div className="relative w-full aspect-[16/9] overflow-hidden">
       {slides.map((s, index) => (
         <div
           key={s.id}
@@ -69,7 +69,7 @@ export function HeroSlider() {
           <img
             src={s.imageUrl}
             alt={s.title || 'Hero slide'}
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            className="absolute inset-0 w-full h-full object-cover object-top"
           />
           {/* Only show overlay if it's NOT image only */}
           {!s.isImageOnly && <div className="absolute inset-0 bg-black/40"></div>}

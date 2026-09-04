@@ -56,19 +56,17 @@ export function Header() {
     >
       {shouldShowAnnouncement && (
         <div 
-          className="bg-brand-green text-white text-sm py-1.5 cursor-pointer hover:bg-opacity-90 transition-colors"
+          className="bg-brand-green text-white text-xs sm:text-sm h-8 flex items-center cursor-pointer hover:bg-opacity-90 transition-colors overflow-hidden"
           onClick={() => announcementLink && navigate(announcementLink)}
         >
           <Marquee speed={40} gradient={false}>
             <span className="mx-4 font-medium tracking-wide uppercase">{displayAnnouncementText}</span>
             <span className="mx-4 font-medium tracking-wide uppercase">{displayAnnouncementText}</span>
             <span className="mx-4 font-medium tracking-wide uppercase">{displayAnnouncementText}</span>
-            <span className="mx-4 font-medium tracking-wide uppercase">{displayAnnouncementText}</span>
-            <span className="mx-4 font-medium tracking-wide uppercase">{displayAnnouncementText}</span>
           </Marquee>
         </div>
       )}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${isScrolled ? 'py-2.5' : 'py-3.5'}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-16 md:h-18' : 'h-[72px] md:h-[80px]'}`}>
         <Link to="/" className="flex items-center gap-2.5 group">
           <img 
             src={logoImg} 
