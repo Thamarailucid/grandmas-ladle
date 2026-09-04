@@ -16,7 +16,10 @@ const envSchema = z.object({
   SMTP_PASSWORD: z.string().optional(),
   BUSINESS_EMAIL: z.string().email().optional(),
   WHATSAPP_BUSINESS_NUMBER: z.string().optional(),
-  GOOGLE_MAPS_API_KEY: z.string().optional(),
+  AWS_REGION: z.string().optional(),
+  AWS_BUCKET_NAME: z.string().optional(),
+  AWS_ACCESS_KEY_ID: z.string().optional(),
+  AWS_SECRET_ACCESS_KEY: z.string().optional(),
 });
 
 function validateEnv() {

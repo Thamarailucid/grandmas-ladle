@@ -5,15 +5,16 @@ import path from 'path';
 import fs from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
 import { AppError } from '../../errors/AppError.js';
+import { env } from '../../config/env.js';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 // Setup AWS S3 Client
 // If the environment variables are not set, it won't break unless you try to upload to S3
-const s3Client = process.env.AWS_REGION && process.env.AWS_ACCESS_KEY_ID ? new S3Client({
-  region: process.env.AWS_REGION,
+const s3Client = env.AWS_REGION && env.AWS_ACCESS_KEY_ID ? new S3Client({
+  region: env.AWS_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY!,
   }
 }) : null;
 
@@ -53,10 +54,10 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
     let imageUrl = '';
 
     // 2. Upload Strategy: AWS S3 (Production) vs Local Disk (Development)
-    if (s3Client && process.env.AWS_BUCKET_NAME) {
+    if (s3Client && env.AWS_BUCKET_NAME) {
       // PRODUCTION: Upload to AWS S3
       const command = new PutObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME,
+        Bucket: env.AWS_BUCKET_NAME,
         Key: `uploads/${filename}`,
         Body: processedImageBuffer,
         ContentType: 'image/webp',
@@ -65,7 +66,7 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
 
       await s3Client.send(command);
       // Construct the public S3 URL or CloudFront URL
-      imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/uploads/${filename}`;
+      imageUrl = `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/uploads/${filename}`;
     } else {
       // DEVELOPMENT: Save to local disk
       const uploadDir = path.join(process.cwd(), 'public', 'uploads');
