@@ -16,6 +16,12 @@ interface BusinessSettings {
   facebookUrl?: string;
   googleMapsUrl?: string;
   isCartEnabled?: boolean;
+  enableEmailNotifications?: boolean;
+  notificationEmail?: string;
+  smtpHost?: string;
+  smtpPort?: number;
+  smtpUser?: string;
+  smtpPassword?: string;
 }
 
 export default function SettingsPage() {
@@ -114,6 +120,38 @@ export default function SettingsPage() {
         <Form.Item name="address" label="Address">
           <Input.TextArea rows={4} placeholder="Enter full address" />
         </Form.Item>
+
+        <div className="border-t border-gray-200 pt-6 mt-6 mb-6">
+          <h3 className="text-xl font-semibold mb-4 text-[#2C4A3B]">Email Notifications (SMTP)</h3>
+          
+          <div className="mb-4">
+            <Form.Item name="enableEmailNotifications" label="Enable Email Notifications" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Form.Item name="notificationEmail" label="Receive Notifications At (Email)">
+              <Input type="email" placeholder="e.g., admin@grandmasladle.com" />
+            </Form.Item>
+            
+            <Form.Item name="smtpHost" label="SMTP Host">
+              <Input placeholder="e.g., smtp.gmail.com" />
+            </Form.Item>
+            
+            <Form.Item name="smtpPort" label="SMTP Port">
+              <Input type="number" placeholder="e.g., 587 or 465" />
+            </Form.Item>
+            
+            <Form.Item name="smtpUser" label="SMTP Username">
+              <Input placeholder="e.g., your-email@gmail.com" />
+            </Form.Item>
+            
+            <Form.Item name="smtpPassword" label="SMTP Password (App Password)">
+              <Input.Password placeholder="Enter SMTP Password" />
+            </Form.Item>
+          </div>
+        </div>
 
         <Form.Item>
           <Button 

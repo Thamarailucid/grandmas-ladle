@@ -309,6 +309,12 @@ CREATE TABLE IF NOT EXISTS business_settings (
     is_cart_enabled BOOLEAN DEFAULT TRUE,
     is_global_sale_active BOOLEAN DEFAULT FALSE,
     is_sale_widget_active BOOLEAN DEFAULT FALSE,
+    enable_email_notifications BOOLEAN DEFAULT FALSE,
+    notification_email VARCHAR(255),
+    smtp_host VARCHAR(255),
+    smtp_port INT,
+    smtp_user VARCHAR(255),
+    smtp_password TEXT,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 DROP TRIGGER IF EXISTS update_business_settings_updated_at ON business_settings;

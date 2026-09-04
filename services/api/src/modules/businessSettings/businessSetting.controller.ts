@@ -26,6 +26,12 @@ export const getSettings = async (req: Request, res: Response, next: NextFunctio
       fssaiNumber: dbData.fssai_number,
       tagline: dbData.tagline,
       isCartEnabled: dbData.is_cart_enabled !== false,
+      enableEmailNotifications: dbData.enable_email_notifications,
+      notificationEmail: dbData.notification_email,
+      smtpHost: dbData.smtp_host,
+      smtpPort: dbData.smtp_port,
+      smtpUser: dbData.smtp_user,
+      smtpPassword: dbData.smtp_password ? '********' : '',
       updatedAt: dbData.updated_at,
     };
     res.status(200).json({ success: true, data: mappedData });
@@ -81,6 +87,12 @@ export const updateSettings = async (req: Request, res: Response, next: NextFunc
       fssaiNumber: dbData.fssai_number,
       tagline: dbData.tagline,
       isCartEnabled: dbData.is_cart_enabled !== false,
+      enableEmailNotifications: dbData.enable_email_notifications,
+      notificationEmail: dbData.notification_email,
+      smtpHost: dbData.smtp_host,
+      smtpPort: dbData.smtp_port,
+      smtpUser: dbData.smtp_user,
+      smtpPassword: dbData.smtp_password ? '********' : '',
       updatedAt: dbData.updated_at,
     };
     res.status(200).json({ success: true, data: mappedData });
