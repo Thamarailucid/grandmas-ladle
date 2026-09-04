@@ -14,7 +14,7 @@ export function FloatingSaleWidget() {
 
   useEffect(() => {
     const storageKey = `hideSaleWidget_${saleStartDate || 'default'}`;
-    if (localStorage.getItem(storageKey) === 'true') {
+    if (sessionStorage.getItem(storageKey) === 'true') {
       return;
     }
     
@@ -89,7 +89,7 @@ export function FloatingSaleWidget() {
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
     const storageKey = `hideSaleWidget_${saleStartDate || 'default'}`;
-    localStorage.setItem(storageKey, 'true');
+    sessionStorage.setItem(storageKey, 'true');
     setIsVisible(false);
   };
 

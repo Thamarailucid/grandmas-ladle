@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Modal, Form, Input, Popconfirm, message, Space, InputNumber } from 'antd';
+import { Table, Button, Modal, Form, Input, Popconfirm, message, Space, InputNumber, Switch } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
 import { ProductCategory, ApiListResponse, ApiResponse } from '@grandmas-ladle/shared';
@@ -127,6 +127,17 @@ export default function CategoriesPage() {
       title: 'Sort Order',
       dataIndex: 'sortOrder',
       key: 'sortOrder',
+    },
+    {
+      title: 'Active',
+      key: 'isActive',
+      render: (_: any, record: ProductCategory) => (
+        <Switch 
+          checked={record.isActive} 
+          onChange={(checked) => updateMutation.mutate({ id: record.id, data: { isActive: checked } })}
+          loading={updateMutation.isPending && updateMutation.variables?.id === record.id}
+        />
+      )
     },
     {
       title: 'Actions',

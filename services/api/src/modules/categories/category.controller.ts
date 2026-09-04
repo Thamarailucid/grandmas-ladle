@@ -12,7 +12,7 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
 
 export const getPublicCategories = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await categoryService.getCategories();
+    const data = await categoryService.getPublicCategories();
     const publicData = data.map((d: any) => ({
       id: d.id,
       name: d.name,

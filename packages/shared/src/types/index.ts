@@ -99,6 +99,7 @@ export interface ProductCategory {
   slug: string;
   description: string | null;
   imageUrl: string | null;
+  isActive: boolean;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;

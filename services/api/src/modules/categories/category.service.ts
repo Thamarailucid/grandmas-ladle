@@ -8,6 +8,11 @@ export const getCategories = async () => {
   return categories;
 };
 
+export const getPublicCategories = async () => {
+  const categories = await categoryRepository.findAllCategories(true);
+  return categories;
+};
+
 export const getCategoryById = async (id: string) => {
   const category = await categoryRepository.findCategoryById(id);
   if (!category) {

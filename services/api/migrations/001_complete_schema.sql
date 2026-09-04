@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS product_categories (
     slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     image_url TEXT,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     sort_order INT NOT NULL DEFAULT 0,
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

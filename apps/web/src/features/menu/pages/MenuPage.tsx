@@ -18,9 +18,7 @@ const fetchCategories = async (): Promise<ProductCategory[]> => {
 };
 
 const fetchProducts = async (): Promise<Product[]> => {
-  const response = await apiClient.get<ApiListResponse<Product>>('/Product/GetPublicProducts', {
-    params: { isAvailable: true }
-  });
+  const response = await apiClient.get<ApiListResponse<Product>>('/Product/GetPublicProducts');
   return response.data.data;
 };
 
@@ -99,7 +97,7 @@ export default function MenuPage() {
                   const hasOfferDates = item.offerStartDate || item.offerEndDate;
                   const isItemFuture = item.offerStartDate && now.isBefore(dayjs(item.offerStartDate));
                   const isItemPast = item.offerEndDate && now.isAfter(dayjs(item.offerEndDate));
-                  const isOrderable = !isItemFuture && !isItemPast;
+                  const isOrderable = !isItemFuture && !isItemPast && item.isAvailable !== false;
 
                   return (
                     <div key={`sale-${item.id}`} className="bg-[#faf6ee] border border-[rgba(35,31,26,0.08)] rounded-[14px] shadow-[0px_2px_10px_0px_rgba(138,75,38,0.1),0px_1px_2px_0px_rgba(138,75,38,0.08)] flex flex-col h-full overflow-hidden">
@@ -183,7 +181,7 @@ export default function MenuPage() {
                             </div>
                           ) : (
                             <div className="w-full text-center py-2 sm:py-3 px-2 sm:px-4 rounded-[9px] border border-gray-300 text-gray-400 text-[10px] sm:text-sm font-medium cursor-not-allowed">
-                              {isItemFuture ? 'COMING SOON' : 'OFFER ENDED'}
+                              {item.isAvailable === false ? 'OUT OF STOCK' : isItemFuture ? 'COMING SOON' : 'OFFER ENDED'}
                             </div>
                           )}
                         </div>
@@ -225,7 +223,7 @@ export default function MenuPage() {
             const hasOfferDates = item.offerStartDate || item.offerEndDate;
             const isFuture = item.offerStartDate && now.isBefore(dayjs(item.offerStartDate));
             const isPast = item.offerEndDate && now.isAfter(dayjs(item.offerEndDate));
-            const isOrderable = !isFuture && !isPast;
+            const isOrderable = !isFuture && !isPast && item.isAvailable !== false;
 
             return (
               <div key={item.id} className="bg-[#faf6ee] border border-[rgba(35,31,26,0.08)] rounded-[14px] shadow-[0px_2px_10px_0px_rgba(138,75,38,0.1),0px_1px_2px_0px_rgba(138,75,38,0.08)] flex flex-col h-full overflow-hidden">
@@ -309,7 +307,7 @@ export default function MenuPage() {
                       </div>
                     ) : (
                       <div className="w-full text-center py-2 sm:py-3 px-2 sm:px-4 rounded-[9px] border border-gray-300 text-gray-400 text-[10px] sm:text-sm font-medium cursor-not-allowed">
-                        {isFuture ? 'COMING SOON' : 'OFFER ENDED'}
+                        {item.isAvailable === false ? 'OUT OF STOCK' : isFuture ? 'COMING SOON' : 'OFFER ENDED'}
                       </div>
                     )}
                   </div>

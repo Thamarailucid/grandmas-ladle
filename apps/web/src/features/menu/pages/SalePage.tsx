@@ -11,9 +11,7 @@ import { useCart } from '@/contexts/CartContext';
 import { createWhatsAppOrderUrl } from '@/lib/whatsapp';
 
 const fetchProducts = async (): Promise<Product[]> => {
-  const response = await apiClient.get<ApiListResponse<Product>>('/Product/GetPublicProducts', {
-    params: { isAvailable: true }
-  });
+  const response = await apiClient.get<ApiListResponse<Product>>('/Product/GetPublicProducts');
   return response.data.data;
 };
 
@@ -81,7 +79,7 @@ export default function SalePage() {
                     saleBadge = <div className="absolute top-4 left-0 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-r-full z-10 shadow-md">SALE COMING SOON</div>;
                   }
 
-                  const isOrderable = !isItemFuture && !isItemPast;
+                  const isOrderable = !isItemFuture && !isItemPast && item.isAvailable !== false;
 
                   return (
                     <div key={`sale-${item.id}`} className="bg-white rounded-lg p-6 shadow-md flex flex-col h-full border-2 border-[#B8925A] relative">
@@ -134,7 +132,7 @@ export default function SalePage() {
                             </div>
                           ) : (
                             <BrandButton variant="outline" href="#" className="w-full text-center opacity-50 cursor-not-allowed" onClick={() => {}}>
-                              {isItemFuture ? 'COMING SOON' : 'OFFER ENDED'}
+                              {item.isAvailable === false ? 'OUT OF STOCK' : isItemFuture ? 'COMING SOON' : 'OFFER ENDED'}
                             </BrandButton>
                           )}
                         </div>

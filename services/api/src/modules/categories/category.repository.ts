@@ -6,6 +6,7 @@ const mapCategoryToDto = (row: any) => ({
   slug: row.slug,
   description: row.description,
   imageUrl: row.image_url,
+  isActive: row.is_active,
   sortOrder: row.sort_order,
   createdAt: row.created_at,
   updatedAt: row.updated_at
@@ -19,8 +20,12 @@ async function shiftSortOrders(targetOrder: number, idToExclude?: string) {
   }
 }
 
-export const findAllCategories = async () => {
-  const query = `SELECT * FROM product_categories ORDER BY sort_order ASC`;
+export const findAllCategories = async (onlyActive = false) => {
+  let query = `SELECT * FROM product_categories`;
+  if (onlyActive) {
+    query += ` WHERE is_active = TRUE`;
+  }
+  query += ` ORDER BY sort_order ASC`;
   const result = await database.query(query);
   return result.rows.map(mapCategoryToDto);
 };
@@ -42,10 +47,10 @@ export const createCategory = async (data: any) => {
     await shiftSortOrders(data.sortOrder);
   }
   const query = `
-    INSERT INTO product_categories (id, name, slug, description, image_url, sort_order)
-    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
+    INSERT INTO product_categories (id, name, slug, description, image_url, sort_order, is_active)
+    VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *
   `;
-  const values = [data.id, data.name, data.slug, data.description, data.imageUrl, data.sortOrder ?? 0];
+  const values = [data.id, data.name, data.slug, data.description, data.imageUrl, data.sortOrder ?? 0, data.isActive ?? true];
   const result = await database.query(query, values);
   return result.rows[0] ? mapCategoryToDto(result.rows[0]) : null;
 };
