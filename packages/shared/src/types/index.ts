@@ -63,10 +63,14 @@ export interface Product {
   originalPrice?: number | null;
   offerPrice?: number | null;
   isOnSale?: boolean;
+  saleStatus?: 'LIVE' | 'COMING_SOON' | 'ENDED' | null;
   portionSize: string | null;
   unit: string | null;
   imageUrl: string | null;
   isAvailable: boolean;
+  isVegetarian?: boolean;
+  spiceLevel?: number;
+  preparationTimeMinutes?: number;
   sortOrder: number;
   tag?: string;
   offerStartDate?: string;
@@ -87,6 +91,13 @@ export interface CreateProductRequest {
   unit?: string;
   imageUrl?: string;
   isAvailable?: boolean;
+  isVegetarian?: boolean;
+  isOnSale?: boolean;
+  spiceLevel?: number;
+  preparationTimeMinutes?: number;
+  tag?: string;
+  offerStartDate?: string | null;
+  offerEndDate?: string | null;
   sortOrder?: number;
 }
 

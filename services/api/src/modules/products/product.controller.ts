@@ -32,26 +32,56 @@ export const getPublicProducts = async (req: Request, res: Response, next: NextF
     }
 
     const publicData = result.data.map((d: any) => {
-      // Determine if product is actively on sale
+      // Determine if product is in an active global campaign
       const isInCampaignSale = isGlobalCampaignActive && saleProductIds.includes(d.id);
       
-      const isItemSaleActive = d.offerStartDate && d.offerEndDate &&
-        now >= new Date(d.offerStartDate) && now <= new Date(d.offerEndDate);
+      const start = d.offerStartDate ? new Date(d.offerStartDate) : null;
+      const end = d.offerEndDate ? new Date(d.offerEndDate) : null;
       
-      const isSaleActive = isInCampaignSale || isItemSaleActive;
+      let saleStatus: 'LIVE' | 'COMING_SOON' | 'ENDED' | null = null;
       
+      if (d.isOnSale || isInCampaignSale) {
+        saleStatus = 'LIVE';
+      } else if (start && end) {
+        if (now >= start && now <= end) {
+          saleStatus = 'LIVE';
+        } else if (now < start) {
+          saleStatus = 'COMING_SOON';
+        } else if (now > end) {
+          saleStatus = 'ENDED';
+        }
+      } else if (start && !end) {
+        if (now >= start) {
+          saleStatus = 'LIVE';
+        } else {
+          saleStatus = 'COMING_SOON';
+        }
+      } else if (!start && end) {
+        if (now <= end) {
+          saleStatus = 'LIVE';
+        } else {
+          saleStatus = 'ENDED';
+        }
+      }
+
+      const isLive = saleStatus === 'LIVE';
+      const isComingSoon = saleStatus === 'COMING_SOON';
+
       // Calculate effective prices
       let currentPrice = d.price;
       let displayOriginalPrice = d.originalPrice; // Always show MRP if set
-      
-      if (isSaleActive && d.offerPrice) {
-        currentPrice = d.offerPrice; // Drop the current price to the offer price during sale
-        // If no originalPrice (MRP) is set, show the regular price as strikethrough
+      let effectiveOfferPrice = null;
+
+      if (isLive && d.offerPrice) {
+        currentPrice = d.offerPrice; // Drop the current price to the offer price during live sale
         if (!displayOriginalPrice) {
           displayOriginalPrice = d.price;
         }
+        effectiveOfferPrice = d.offerPrice;
+      } else if (isComingSoon && d.offerPrice) {
+        effectiveOfferPrice = d.offerPrice;
       }
-      
+
       return {
         id: d.id,
         categoryId: d.categoryId,
@@ -62,18 +92,19 @@ export const getPublicProducts = async (req: Request, res: Response, next: NextF
         shortDescription: d.shortDescription,
         price: currentPrice,
         originalPrice: displayOriginalPrice,
-        offerPrice: d.offerPrice,
+        offerPrice: effectiveOfferPrice,
         imageUrl: d.imageUrl,
         isAvailable: d.isAvailable !== false,
-        isVegetarian: d.isVegetarian ?? false,
+        isVegetarian: d.isVegetarian !== false,
+        isOnSale: isLive,
+        saleStatus,
         spiceLevel: d.spiceLevel ?? 0,
         preparationTimeMinutes: d.preparationTimeMinutes ?? 0,
         portionSize: d.portionSize,
         unit: d.unit,
         tag: d.tag,
-        offerStartDate: d.offerStartDate,
-        offerEndDate: d.offerEndDate,
-        isOnSale: isSaleActive && d.offerPrice != null,
+        offerStartDate: (isLive || isComingSoon) ? d.offerStartDate : null,
+        offerEndDate: (isLive || isComingSoon) ? d.offerEndDate : null,
       };
     });
     res.status(200).json({ success: true, data: publicData, pagination: result.pagination });

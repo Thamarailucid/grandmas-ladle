@@ -79,6 +79,17 @@ export default function ProductsPage() {
     },
   });
 
+  const toggleFieldMutation = useMutation({
+    mutationFn: updateProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      message.success('Product updated');
+    },
+    onError: () => {
+      message.error('Failed to update product');
+    },
+  });
+
   const availabilityMutation = useMutation({
     mutationFn: updateAvailability,
     onSuccess: () => {
@@ -106,12 +117,20 @@ export default function ProductsPage() {
       setEditingProduct(record);
       form.setFieldsValue({
         ...record,
+        isAvailable: record.isAvailable !== false,
+        isVegetarian: record.isVegetarian !== false,
+        isOnSale: Boolean(record.isOnSale),
         offerStartDate: record.offerStartDate ? dayjs(record.offerStartDate) : null,
         offerEndDate: record.offerEndDate ? dayjs(record.offerEndDate) : null,
       });
     } else {
       setEditingProduct(null);
       form.resetFields();
+      form.setFieldsValue({
+        isAvailable: true,
+        isVegetarian: true,
+        isOnSale: false,
+      });
     }
     setIsModalVisible(true);
   };
@@ -126,6 +145,9 @@ export default function ProductsPage() {
     form.validateFields().then((values) => {
       const payload = {
         ...values,
+        isAvailable: values.isAvailable !== false,
+        isVegetarian: values.isVegetarian !== false,
+        isOnSale: Boolean(values.isOnSale),
         offerStartDate: values.offerStartDate ? values.offerStartDate.toISOString() : null,
         offerEndDate: values.offerEndDate ? values.offerEndDate.toISOString() : null,
       };
@@ -155,9 +177,19 @@ export default function ProductsPage() {
       ),
     },
     {
-      title: 'Name',
+      title: 'Name & Short Desc',
       dataIndex: 'name',
       key: 'name',
+      render: (name: string, record: Product) => (
+        <div>
+          <div style={{ fontWeight: 600, color: '#1e293b' }}>{name}</div>
+          {record.shortDescription && (
+            <div style={{ fontSize: 12, color: '#64748b', maxWidth: 220, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {record.shortDescription}
+            </div>
+          )}
+        </div>
+      ),
     },
     {
       title: 'Category',
@@ -171,13 +203,27 @@ export default function ProductsPage() {
       },
     },
     {
-      title: 'Price',
+      title: 'Price Details',
       dataIndex: 'price',
       key: 'price',
-      render: (price: number | string) => `₹${Number(price || 0).toFixed(2)}`,
+      render: (price: number | string, record: Product) => (
+        <div>
+          <div style={{ fontWeight: 600, color: '#2C4A3B' }}>₹{Number(price || 0).toFixed(2)}</div>
+          {record.offerPrice && (
+            <div style={{ fontSize: 11, color: '#e11d48', fontWeight: 500 }}>
+              Offer: ₹{Number(record.offerPrice).toFixed(2)}
+            </div>
+          )}
+          {record.originalPrice && (
+            <div style={{ fontSize: 11, color: '#94a3b8', textDecoration: 'line-through' }}>
+              MRP: ₹{Number(record.originalPrice).toFixed(2)}
+            </div>
+          )}
+        </div>
+      ),
     },
     {
-      title: 'Portion Size',
+      title: 'Portion',
       key: 'portionSize',
       render: (_: any, record: Product) => `${record.portionSize || ''} ${record.unit || ''}`.trim(),
     },
@@ -187,9 +233,65 @@ export default function ProductsPage() {
       key: 'isAvailable',
       render: (isAvailable: boolean, record: Product) => (
         <Switch
-          checked={isAvailable}
+          checked={isAvailable !== false}
+          checkedChildren="In Stock"
+          unCheckedChildren="Out"
           onChange={(checked) => availabilityMutation.mutate({ id: record.id, isAvailable: checked })}
           loading={availabilityMutation.isPending}
+        />
+      ),
+    },
+    {
+      title: 'Diet (Veg)',
+      dataIndex: 'isVegetarian',
+      key: 'isVegetarian',
+      render: (isVegetarian: boolean, record: Product) => (
+        <Space size={6}>
+          <div 
+            style={{
+              width: 14,
+              height: 14,
+              border: `1.5px solid ${isVegetarian !== false ? '#16a34a' : '#dc2626'}`,
+              borderRadius: 3,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+            }}
+            title={isVegetarian !== false ? 'Pure Vegetarian' : 'Non-Vegetarian'}
+          >
+            <div 
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                backgroundColor: isVegetarian !== false ? '#16a34a' : '#dc2626',
+              }}
+            />
+          </div>
+          <Switch
+            checked={isVegetarian !== false}
+            checkedChildren="Veg"
+            unCheckedChildren="Non"
+            style={{ backgroundColor: isVegetarian !== false ? '#16a34a' : undefined }}
+            onChange={(checked) => toggleFieldMutation.mutate({ id: record.id, data: { isVegetarian: checked } })}
+            loading={toggleFieldMutation.isPending}
+          />
+        </Space>
+      ),
+    },
+    {
+      title: 'Sale Active',
+      dataIndex: 'isOnSale',
+      key: 'isOnSale',
+      render: (isOnSale: boolean, record: Product) => (
+        <Switch
+          checked={Boolean(isOnSale)}
+          checkedChildren="Sale"
+          unCheckedChildren="Off"
+          style={{ backgroundColor: isOnSale ? '#e11d48' : undefined }}
+          onChange={(checked) => toggleFieldMutation.mutate({ id: record.id, data: { isOnSale: checked } })}
+          loading={toggleFieldMutation.isPending}
         />
       ),
     },
@@ -320,6 +422,43 @@ export default function ProductsPage() {
             </div>
             
             <div>
+              <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', marginBottom: '16px', border: '1px solid #e2e8f0' }}>
+                <h4 style={{ marginTop: 0, marginBottom: '12px', fontSize: '14px', fontWeight: 600, color: '#334155' }}>
+                  Product Switches
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 500, fontSize: '13px' }}>In Stock (Available)</div>
+                      <div style={{ fontSize: '11px', color: '#64748b' }}>Item can be purchased by customers</div>
+                    </div>
+                    <Form.Item name="isAvailable" valuePropName="checked" noStyle initialValue={true}>
+                      <Switch checkedChildren="In Stock" unCheckedChildren="Out" />
+                    </Form.Item>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 500, fontSize: '13px' }}>Pure Vegetarian</div>
+                      <div style={{ fontSize: '11px', color: '#64748b' }}>Displays Indian green Veg symbol</div>
+                    </div>
+                    <Form.Item name="isVegetarian" valuePropName="checked" noStyle initialValue={true}>
+                      <Switch checkedChildren="Veg" unCheckedChildren="Non-Veg" />
+                    </Form.Item>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 500, fontSize: '13px' }}>Active On Sale</div>
+                      <div style={{ fontSize: '11px', color: '#64748b' }}>Directly trigger sale price & badge</div>
+                    </div>
+                    <Form.Item name="isOnSale" valuePropName="checked" noStyle initialValue={false}>
+                      <Switch checkedChildren="On Sale" unCheckedChildren="Regular" />
+                    </Form.Item>
+                  </div>
+                </div>
+              </div>
+
               <div style={{ padding: '16px', background: '#f5f5f5', borderRadius: '8px', marginBottom: '16px' }}>
                 <h4 style={{ marginTop: 0 }}>Offers & Tags</h4>
                 <Form.Item name="tag" label="Tag (e.g. Must Try, Bestseller)">

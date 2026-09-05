@@ -78,7 +78,8 @@ CREATE TABLE IF NOT EXISTS products (
     offer_start_date TIMESTAMPTZ,
     offer_end_date TIMESTAMPTZ,
     is_available BOOLEAN NOT NULL DEFAULT TRUE,
-    is_vegetarian BOOLEAN NOT NULL DEFAULT FALSE,
+    is_vegetarian BOOLEAN NOT NULL DEFAULT TRUE,
+    is_on_sale BOOLEAN NOT NULL DEFAULT FALSE,
     spice_level INT NOT NULL DEFAULT 0,
     preparation_time_minutes INT NOT NULL DEFAULT 0,
     sort_order INT NOT NULL DEFAULT 0,
@@ -402,7 +403,8 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
 -- IDEMPOTENT COLUMN ADDITIONS (Guarantees columns exist on existing DBs)
 -- ============================================================
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_available BOOLEAN NOT NULL DEFAULT TRUE;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS is_vegetarian BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_vegetarian BOOLEAN NOT NULL DEFAULT TRUE;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_on_sale BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS spice_level INT NOT NULL DEFAULT 0;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS preparation_time_minutes INT NOT NULL DEFAULT 0;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS offer_price NUMERIC(12,2);

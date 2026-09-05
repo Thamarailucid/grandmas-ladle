@@ -25,10 +25,9 @@ export default function SalePage() {
   });
 
   const now = dayjs();
-  const isGlobalSaleVisible = isGlobalSaleActive && (!saleEndDate || now.isBefore(dayjs(saleEndDate).add(offerPostVisibilityDays, 'day')));
+  const saleProducts = products.filter((p: any) => p.isOnSale || p.saleStatus === 'LIVE' || p.saleStatus === 'COMING_SOON' || saleProductIds.includes(p.id));
+  const isGlobalSaleVisible = (isGlobalSaleActive && (!saleEndDate || now.isBefore(dayjs(saleEndDate).add(offerPostVisibilityDays, 'day')))) || saleProducts.length > 0;
   const isGlobalSaleFuture = isGlobalSaleActive && saleStartDate && now.isBefore(dayjs(saleStartDate));
-  
-  const saleProducts = products.filter((p: any) => saleProductIds.includes(p.id));
 
   return (
     <>
@@ -63,8 +62,8 @@ export default function SalePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {saleProducts.map((item: any) => {
                   const hasOfferDates = item.offerStartDate || item.offerEndDate;
-                  const isItemFuture = item.offerStartDate && now.isBefore(dayjs(item.offerStartDate));
-                  const isItemPast = item.offerEndDate && now.isAfter(dayjs(item.offerEndDate));
+                  const isItemFuture = (item.saleStatus === 'COMING_SOON') || (item.offerStartDate && now.isBefore(dayjs(item.offerStartDate)));
+                  const isItemPast = (item.saleStatus === 'ENDED') || (item.offerEndDate && now.isAfter(dayjs(item.offerEndDate)));
                   
                   let badge = <div className="absolute top-4 right-4 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-md">SPECIAL OFFER</div>;
                   if (isItemFuture) badge = <div className="absolute top-4 right-4 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-md">STARTS SOON</div>;
@@ -73,9 +72,9 @@ export default function SalePage() {
 
                   let saleBadge = null;
                   
-                  if (item.isOnSale) {
+                  if (item.isOnSale || item.saleStatus === 'LIVE') {
                     saleBadge = <div className="absolute top-4 left-0 bg-[#B85C3E] text-white text-xs font-bold px-3 py-1 rounded-r-full z-10 shadow-md">SALE</div>;
-                  } else if (isGlobalSaleFuture) {
+                  } else if (isItemFuture || isGlobalSaleFuture) {
                     saleBadge = <div className="absolute top-4 left-0 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-r-full z-10 shadow-md">SALE COMING SOON</div>;
                   }
 
@@ -96,7 +95,16 @@ export default function SalePage() {
                       <div className="flex-grow flex flex-col justify-between">
                         <div>
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="text-xl font-bold font-fraunces text-[#2C4A3B]">{item.name}</h3>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-xl font-bold font-fraunces text-[#2C4A3B]">{item.name}</h3>
+                              {/* FSSAI Veg / Non-Veg Mark */}
+                              <div 
+                                className={`flex-shrink-0 w-4 h-4 border-[1.5px] ${item.isVegetarian !== false ? 'border-[#16a34a]' : 'border-[#dc2626]'} rounded-sm p-[2px] flex items-center justify-center bg-white`}
+                                title={item.isVegetarian !== false ? 'Pure Vegetarian' : 'Non-Vegetarian'}
+                              >
+                                <div className={`w-2 h-2 rounded-full ${item.isVegetarian !== false ? 'bg-[#16a34a]' : 'bg-[#dc2626]'}`} />
+                              </div>
+                            </div>
                             <div className="text-right">
                               {item.originalPrice ? (
                                 <>
@@ -109,7 +117,7 @@ export default function SalePage() {
                             </div>
                           </div>
                           
-                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">{item.description}</p>
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">{item.shortDescription || item.description}</p>
                         </div>
                         
                         <div>

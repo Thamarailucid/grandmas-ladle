@@ -14,6 +14,7 @@ const mapProductToDto = (row: any) => ({
   imageUrl: row.image_url,
   isAvailable: row.is_available,
   isVegetarian: row.is_vegetarian,
+  isOnSale: row.is_on_sale,
   spiceLevel: row.spice_level,
   preparationTimeMinutes: row.preparation_time_minutes,
   portionSize: row.portion_size,
@@ -107,17 +108,17 @@ export const createProduct = async (data: any) => {
   const query = `
     INSERT INTO products (
       id, category_id, name, slug, description, short_description,
-      price, original_price, offer_price, image_url, is_available, is_vegetarian,
+      price, original_price, offer_price, image_url, is_available, is_vegetarian, is_on_sale,
       spice_level, preparation_time_minutes, sort_order, portion_size, unit,
       tag, offer_start_date, offer_end_date
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21
     ) RETURNING *
   `;
   const values = [
     data.id, data.categoryId, data.name, data.slug, data.description,
     data.shortDescription, data.price, data.originalPrice, data.offerPrice, data.imageUrl,
-    data.isAvailable ?? true, data.isVegetarian ?? false, data.spiceLevel ?? 0,
+    data.isAvailable ?? true, data.isVegetarian ?? true, data.isOnSale ?? false, data.spiceLevel ?? 0,
     data.preparationTimeMinutes ?? 0, data.sortOrder ?? 0, data.portionSize, data.unit,
     data.tag, data.offerStartDate, data.offerEndDate
   ];

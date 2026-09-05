@@ -80,12 +80,10 @@ export default function MenuPage() {
 
             {(() => {
               const now = dayjs();
-              // Show featured section if announcement is active and sale hasn't fully ended yet
-              const isGlobalSaleVisible = isGlobalSaleActive && (!saleEndDate || now.isBefore(dayjs(saleEndDate).add(offerPostVisibilityDays, 'day')));
+              const saleProducts = products.filter(p => p.isOnSale || p.saleStatus === 'LIVE' || p.saleStatus === 'COMING_SOON' || saleProductIds.includes(p.id));
+              // Show featured section if announcement is active or any product is actively on sale
+              const isGlobalSaleVisible = (isGlobalSaleActive && (!saleEndDate || now.isBefore(dayjs(saleEndDate).add(offerPostVisibilityDays, 'day')))) || saleProducts.length > 0;
               const isGlobalSaleFuture = isGlobalSaleActive && saleStartDate && now.isBefore(dayjs(saleStartDate));
-              const isGlobalSaleActiveNow = isGlobalSaleActive && (!saleStartDate || now.isAfter(dayjs(saleStartDate))) && (!saleEndDate || now.isBefore(dayjs(saleEndDate)));
-              
-              const saleProducts = products.filter(p => saleProductIds.includes(p.id));
               
               if (isGlobalSaleVisible && saleProducts.length > 0) {
                 return (
@@ -111,7 +109,7 @@ export default function MenuPage() {
                             <span className="text-xs sm:text-sm text-[#6b6259] italic">Image of {item.name}</span>
                           )}
                           {/* Sale Ribbon */}
-                          {item.isOnSale && (
+                          {(item.isOnSale || item.saleStatus === 'LIVE') && (
                             <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center">
                               <div className="-rotate-45">
                                 <div className="bg-[#b23a2e] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1.5 w-[100px] sm:w-[130px]">
@@ -120,7 +118,7 @@ export default function MenuPage() {
                               </div>
                             </div>
                           )}
-                          {isItemFuture && !item.isOnSale && (
+                          {(item.saleStatus === 'COMING_SOON' || (isItemFuture && !item.isOnSale)) && (
                             <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center">
                               <div className="-rotate-45">
                                 <div className="bg-[#2f4a3c] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1.5 w-[100px] sm:w-[130px]">
@@ -145,7 +143,16 @@ export default function MenuPage() {
                       </div>
                       {/* Content */}
                       <div className="px-3 sm:px-[18px] pb-3 sm:pb-[18px] pt-1 sm:pt-2 flex flex-col flex-grow">
-                        <h3 className="text-sm sm:text-xl font-semibold font-serif text-[#2f4a3c] mb-1 sm:mb-1.5 leading-tight line-clamp-1">{item.name}</h3>
+                        <div className="flex items-start justify-between gap-1.5 mb-1 sm:mb-1.5">
+                          <h3 className="text-sm sm:text-xl font-semibold font-serif text-[#2f4a3c] leading-tight line-clamp-1 flex-grow">{item.name}</h3>
+                          {/* FSSAI Veg / Non-Veg Mark */}
+                          <div 
+                            className={`flex-shrink-0 w-3.5 h-3.5 sm:w-4 sm:h-4 border-[1.5px] ${item.isVegetarian !== false ? 'border-[#16a34a]' : 'border-[#dc2626]'} rounded-sm p-[2px] flex items-center justify-center bg-white mt-0.5`}
+                            title={item.isVegetarian !== false ? 'Pure Vegetarian' : 'Non-Vegetarian'}
+                          >
+                            <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${item.isVegetarian !== false ? 'bg-[#16a34a]' : 'bg-[#dc2626]'}`} />
+                          </div>
+                        </div>
                         <p className="text-[#6b6259] text-[11px] sm:text-sm leading-snug flex-grow mb-2 sm:mb-3 line-clamp-2">{item.shortDescription || item.description}</p>
                         <div className="mt-auto">
                           <div className="mb-2 sm:mb-3 flex flex-wrap items-baseline gap-1 sm:gap-2">
@@ -243,7 +250,7 @@ export default function MenuPage() {
                       <span className="text-xs sm:text-sm text-[#6b6259] italic">Image of {item.name}</span>
                     )}
                     {/* Sale Ribbon */}
-                    {item.isOnSale && (
+                    {(item.isOnSale || item.saleStatus === 'LIVE') && (
                       <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center">
                         <div className="-rotate-45">
                           <div className="bg-[#b23a2e] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1.5 w-[100px] sm:w-[130px]">
@@ -252,7 +259,7 @@ export default function MenuPage() {
                         </div>
                       </div>
                     )}
-                    {isFuture && !item.isOnSale && (
+                    {(item.saleStatus === 'COMING_SOON' || (isFuture && !item.isOnSale)) && (
                       <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center">
                         <div className="-rotate-45">
                           <div className="bg-[#2f4a3c] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1.5 w-[100px] sm:w-[130px]">
@@ -277,7 +284,16 @@ export default function MenuPage() {
                 </div>
                 {/* Content */}
                 <div className="px-3 sm:px-[18px] pb-3 sm:pb-[18px] pt-1 sm:pt-2 flex flex-col flex-grow">
-                  <h3 className="text-sm sm:text-xl font-semibold font-serif text-[#2f4a3c] mb-1 sm:mb-1.5 leading-tight line-clamp-1">{item.name}</h3>
+                  <div className="flex items-start justify-between gap-1.5 mb-1 sm:mb-1.5">
+                    <h3 className="text-sm sm:text-xl font-semibold font-serif text-[#2f4a3c] leading-tight line-clamp-1 flex-grow">{item.name}</h3>
+                    {/* FSSAI Veg / Non-Veg Mark */}
+                    <div 
+                      className={`flex-shrink-0 w-3.5 h-3.5 sm:w-4 sm:h-4 border-[1.5px] ${item.isVegetarian !== false ? 'border-[#16a34a]' : 'border-[#dc2626]'} rounded-sm p-[2px] flex items-center justify-center bg-white mt-0.5`}
+                      title={item.isVegetarian !== false ? 'Pure Vegetarian' : 'Non-Vegetarian'}
+                    >
+                      <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${item.isVegetarian !== false ? 'bg-[#16a34a]' : 'bg-[#dc2626]'}`} />
+                    </div>
+                  </div>
                   <p className="text-[#6b6259] text-[11px] sm:text-sm leading-snug flex-grow mb-2 sm:mb-3 line-clamp-2">{item.shortDescription || item.description}</p>
                   <div className="mt-auto">
                     <div className="mb-2 sm:mb-3 flex flex-wrap items-baseline gap-1 sm:gap-2">
