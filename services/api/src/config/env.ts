@@ -17,15 +17,15 @@ const candidateDirs = [
 ];
 
 // Load priority:
-// 1. .env.{NODE_ENV}.local
-// 2. .env.{NODE_ENV} (e.g., .env.development or .env.production)
-// 3. .env.local
-// 4. .env
+// 1. .env (direct server/local config - highest precedence)
+// 2. .env.local
+// 3. .env.{NODE_ENV} (e.g., .env.development or .env.production)
+// 4. .env.{NODE_ENV}.local
 const envFileNames = [
-  `.env.${currentEnv}.local`,
-  `.env.${currentEnv}`,
-  '.env.local',
   '.env',
+  '.env.local',
+  `.env.${currentEnv}`,
+  `.env.${currentEnv}.local`,
 ];
 
 for (const dir of candidateDirs) {
