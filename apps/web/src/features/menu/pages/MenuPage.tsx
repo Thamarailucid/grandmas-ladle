@@ -129,6 +129,12 @@ export default function MenuPage() {
                               </div>
                             </div>
                           )}
+                          {/* Out of Stock Badge */}
+                          {item.isAvailable === false && (
+                            <div className="absolute top-2 left-2 z-10 bg-red-600/90 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded shadow uppercase tracking-wider">
+                              Out of Stock
+                            </div>
+                          )}
                           {/* Tag Badge */}
                           {item.tag && (
                             <div className="absolute top-2 right-2 bg-[#2f4a3c] px-2 sm:px-3 py-1 rounded-md">
@@ -253,6 +259,12 @@ export default function MenuPage() {
                             <span className="text-white text-[10px] sm:text-xs font-semibold tracking-wider uppercase">Soon</span>
                           </div>
                         </div>
+                      </div>
+                    )}
+                    {/* Out of Stock Badge */}
+                    {item.isAvailable === false && (
+                      <div className="absolute top-2 left-2 z-10 bg-red-600/90 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded shadow uppercase tracking-wider">
+                        Out of Stock
                       </div>
                     )}
                     {/* Tag Badge */}
