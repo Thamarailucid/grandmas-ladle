@@ -281,10 +281,25 @@ export interface Review {
   customerLocation: string | null;
   rating: number;
   content: string;
+  adminReply?: string | null;
   isPublished: boolean;
+  isApproved: boolean;
+  isVerified: boolean;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ReviewStats {
+  averageRating: number;
+  totalReviews: number;
+  ratingBreakdown: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
 }
 
 export interface CreateReviewRequest {
@@ -292,8 +307,18 @@ export interface CreateReviewRequest {
   customerLocation?: string;
   rating: number;
   content: string;
+  adminReply?: string;
   isPublished?: boolean;
+  isApproved?: boolean;
+  isVerified?: boolean;
   sortOrder?: number;
+}
+
+export interface SubmitCustomerReviewRequest {
+  customerName: string;
+  customerLocation?: string;
+  rating: number;
+  content: string;
 }
 
 // === FAQ Types ===

@@ -1,13 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Carousel, Rate, Spin } from 'antd';
-import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/lib/apiClient';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { BrandButton } from '@/components/common/BrandButton';
 import { CategoryCard } from '@/components/common/CategoryCard';
-import { ReviewCard } from '@/components/common/ReviewCard';
+import { CustomerReviewsSection } from '@/components/common/CustomerReviewsSection';
 import { createWhatsAppUrl } from '@/lib/whatsapp';
 import { useBusinessSettingsContext } from '@/contexts/BusinessSettingsContext';
 import { HeroSlider } from '@/components/common/HeroSlider';
@@ -23,19 +20,6 @@ import silverGlassImg from '@/assets/silver_glass.jpg';
 export default function HomePage() {
   const { whatsapp } = useBusinessSettingsContext();
   const whatsappUrl = createWhatsAppUrl('Hello! I would like to place an order from Grandma\'s Ladle.');
-
-  const { data: reviews, isLoading: reviewsLoading } = useQuery({
-    queryKey: ['PublishedReviews'],
-    queryFn: () => apiClient.get('/Review/GetPublishedReviews').then(res => res.data.data),
-  });
-
-  const fallbackReviews = [
-    { id: '1', customerName: 'Ananya S.', customerLocation: 'Indiranagar', rating: 5, content: 'The mini murukkus remind me exactly of how my grandmother used to make them. Perfectly crispy and not too oily. Will definitely order again for Diwali!' },
-    { id: '2', customerName: 'Rahul M.', customerLocation: 'Koramangala', rating: 5, content: 'I ordered the corporate snack box for my team and everyone absolutely loved the authentic flavours. The packaging was neat and delivery was right on time.' },
-    { id: '3', customerName: 'Kavitha R.', customerLocation: 'Jayanagar', rating: 4, content: 'The ladoos melt in your mouth. They use good quality ghee and you can taste it. Would love to see more varieties soon.' }
-  ];
-
-  const displayReviews = reviews && reviews.length > 0 ? reviews : fallbackReviews;
 
   return (
     <>
@@ -204,37 +188,8 @@ export default function HomePage() {
         </div>
       </SectionContainer>
 
-      {/* 8. Testimonials Section */}
-      <SectionContainer bgColor="white">
-        <SectionHeading 
-          title="WHAT OUR CUSTOMERS SAY"
-          centered 
-        />
-        <div className="max-w-4xl mx-auto mt-12 text-center">
-          {reviewsLoading ? (
-            <div className="py-12"><Spin size="large" /></div>
-          ) : (
-            <Carousel autoplay dots={{ className: 'custom-slick-dots' }} effect="fade" className="pb-12">
-              {displayReviews.map((review: any) => (
-                <div key={review.id} className="px-4 outline-none">
-                  <div className="bg-brand-cream p-10 rounded-2xl max-w-2xl mx-auto shadow-sm">
-                    <Rate disabled defaultValue={review.rating} className="text-[#B85C3E] text-xl mb-6" />
-                    <p className="font-outfit text-brand-dark-brown/90 text-xl leading-relaxed italic mb-8">
-                      "{review.content}"
-                    </p>
-                    <h4 className="font-playfair text-brand-green font-bold text-lg tracking-wide uppercase">
-                      {review.customerName}
-                    </h4>
-                    {review.customerLocation && (
-                      <p className="text-brand-dark-brown/60 text-sm mt-1">{review.customerLocation}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </Carousel>
-          )}
-        </div>
-      </SectionContainer>
+      {/* 8. Customer Reviews & Testimonials Section */}
+      <CustomerReviewsSection />
 
       {/* 9. Final CTA Section */}
       <SectionContainer bgColor="green">

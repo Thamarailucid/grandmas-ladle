@@ -3,16 +3,62 @@ import * as reviewService from './review.service.js';
 
 export const getPublishedReviews = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await reviewService.getPublishedReviews();
+    const [data, stats] = await Promise.all([
+      reviewService.getPublishedReviews(),
+      reviewService.getReviewStats()
+    ]);
     const publicData = data.map((d: any) => ({
       id: d.id,
       customerName: d.customerName,
+      customerLocation: d.customerLocation,
       rating: d.rating,
       title: d.title,
       content: d.content,
-      createdAt: d.createdAt // useful for "Reviewed on [Date]"
+      isVerified: d.isVerified,
+      adminReply: d.adminReply,
+      createdAt: d.createdAt
     }));
-    res.status(200).json({ success: true, data: publicData });
+    res.status(200).json({ success: true, data: publicData, stats });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getReviewStats = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const stats = await reviewService.getReviewStats();
+    res.status(200).json({ success: true, data: stats });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const submitCustomerReview = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { customerName, customerLocation, rating, content } = req.body;
+    if (!customerName || !customerName.trim()) {
+      return res.status(400).json({ success: false, message: 'Customer name is required' });
+    }
+    const numRating = Number(rating);
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+      return res.status(400).json({ success: false, message: 'Rating must be between 1 and 5' });
+    }
+    if (!content || !content.trim()) {
+      return res.status(400).json({ success: false, message: 'Review content is required' });
+    }
+
+    const data = await reviewService.submitCustomerReview({
+      customerName: customerName.trim(),
+      customerLocation: customerLocation ? customerLocation.trim() : null,
+      rating: numRating,
+      content: content.trim()
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Thank you! Your review has been submitted and will be visible after approval.',
+      data
+    });
   } catch (error) {
     next(error);
   }
@@ -59,6 +105,26 @@ export const updateReviewPublicationStatus = async (req: Request<{ reviewId: str
   try {
     const { isPublished } = req.body;
     const data = await reviewService.updateReviewPublicationStatus(req.params.reviewId, isPublished);
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateReviewApprovalStatus = async (req: Request<{ reviewId: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { isApproved } = req.body;
+    const data = await reviewService.updateReviewApprovalStatus(req.params.reviewId, Boolean(isApproved));
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateReviewVerificationStatus = async (req: Request<{ reviewId: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { isVerified } = req.body;
+    const data = await reviewService.updateReviewVerificationStatus(req.params.reviewId, Boolean(isVerified));
     res.status(200).json({ success: true, data });
   } catch (error) {
     next(error);

@@ -6,6 +6,10 @@ export const getPublishedReviews = async () => {
   return await reviewRepository.findAllReviews(true);
 };
 
+export const getReviewStats = async () => {
+  return await reviewRepository.getReviewStats();
+};
+
 export const getReviews = async () => {
   return await reviewRepository.findAllReviews(false);
 };
@@ -21,6 +25,22 @@ export const getReviewById = async (id: string) => {
 export const createReview = async (data: any) => {
   const id = crypto.randomUUID();
   const review = await reviewRepository.createReview({ id, ...data });
+  return review;
+};
+
+export const submitCustomerReview = async (data: any) => {
+  const id = crypto.randomUUID();
+  const review = await reviewRepository.createReview({
+    id,
+    customerName: data.customerName,
+    customerLocation: data.customerLocation || null,
+    rating: data.rating,
+    content: data.content,
+    isApproved: false,
+    isPublished: false,
+    isVerified: false,
+    sortOrder: 0
+  });
   return review;
 };
 
@@ -41,6 +61,26 @@ export const updateReviewPublicationStatus = async (id: string, isPublished: boo
   }
 
   const review = await reviewRepository.updateReviewPublicationStatus(id, isPublished);
+  return review;
+};
+
+export const updateReviewApprovalStatus = async (id: string, isApproved: boolean) => {
+  const existing = await reviewRepository.findReviewById(id);
+  if (!existing) {
+    throw AppError.notFound('Review not found');
+  }
+
+  const review = await reviewRepository.updateReviewApprovalStatus(id, isApproved);
+  return review;
+};
+
+export const updateReviewVerificationStatus = async (id: string, isVerified: boolean) => {
+  const existing = await reviewRepository.findReviewById(id);
+  if (!existing) {
+    throw AppError.notFound('Review not found');
+  }
+
+  const review = await reviewRepository.updateReviewVerificationStatus(id, isVerified);
   return review;
 };
 
