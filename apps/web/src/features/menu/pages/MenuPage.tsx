@@ -48,6 +48,34 @@ export default function MenuPage() {
   const displayedItems = products.filter(item => item.categoryId === activeCategoryId);
   const activeCategoryObj = categories.find(c => c.id === activeCategoryId);
 
+  const now = dayjs();
+  const saleProducts = products.filter(p => p.isOnSale || p.saleStatus === 'LIVE' || p.saleStatus === 'COMING_SOON' || saleProductIds.includes(p.id));
+  const isGlobalSaleVisible = (isGlobalSaleActive && (!saleEndDate || now.isBefore(dayjs(saleEndDate).add(offerPostVisibilityDays, 'day')))) || saleProducts.length > 0;
+  const isGlobalSaleFuture = isGlobalSaleActive && saleStartDate && now.isBefore(dayjs(saleStartDate));
+
+  const handleCategoryClick = (categoryId: string) => {
+    setActiveCategoryId(categoryId);
+    setTimeout(() => {
+      const section = document.getElementById('category-products-section');
+      if (section) {
+        const yOffset = -130;
+        const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 60);
+  };
+
+  const handleSaleTagClick = () => {
+    setTimeout(() => {
+      const section = document.getElementById('featured-sale-section');
+      if (section) {
+        const yOffset = -130;
+        const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 60);
+  };
+
   return (
     <>
       <Helmet>
@@ -66,32 +94,41 @@ export default function MenuPage() {
           <MinimalLoader text="Loading Menu..." />
         ) : (
           <>
-            <div className="flex overflow-x-auto hide-scrollbar gap-4 py-4 mb-8">
+            <div className="flex overflow-x-auto hide-scrollbar gap-2.5 sm:gap-3.5 py-3 mb-8 sticky top-[64px] sm:top-[74px] z-20 bg-[#faf6ee]/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-6 sm:px-6 border-b border-[#e7e1d2] shadow-sm">
+              {isGlobalSaleVisible && saleProducts.length > 0 && (
+                <button
+                  onClick={handleSaleTagClick}
+                  className="whitespace-nowrap px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#b23a2e] text-[#b23a2e] hover:bg-[#b23a2e] hover:text-white transition-colors text-xs sm:text-sm font-semibold flex items-center gap-1.5 shadow-sm flex-shrink-0"
+                >
+                  <span>🌟</span>
+                  <span>Special Offers</span>
+                  <span className="bg-[#b23a2e] text-white text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">
+                    {saleProducts.length}
+                  </span>
+                </button>
+              )}
               {categories.map(cat => (
                 <button 
                   key={cat.id}
-                  onClick={() => setActiveCategoryId(cat.id)}
-                  className={`whitespace-nowrap px-4 py-2 rounded-full border transition-colors ${activeCategoryId === cat.id ? 'bg-[#2C4A3B] text-white border-[#2C4A3B]' : 'bg-transparent border-[#2C4A3B] text-[#2C4A3B] hover:bg-[#2C4A3B] hover:text-white'}`}
+                  onClick={() => handleCategoryClick(cat.id)}
+                  className={`whitespace-nowrap px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border transition-colors text-xs sm:text-sm font-medium flex-shrink-0 ${activeCategoryId === cat.id ? 'bg-[#2C4A3B] text-white border-[#2C4A3B] shadow-sm' : 'bg-white/80 border-[#2C4A3B]/30 text-[#2C4A3B] hover:bg-[#2C4A3B] hover:text-white'}`}
                 >
                   {cat.name}
                 </button>
               ))}
             </div>
 
-            {(() => {
-              const now = dayjs();
-              const saleProducts = products.filter(p => p.isOnSale || p.saleStatus === 'LIVE' || p.saleStatus === 'COMING_SOON' || saleProductIds.includes(p.id));
-              // Show featured section if announcement is active or any product is actively on sale
-              const isGlobalSaleVisible = (isGlobalSaleActive && (!saleEndDate || now.isBefore(dayjs(saleEndDate).add(offerPostVisibilityDays, 'day')))) || saleProducts.length > 0;
-              const isGlobalSaleFuture = isGlobalSaleActive && saleStartDate && now.isBefore(dayjs(saleStartDate));
-              
-              if (isGlobalSaleVisible && saleProducts.length > 0) {
-                return (
-                  <div className="mb-12">
-                    <h3 className="text-2xl font-serif text-[#2C4A3B] mb-6 border-b pb-2">
-                      🌟 {isGlobalSaleFuture ? 'Upcoming Sale Items' : 'Featured Sale Items'}
-                    </h3>
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {isGlobalSaleVisible && saleProducts.length > 0 && (
+              <div id="featured-sale-section" className="mb-14 scroll-mt-32">
+                <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20 pb-2">
+                  <h3 className="text-xl sm:text-2xl font-serif text-[#2C4A3B]">
+                    🌟 {isGlobalSaleFuture ? 'Upcoming Sale Items' : 'Featured Sale Items'}
+                  </h3>
+                  <span className="text-xs sm:text-sm text-[#6b6259] font-medium bg-[#e7e1d2] px-2.5 py-1 rounded-full">
+                    {saleProducts.length} {saleProducts.length === 1 ? 'offer' : 'offers'}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {saleProducts.map((item: any) => {
                   const hasOfferDates = item.offerStartDate || item.offerEndDate;
                   const isItemFuture = item.offerStartDate && now.isBefore(dayjs(item.offerStartDate));
@@ -205,24 +242,31 @@ export default function MenuPage() {
                 })}
               </div>
             </div>
-          );
-        }
-        return null;
-      })()}
+          )}
 
-      {activeCategoryObj?.name.includes('Festival') || activeCategoryObj?.slug.includes('festival') ? (
-        <div className="text-center py-12">
-          <h3 className="text-xl text-[#3E2C22] mb-4">See our festival specials</h3>
-          <BrandButton variant="primary" to="/festivals">View Festival Specials</BrandButton>
-        </div>
-      ) : isLoadingProducts ? (
-        <MinimalLoader text="Loading Products..." />
-      ) : displayedItems.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          No items available in this category right now.
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div id="category-products-section" className="scroll-mt-32">
+            <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20 pb-2">
+              <h3 className="text-xl sm:text-2xl font-serif text-[#2C4A3B]">
+                {activeCategoryObj?.name || 'Menu Items'}
+              </h3>
+              <span className="text-xs sm:text-sm text-[#6b6259] font-medium bg-[#e7e1d2] px-2.5 py-1 rounded-full">
+                {displayedItems.length} {displayedItems.length === 1 ? 'item' : 'items'}
+              </span>
+            </div>
+
+            {activeCategoryObj?.name.includes('Festival') || activeCategoryObj?.slug.includes('festival') ? (
+              <div className="text-center py-12 bg-[#faf6ee] rounded-[14px] border border-[rgba(35,31,26,0.08)] shadow-sm">
+                <h3 className="text-xl text-[#3E2C22] mb-4">See our festival specials</h3>
+                <BrandButton variant="primary" to="/festivals">View Festival Specials</BrandButton>
+              </div>
+            ) : isLoadingProducts ? (
+              <MinimalLoader text="Loading Products..." />
+            ) : displayedItems.length === 0 ? (
+              <div className="text-center py-12 text-gray-500 bg-[#faf6ee] rounded-[14px] border border-[rgba(35,31,26,0.08)] shadow-sm">
+                No items available in this category right now.
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {displayedItems.filter((item: any) => {
             const now = dayjs();
             if (item.offerStartDate && now.isBefore(dayjs(item.offerStartDate).subtract(offerPreVisibilityDays, 'day'))) return false;
@@ -346,6 +390,7 @@ export default function MenuPage() {
           })}
         </div>
       )}
+          </div>
           </>
         )}
 
