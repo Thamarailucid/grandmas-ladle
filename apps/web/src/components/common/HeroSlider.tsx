@@ -29,7 +29,7 @@ export function HeroSlider() {
     return () => clearInterval(interval);
   }, [slides.length]);
 
-  const containerClasses = "relative w-full h-[calc(100dvh-var(--header-height,72px))] md:h-[calc(100dvh-var(--header-height,80px))] min-h-[460px] max-h-[920px] overflow-hidden bg-[#1a1612]";
+  const containerClasses = "relative w-full aspect-[16/9] md:aspect-auto md:h-[calc(100dvh-var(--header-height,80px))] md:min-h-[500px] md:max-h-[920px] overflow-hidden bg-[#1a1612]";
 
   if (isLoading) {
     return <div className={`${containerClasses} bg-[#F9F6F0] animate-pulse`} />;
@@ -45,17 +45,17 @@ export function HeroSlider() {
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-6">
+        <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-4 sm:px-6">
           <div className="flex flex-col items-center max-w-4xl">
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold font-serif text-white mb-4 md:mb-6 drop-shadow-lg tracking-wide uppercase">
+            <h1 className="text-xl sm:text-3xl md:text-6xl font-bold font-serif text-white mb-2 md:mb-6 drop-shadow-lg tracking-wide uppercase">
               GRANDMA'S LADLE
             </h1>
-            <p className="text-base sm:text-xl md:text-2xl text-white mb-6 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
+            <p className="hidden sm:block text-xs sm:text-base md:text-xl text-white mb-3 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
               Traditional goodness, from our kitchen to yours.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <BrandButton variant="primary" to="/menu">ORDER NOW</BrandButton>
-              <BrandButton variant="outline" to="/our-story" className="text-white border-white hover:bg-white hover:text-brand-green">
+            <div className="flex gap-2 sm:gap-3 scale-90 sm:scale-100">
+              <BrandButton variant="primary" size="sm" to="/menu">ORDER NOW</BrandButton>
+              <BrandButton variant="outline" size="sm" to="/our-story" className="text-white border-white hover:bg-white hover:text-brand-green">
                 OUR STORY
               </BrandButton>
             </div>
@@ -74,7 +74,7 @@ export function HeroSlider() {
         const isBottom = s.imageFit === 'cover-bottom';
 
         const fitClass = isContain
-          ? 'object-contain object-center'
+          ? 'object-cover md:object-contain object-center'
           : isTop
           ? 'object-cover object-top'
           : isBottom
@@ -106,12 +106,12 @@ export function HeroSlider() {
             tabIndex={isClickableBanner ? 0 : undefined}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
               index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            } ${isClickableBanner ? 'cursor-pointer group' : ''}`}
+            } ${isClickableBanner ? 'cursor-pointer select-none group' : ''}`}
           >
-            {/* If contain mode, show an elegant blurred backdrop of the same image */}
+            {/* If contain mode on desktop, show an elegant blurred backdrop of the same image */}
             {isContain && (
               <div
-                className="absolute inset-0 -z-10 bg-cover bg-center blur-2xl opacity-40 scale-110"
+                className="hidden md:block absolute inset-0 -z-10 bg-cover bg-center blur-2xl opacity-40 scale-110"
                 style={{ backgroundImage: `url(${s.imageUrl})` }}
               />
             )}
@@ -125,26 +125,26 @@ export function HeroSlider() {
             {!s.isImageOnly && <div className="absolute inset-0 bg-black/40"></div>}
 
             {!s.isImageOnly && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-6">
+              <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-4 sm:px-6">
                 <div className="flex flex-col items-center max-w-4xl">
                   {s.title && (
-                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold font-serif text-white mb-4 md:mb-6 drop-shadow-lg tracking-wide uppercase">
+                    <h1 className="text-xl sm:text-3xl md:text-6xl font-bold font-serif text-white mb-2 md:mb-6 drop-shadow-lg tracking-wide uppercase">
                       {s.title}
                     </h1>
                   )}
                   {s.subtitle && (
-                    <p className="text-sm sm:text-lg md:text-2xl text-white mb-6 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
+                    <p className="hidden sm:block text-xs sm:text-base md:text-xl text-white mb-3 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
                       {s.subtitle}
                     </p>
                   )}
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex gap-2 sm:gap-3 scale-90 sm:scale-100">
                     {s.ctaText && s.ctaLink && (
-                      <BrandButton variant="primary" to={s.ctaLink}>
+                      <BrandButton variant="primary" size="sm" to={s.ctaLink}>
                         {s.ctaText}
                       </BrandButton>
                     )}
                     {s.secondaryCtaText && s.secondaryCtaLink && (
-                      <BrandButton variant="outline" to={s.secondaryCtaLink} className="text-white border-white hover:bg-white hover:text-brand-green">
+                      <BrandButton variant="outline" size="sm" to={s.secondaryCtaLink} className="text-white border-white hover:bg-white hover:text-brand-green">
                         {s.secondaryCtaText}
                       </BrandButton>
                     )}
@@ -158,11 +158,14 @@ export function HeroSlider() {
 
       {/* Dots Indicator */}
       {slides.length > 1 && (
-        <div className="absolute bottom-2.5 sm:bottom-4 md:bottom-6 left-0 right-0 flex justify-center items-center gap-1.5 sm:gap-2 z-20">
+        <div className="absolute bottom-2 sm:bottom-3 md:bottom-6 left-0 right-0 flex justify-center items-center gap-1.5 sm:gap-2 z-20">
           {slides.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex(index);
+              }}
               className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 drop-shadow-sm ${index === currentIndex ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/80'}`}
               aria-label={`Go to slide ${index + 1}`}
             />
