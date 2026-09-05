@@ -50,7 +50,7 @@ export const updateProduct = async (id: string, data: any) => {
   }
 
   const product = await productRepository.updateProduct(id, data);
-  return product;
+  return product || existing;
 };
 
 export const updateProductAvailability = async (id: string, isAvailable: boolean) => {

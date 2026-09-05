@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { Form, Input, Button, Card, message, Switch } from 'antd';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 interface BusinessSettings {
   businessName?: string;
@@ -26,6 +27,7 @@ interface BusinessSettings {
 
 export default function SettingsPage() {
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['businessSettings'],
@@ -36,10 +38,11 @@ export default function SettingsPage() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (values: BusinessSettings) => {
+    mutationFn: async (values: Partial<BusinessSettings>) => {
       await apiClient.put('/BusinessSetting/UpdateBusinessSettings', values);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['businessSettings'] });
       message.success('Business settings updated successfully!');
     },
     onError: () => {
@@ -54,7 +57,16 @@ export default function SettingsPage() {
   }, [data, form]);
 
   const onFinish = (values: BusinessSettings) => {
-    mutation.mutate(values);
+    const delta = computeDelta<BusinessSettings>(data, values, {
+      maskedFields: ['smtpPassword']
+    });
+
+    if (!hasDelta(delta)) {
+      message.info('No changes detected.');
+      return;
+    }
+
+    mutation.mutate(delta);
   };
 
   if (isError) {

@@ -72,7 +72,7 @@ export const updateCategory = async (id: string, data: any) => {
     }
   }
 
-  if (fields.length === 0) return null;
+  if (fields.length === 0) return findCategoryById(id);
 
   values.push(id);
   const query = `

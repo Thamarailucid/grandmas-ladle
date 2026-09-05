@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Table, Button, Modal, Form, Input, Switch, Popconfirm, message, Space, InputNumber } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 interface Faq {
   id: string;
@@ -92,7 +93,13 @@ export default function FaqsPage() {
 
   const handleFinish = (values: any) => {
     if (editingFaq) {
-      updateMutation.mutate({ id: editingFaq.id, values });
+      const delta = computeDelta(editingFaq, values);
+      if (!hasDelta(delta)) {
+        message.info('No changes detected.');
+        handleCancel();
+        return;
+      }
+      updateMutation.mutate({ id: editingFaq.id, values: delta });
     } else {
       createMutation.mutate(values);
     }

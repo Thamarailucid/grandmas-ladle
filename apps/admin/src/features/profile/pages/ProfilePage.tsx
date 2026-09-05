@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import { Form, Input, Button, Card, message, Typography, Divider } from 'antd';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 const { Title } = Typography;
 
 export default function ProfilePage() {
   const [profileForm] = Form.useForm();
   const [passwordForm] = Form.useForm();
+  const queryClient = useQueryClient();
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -27,16 +29,26 @@ export default function ProfilePage() {
   }, [user, profileForm]);
 
   const profileMutation = useMutation({
-    mutationFn: async (values: { email: string; name?: string }) => {
+    mutationFn: async (values: { email?: string; name?: string }) => {
       await apiClient.post('/Auth/UpdateProfile', values);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       message.success('Profile updated successfully!');
     },
     onError: (error: any) => {
       message.error(error.response?.data?.error?.message || 'Failed to update profile');
     },
   });
+
+  const onProfileFinish = (values: { email: string; name?: string }) => {
+    const delta = computeDelta(user, values);
+    if (!hasDelta(delta)) {
+      message.info('No changes detected.');
+      return;
+    }
+    profileMutation.mutate(delta);
+  };
 
   const passwordMutation = useMutation({
     mutationFn: async (values: any) => {
@@ -59,7 +71,7 @@ export default function ProfilePage() {
         <Form
           form={profileForm}
           layout="vertical"
-          onFinish={(values) => profileMutation.mutate(values)}
+          onFinish={onProfileFinish}
           disabled={isLoading || profileMutation.isPending}
         >
           <Form.Item

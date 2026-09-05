@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
 import { HeroSlide, ApiListResponse, ApiResponse } from '@grandmas-ladle/shared';
 import { getAccessToken } from '@/stores/authStore';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 const fetchSlides = async () => {
   const response = await apiClient.get<ApiListResponse<HeroSlide>>('/HeroSlide/GetHeroSlides');
@@ -45,6 +46,9 @@ export default function HeroSliderPage() {
       message.success('Slide created successfully');
       handleCancel();
     },
+    onError: (err: any) => {
+      message.error(err.response?.data?.message || err.message || 'Failed to create slide');
+    },
   });
 
   const updateMutation = useMutation({
@@ -54,6 +58,9 @@ export default function HeroSliderPage() {
       message.success('Slide updated successfully');
       handleCancel();
     },
+    onError: (err: any) => {
+      message.error(err.response?.data?.message || err.message || 'Failed to update slide');
+    },
   });
 
   const deleteMutation = useMutation({
@@ -62,26 +69,31 @@ export default function HeroSliderPage() {
       queryClient.invalidateQueries({ queryKey: ['heroSlides'] });
       message.success('Slide deleted successfully');
     },
+    onError: (err: any) => {
+      message.error(err.response?.data?.message || err.message || 'Failed to delete slide');
+    },
   });
 
   const handleOpenModal = (slide?: HeroSlide) => {
     if (slide) {
       setEditingSlide(slide);
       form.setFieldsValue({
-        ...slide,
-        isClickable: slide.isClickable ?? false,
+        imageUrl: slide.imageUrl || '',
+        title: slide.title || '',
+        subtitle: slide.subtitle || '',
+        ctaText: slide.ctaText || '',
+        ctaLink: slide.ctaLink || '/menu',
+        secondaryCtaText: slide.secondaryCtaText || '',
+        secondaryCtaLink: slide.secondaryCtaLink || '',
+        isImageOnly: Boolean(slide.isImageOnly),
+        imageFit: slide.imageFit || 'cover-center',
+        isClickable: Boolean(slide.isClickable),
+        sortOrder: slide.sortOrder ?? 0,
+        isActive: slide.isActive !== false,
       });
     } else {
       setEditingSlide(null);
       form.resetFields();
-      form.setFieldsValue({ 
-        isActive: true, 
-        isImageOnly: false, 
-        isClickable: false,
-        sortOrder: 0, 
-        imageFit: 'cover-center',
-        ctaLink: '/menu'
-      });
     }
     setIsModalVisible(true);
   };
@@ -94,10 +106,23 @@ export default function HeroSliderPage() {
 
   const handleSubmit = () => {
     form.validateFields().then((values) => {
+      const formattedValues = {
+        ...values,
+        isClickable: Boolean(values.isClickable),
+        isImageOnly: Boolean(values.isImageOnly),
+        isActive: values.isActive !== false,
+      };
+
       if (editingSlide) {
-        updateMutation.mutate({ id: editingSlide.id, data: values });
+        const delta = computeDelta(editingSlide, formattedValues);
+        if (!hasDelta(delta)) {
+          message.info('No changes detected.');
+          handleCancel();
+          return;
+        }
+        updateMutation.mutate({ id: editingSlide.id, data: delta });
       } else {
-        createMutation.mutate(values);
+        createMutation.mutate(formattedValues);
       }
     });
   };
@@ -127,22 +152,23 @@ export default function HeroSliderPage() {
       ),
     },
     {
-      title: 'Clickable Route',
+      title: 'Clickable Banner',
       key: 'isClickable',
-      render: (_: any, record: HeroSlide) => {
-        if (record.isClickable && record.ctaLink) {
-          return (
-            <Space direction="vertical" size={2}>
-              <Tag color="green">Clickable &rarr; {record.ctaLink}</Tag>
-              <span style={{ fontSize: 11, color: '#666' }}>Navigates in same page</span>
-            </Space>
-          );
-        }
-        if (record.ctaLink && !record.isImageOnly) {
-          return <Tag color="blue">Button: {record.ctaLink}</Tag>;
-        }
-        return <Tag color="default">Non-Clickable</Tag>;
-      },
+      render: (_: any, record: HeroSlide) => (
+        <Space direction="vertical" size={2}>
+          <Switch 
+            checked={Boolean(record.isClickable)} 
+            checkedChildren="ON"
+            unCheckedChildren="OFF"
+            onChange={(checked) => updateMutation.mutate({ id: record.id, data: { isClickable: checked } })} 
+          />
+          {record.ctaLink ? (
+            <Tag color={record.isClickable ? "green" : "default"}>{record.ctaLink}</Tag>
+          ) : (
+            <span style={{ fontSize: 11, color: '#aaa' }}>No link</span>
+          )}
+        </Space>
+      ),
     },
     {
       title: 'Fit Mode',
@@ -166,7 +192,7 @@ export default function HeroSliderPage() {
       render: (_: any, record: HeroSlide) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => handleOpenModal(record)} />
-          <Popconfirm title="Are you sure?" onConfirm={() => deleteMutation.mutate(record.id)}>
+          <Popconfirm title="Are you sure you want to delete this slide?" onConfirm={() => deleteMutation.mutate(record.id)}>
             <Button icon={<DeleteOutlined />} danger />
           </Popconfirm>
         </Space>
@@ -198,9 +224,21 @@ export default function HeroSliderPage() {
         onOk={handleSubmit}
         onCancel={handleCancel}
         width={700}
+        destroyOnClose
         confirmLoading={createMutation.isPending || updateMutation.isPending}
       >
-        <Form form={form} layout="vertical">
+        <Form 
+          form={form} 
+          layout="vertical"
+          initialValues={{
+            isActive: true,
+            isImageOnly: false,
+            isClickable: false,
+            imageFit: 'cover-center',
+            sortOrder: 0,
+            ctaLink: '/menu'
+          }}
+        >
           <Form.Item name="imageUrl" label="Slide Image URL" rules={[{ required: true, message: 'Image is required' }]}>
             <Input readOnly placeholder="Upload an image below" style={{ marginBottom: 8 }} />
           </Form.Item>
@@ -241,39 +279,43 @@ export default function HeroSliderPage() {
           </div>
 
           <div style={{ padding: 16, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, marginBottom: 16 }}>
-            <Form.Item name="isClickable" valuePropName="checked" label={<span style={{ fontWeight: 600 }}>Clickable Banner (Navigate on Click)</span>} style={{ marginBottom: 8 }}>
+            <Form.Item 
+              name="isClickable" 
+              valuePropName="checked" 
+              label={<span style={{ fontWeight: 600 }}>Clickable Banner (Navigate on Click)</span>} 
+              style={{ marginBottom: 8 }}
+            >
               <Switch checkedChildren="ENABLED" unCheckedChildren="DISABLED" />
             </Form.Item>
-            <div style={{ color: '#64748b', fontSize: 12, marginBottom: isClickable ? 14 : 0 }}>
+            
+            <div style={{ color: '#64748b', fontSize: 12, marginBottom: 12 }}>
               {isClickable 
                 ? 'When enabled, clicking anywhere on this hero banner immediately navigates to the selected route in the same window (no _blank/new tab).'
                 : 'Turn this ON if you want clicking anywhere on the hero banner to navigate directly to a page.'}
             </div>
 
-            {isClickable && (
-              <Form.Item 
-                name="ctaLink" 
-                label="Navigate Route (Same Tab)" 
-                rules={[{ required: true, message: 'Please select a destination route' }]}
-                style={{ marginBottom: 0 }}
-              >
-                <Select 
-                  showSearch
-                  placeholder="Select destination route"
-                  options={[
-                    { label: 'Menu (/menu)', value: '/menu' },
-                    { label: 'Special Sale / Offers (/sale)', value: '/sale' },
-                    { label: 'Festivals (/festivals)', value: '/festivals' },
-                    { label: 'Our Story (/our-story)', value: '/our-story' },
-                    { label: 'Corporate Orders (/corporate)', value: '/corporate' },
-                    { label: 'Visit Us (/visit-us)', value: '/visit-us' },
-                    { label: 'Contact Us (/contact)', value: '/contact' },
-                    { label: 'FAQ (/faq)', value: '/faq' },
-                    { label: 'Home Page (/)', value: '/' },
-                  ]} 
-                />
-              </Form.Item>
-            )}
+            <Form.Item 
+              name="ctaLink" 
+              label={isClickable ? "Navigate Route (Banner Click Destination)" : "Link Route (/menu, /sale, etc.)"} 
+              rules={isClickable ? [{ required: true, message: 'Please select a destination route' }] : []}
+              style={{ marginBottom: 0 }}
+            >
+              <Select 
+                showSearch
+                placeholder="Select destination route"
+                options={[
+                  { label: 'Menu (/menu)', value: '/menu' },
+                  { label: 'Special Sale / Offers (/sale)', value: '/sale' },
+                  { label: 'Festivals (/festivals)', value: '/festivals' },
+                  { label: 'Our Story (/our-story)', value: '/our-story' },
+                  { label: 'Corporate Orders (/corporate)', value: '/corporate' },
+                  { label: 'Visit Us (/visit-us)', value: '/visit-us' },
+                  { label: 'Contact Us (/contact)', value: '/contact' },
+                  { label: 'FAQ (/faq)', value: '/faq' },
+                  { label: 'Home Page (/)', value: '/' },
+                ]} 
+              />
+            </Form.Item>
           </div>
 
           <div style={{ padding: 16, background: '#f5f5f5', borderRadius: 8, marginBottom: 24 }}>
@@ -302,42 +344,22 @@ export default function HeroSliderPage() {
                     <Input placeholder="e.g. OUR STORY" />
                   </Form.Item>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: isClickable ? '1fr' : '1fr 1fr', gap: 16 }}>
-                  {!isClickable && (
-                    <Form.Item name="ctaLink" label="Primary Button Link">
-                      <Select 
-                        showSearch
-                        options={[
-                          { label: 'Menu (/menu)', value: '/menu' },
-                          { label: 'Sale (/sale)', value: '/sale' },
-                          { label: 'Festivals (/festivals)', value: '/festivals' },
-                          { label: 'Our Story (/our-story)', value: '/our-story' },
-                          { label: 'Corporate (/corporate)', value: '/corporate' },
-                          { label: 'Visit Us (/visit-us)', value: '/visit-us' },
-                          { label: 'Home (/)', value: '/' },
-                        ]} 
-                        placeholder="Select route" 
-                        allowClear 
-                      />
-                    </Form.Item>
-                  )}
-                  <Form.Item name="secondaryCtaLink" label="Secondary Button Link">
-                    <Select 
-                      showSearch
-                      options={[
-                        { label: 'Home (/)', value: '/' },
-                        { label: 'Our Story (/our-story)', value: '/our-story' },
-                        { label: 'Menu (/menu)', value: '/menu' },
-                        { label: 'Corporate (/corporate)', value: '/corporate' },
-                        { label: 'Festivals (/festivals)', value: '/festivals' },
-                        { label: 'Visit Us (/visit-us)', value: '/visit-us' },
-                        { label: 'Sale (/sale)', value: '/sale' },
-                      ]} 
-                      placeholder="Select a page for secondary button" 
-                      allowClear 
-                    />
-                  </Form.Item>
-                </div>
+                <Form.Item name="secondaryCtaLink" label="Secondary Button Link">
+                  <Select 
+                    showSearch
+                    options={[
+                      { label: 'Home (/)', value: '/' },
+                      { label: 'Our Story (/our-story)', value: '/our-story' },
+                      { label: 'Menu (/menu)', value: '/menu' },
+                      { label: 'Corporate (/corporate)', value: '/corporate' },
+                      { label: 'Festivals (/festivals)', value: '/festivals' },
+                      { label: 'Visit Us (/visit-us)', value: '/visit-us' },
+                      { label: 'Sale (/sale)', value: '/sale' },
+                    ]} 
+                    placeholder="Select a page for secondary button" 
+                    allowClear 
+                  />
+                </Form.Item>
               </>
             )}
           </div>

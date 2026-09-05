@@ -23,5 +23,5 @@ export const updateSettings = async (data: any) => {
   }
 
   const settings = await businessSettingRepository.updateSettings(data);
-  return settings;
+  return settings || existing;
 };

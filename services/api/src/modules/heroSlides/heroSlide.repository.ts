@@ -1,5 +1,19 @@
 import { database } from '../../database/connection.js';
 
+let columnsEnsured = false;
+async function ensureColumns() {
+  if (columnsEnsured) return;
+  try {
+    await database.query(`
+      ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS image_fit VARCHAR(50) DEFAULT 'cover-center';
+      ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS is_clickable BOOLEAN DEFAULT FALSE;
+    `);
+    columnsEnsured = true;
+  } catch (err) {
+    console.error('Failed to ensure hero_slides columns:', err);
+  }
+}
+
 async function shiftSortOrders(targetOrder: number, idToExclude?: string) {
   if (idToExclude) {
     await database.query(`UPDATE hero_slides SET sort_order = sort_order + 1 WHERE sort_order >= $1 AND id != $2`, [targetOrder, idToExclude]);
@@ -9,24 +23,28 @@ async function shiftSortOrders(targetOrder: number, idToExclude?: string) {
 }
 
 export const getHeroSlides = async () => {
+  await ensureColumns();
   const query = `SELECT * FROM hero_slides ORDER BY sort_order ASC, created_at DESC`;
   const result = await database.query(query);
   return result.rows.map(mapToDTO);
 };
 
 export const getPublicHeroSlides = async () => {
+  await ensureColumns();
   const query = `SELECT * FROM hero_slides WHERE is_active = true ORDER BY sort_order ASC, created_at DESC`;
   const result = await database.query(query);
   return result.rows.map(mapToDTO);
 };
 
 export const getHeroSlideById = async (id: string) => {
+  await ensureColumns();
   const query = `SELECT * FROM hero_slides WHERE id = $1`;
   const result = await database.query(query, [id]);
   return result.rows[0] ? mapToDTO(result.rows[0]) : null;
 };
 
 export const createHeroSlide = async (data: any) => {
+  await ensureColumns();
   if (data.sortOrder !== undefined) {
     await shiftSortOrders(data.sortOrder);
   }
@@ -44,17 +62,18 @@ export const createHeroSlide = async (data: any) => {
     data.ctaLink, 
     data.secondaryCtaText,
     data.secondaryCtaLink,
-    data.isImageOnly ?? false, 
+    Boolean(data.isImageOnly), 
     data.imageFit ?? 'cover-center',
-    data.isClickable ?? false,
+    Boolean(data.isClickable),
     data.sortOrder ?? 0, 
-    data.isActive ?? true
+    data.isActive !== false
   ];
   const result = await database.query(query, values);
   return mapToDTO(result.rows[0]);
 };
 
 export const updateHeroSlide = async (id: string, data: any) => {
+  await ensureColumns();
   if (data.sortOrder !== undefined) {
     await shiftSortOrders(data.sortOrder, id);
   }
@@ -81,7 +100,11 @@ export const updateHeroSlide = async (id: string, data: any) => {
   for (const [key, dbCol] of Object.entries(mapping)) {
     if (data[key] !== undefined) {
       fields.push(`${dbCol} = $${counter}`);
-      values.push(data[key]);
+      let val = data[key];
+      if (key === 'isClickable' || key === 'isImageOnly' || key === 'isActive') {
+        val = Boolean(val);
+      }
+      values.push(val);
       counter++;
     }
   }
@@ -91,7 +114,7 @@ export const updateHeroSlide = async (id: string, data: any) => {
   values.push(id);
   const query = `
     UPDATE hero_slides
-    SET ${fields.join(', ')}
+    SET ${fields.join(', ')}, updated_at = NOW()
     WHERE id = $${counter}
     RETURNING *
   `;
@@ -115,11 +138,11 @@ const mapToDTO = (row: any) => ({
   ctaLink: row.cta_link,
   secondaryCtaText: row.secondary_cta_text,
   secondaryCtaLink: row.secondary_cta_link,
-  isImageOnly: row.is_image_only,
+  isImageOnly: Boolean(row.is_image_only),
   imageFit: row.image_fit || 'cover-center',
-  isClickable: row.is_clickable ?? false,
-  sortOrder: row.sort_order,
-  isActive: row.is_active,
+  isClickable: Boolean(row.is_clickable),
+  sortOrder: row.sort_order ?? 0,
+  isActive: row.is_active !== false,
   createdAt: row.created_at,
   updatedAt: row.updated_at
 });

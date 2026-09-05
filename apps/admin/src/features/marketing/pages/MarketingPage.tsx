@@ -4,6 +4,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 const { Title } = Typography;
 
@@ -90,7 +91,13 @@ export default function MarketingPage() {
       };
 
       if (editingCampaign) {
-        updateMutation.mutate({ id: editingCampaign.id, values: payload });
+        const delta = computeDelta(editingCampaign, payload);
+        if (!hasDelta(delta)) {
+          message.info('No changes detected.');
+          setIsModalVisible(false);
+          return;
+        }
+        updateMutation.mutate({ id: editingCampaign.id, values: delta });
       } else {
         createMutation.mutate(payload);
       }

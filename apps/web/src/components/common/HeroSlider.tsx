@@ -68,7 +68,7 @@ export function HeroSlider() {
   return (
     <div className={containerClasses}>
       {slides.map((s, index) => {
-        const isClickableBanner = (s.isClickable || (s.isImageOnly && !!s.ctaLink)) && !!s.ctaLink;
+        const isClickableBanner = (Boolean(s.isClickable) || Boolean(s.isImageOnly)) && Boolean(s.ctaLink);
         const isContain = s.imageFit === 'contain';
         const isTop = s.imageFit === 'cover-top';
         const isBottom = s.imageFit === 'cover-bottom';
@@ -87,11 +87,13 @@ export function HeroSlider() {
             return;
           }
           if (isClickableBanner && s.ctaLink) {
+            const target = s.ctaLink.trim();
             // Same-page navigation (strictly no _blank)
-            if (s.ctaLink.startsWith('http://') || s.ctaLink.startsWith('https://')) {
-              window.location.href = s.ctaLink;
+            if (target.startsWith('http://') || target.startsWith('https://')) {
+              window.location.href = target;
             } else {
-              navigate(s.ctaLink);
+              const route = target.startsWith('/') ? target : `/${target}`;
+              navigate(route);
             }
           }
         };

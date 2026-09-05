@@ -41,7 +41,10 @@ export const update = async (id: string, data: any) => {
       counter++;
     }
   }
-  if (fields.length === 0) return null;
+  if (fields.length === 0) {
+    const res = await database.query('SELECT * FROM festivals WHERE id = $1', [id]);
+    return res.rows[0];
+  }
   values.push(id);
   const query = "UPDATE festivals SET " + fields.join(', ') + ", updated_at = NOW() WHERE id = $" + counter + " RETURNING *";
   const result = await database.query(query, values);

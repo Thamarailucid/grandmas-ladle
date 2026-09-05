@@ -5,6 +5,7 @@ import { apiClient } from '@/lib/apiClient';
 import { Product, ProductCategory, ApiListResponse, ApiResponse } from '@grandmas-ladle/shared';
 import { getAccessToken } from '@/stores/authStore';
 import dayjs from 'dayjs';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -155,7 +156,13 @@ export default function ProductsPage() {
         offerEndDate: values.offerEndDate ? values.offerEndDate.toISOString() : null,
       };
       if (editingProduct) {
-        updateMutation.mutate({ id: editingProduct.id, data: payload });
+        const delta = computeDelta(editingProduct, payload);
+        if (!hasDelta(delta)) {
+          message.info('No changes detected.');
+          setIsModalVisible(false);
+          return;
+        }
+        updateMutation.mutate({ id: editingProduct.id, data: delta });
       } else {
         createMutation.mutate(payload);
       }

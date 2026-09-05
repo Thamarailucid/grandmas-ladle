@@ -3,6 +3,7 @@ import { Table, Button, Modal, Form, Input, Popconfirm, message, Space, InputNum
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
 import { ProductCategory, ApiListResponse, ApiResponse } from '@grandmas-ladle/shared';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 // API functions
 const fetchCategories = async (): Promise<ProductCategory[]> => {
@@ -94,7 +95,13 @@ export default function CategoriesPage() {
     try {
       const values = await form.validateFields();
       if (editingCategory) {
-        updateMutation.mutate({ id: editingCategory.id, data: values });
+        const delta = computeDelta(editingCategory, values);
+        if (!hasDelta(delta)) {
+          message.info('No changes detected.');
+          handleCancel();
+          return;
+        }
+        updateMutation.mutate({ id: editingCategory.id, data: delta });
       } else {
         createMutation.mutate(values);
       }

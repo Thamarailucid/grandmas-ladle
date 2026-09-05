@@ -40,6 +40,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
 import dayjs from 'dayjs';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 const { Text, Paragraph } = Typography;
 
@@ -181,7 +182,14 @@ export default function ReviewsPage() {
     try {
       const values = await form.validateFields();
       if (editingId) {
-        updateMutation.mutate({ id: editingId, data: values });
+        const originalReview = reviewsData.find((r: any) => r.id === editingId);
+        const delta = computeDelta(originalReview, values);
+        if (!hasDelta(delta)) {
+          message.info('No changes detected.');
+          handleCancel();
+          return;
+        }
+        updateMutation.mutate({ id: editingId, data: delta });
       } else {
         createMutation.mutate(values);
       }

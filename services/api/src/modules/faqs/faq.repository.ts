@@ -56,7 +56,7 @@ export const updateFaq = async (id: string, data: any) => {
       counter++;
   }
 
-  if (fields.length === 0) return null;
+  if (fields.length === 0) return findFaqById(id);
 
   values.push(id);
   const query = `

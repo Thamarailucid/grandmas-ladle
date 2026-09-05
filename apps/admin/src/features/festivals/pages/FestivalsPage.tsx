@@ -3,6 +3,7 @@ import { Table, Button, Popconfirm, message, Space, Modal, Form, Input, Switch, 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
 import dayjs from 'dayjs';
+import { computeDelta, hasDelta } from '@/utils/delta';
 
 export default function FestivalPage() {
   const queryClient = useQueryClient();
@@ -72,7 +73,13 @@ export default function FestivalPage() {
       endDate: values.endDate ? values.endDate.toISOString() : null,
     };
     if (editingFestival) {
-      updateMutation.mutate({ ...payload, id: editingFestival.id });
+      const delta = computeDelta(editingFestival, payload);
+      if (!hasDelta(delta)) {
+        message.info('No changes detected.');
+        handleCancel();
+        return;
+      }
+      updateMutation.mutate({ ...delta, id: editingFestival.id });
     } else {
       createMutation.mutate(payload);
     }
