@@ -317,7 +317,7 @@ CREATE TABLE IF NOT EXISTS business_settings (
     enable_email_notifications BOOLEAN DEFAULT FALSE,
     notification_email VARCHAR(255),
     smtp_host VARCHAR(255),
-    smtp_port INT,
+    smtp_port INT DEFAULT 587,
     smtp_user VARCHAR(255),
     smtp_password TEXT,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -403,31 +403,5 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
     applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- ============================================================
--- IDEMPOTENT COLUMN ADDITIONS (Guarantees columns exist on existing DBs)
--- ============================================================
-ALTER TABLE products ADD COLUMN IF NOT EXISTS is_available BOOLEAN NOT NULL DEFAULT TRUE;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS is_vegetarian BOOLEAN NOT NULL DEFAULT TRUE;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS is_on_sale BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS is_listed BOOLEAN NOT NULL DEFAULT TRUE;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS spice_level INT NOT NULL DEFAULT 0;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS preparation_time_minutes INT NOT NULL DEFAULT 0;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS offer_price NUMERIC(12,2);
-ALTER TABLE products ADD COLUMN IF NOT EXISTS tag VARCHAR(255);
-ALTER TABLE products ADD COLUMN IF NOT EXISTS offer_start_date TIMESTAMPTZ;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS offer_end_date TIMESTAMPTZ;
-
-ALTER TABLE product_categories ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE;
-
-ALTER TABLE business_settings ADD COLUMN IF NOT EXISTS enable_email_notifications BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE business_settings ADD COLUMN IF NOT EXISTS notification_email VARCHAR(255);
-ALTER TABLE business_settings ADD COLUMN IF NOT EXISTS smtp_host VARCHAR(255);
-ALTER TABLE business_settings ADD COLUMN IF NOT EXISTS smtp_port INT DEFAULT 587;
-ALTER TABLE business_settings ADD COLUMN IF NOT EXISTS smtp_user VARCHAR(255);
-ALTER TABLE business_settings ADD COLUMN IF NOT EXISTS smtp_password TEXT;
-
-ALTER TABLE reviews ADD COLUMN IF NOT EXISTS is_approved BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE reviews ADD COLUMN IF NOT EXISTS is_verified BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE reviews ADD COLUMN IF NOT EXISTS product_names TEXT[] DEFAULT '{}';
 
 
