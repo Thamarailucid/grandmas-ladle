@@ -80,11 +80,11 @@ export default function SalePage() {
                   const isOrderable = !isItemFuture && !isItemPast && item.isAvailable !== false;
 
                   return (
-                    <div key={`sale-${item.id}`} className="bg-[#faf6ee] border border-[rgba(35,31,26,0.08)] rounded-[14px] shadow-[0px_2px_10px_0px_rgba(138,75,38,0.08),0px_1px_2px_0px_rgba(138,75,38,0.06)] flex flex-col h-full overflow-hidden hover:shadow-[0px_4px_14px_0px_rgba(138,75,38,0.12)] transition-shadow">
+                    <div key={`sale-${item.id}`} className="bg-[#faf6ee] border border-[rgba(35,31,26,0.08)] rounded-[14px] shadow-[0px_2px_10px_0px_rgba(138,75,38,0.08),0px_1px_2px_0px_rgba(138,75,38,0.06)] flex flex-col h-full overflow-hidden hover:shadow-[0px_4px_14px_0px_rgba(138,75,38,0.12)] transition-shadow relative isolate">
                       {/* Image Container */}
                       <div className="p-2 sm:p-2.5">
                         <div 
-                          className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center cursor-pointer group"
+                          className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center cursor-pointer group isolate"
                           onClick={() => setSelectedProduct(item)}
                         >
                           {item.imageUrl ? (
