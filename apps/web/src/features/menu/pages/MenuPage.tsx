@@ -12,6 +12,7 @@ import { useBusinessSettingsContext } from '../../../contexts/BusinessSettingsCo
 import { useCart } from '../../../contexts/CartContext';
 import toast from 'react-hot-toast';
 import { MinimalLoader } from '@/components/common/MinimalLoader';
+import { ProductDetailModal } from '@/components/common/ProductDetailModal';
 
 const fetchCategories = async (): Promise<ProductCategory[]> => {
   const response = await apiClient.get<ApiListResponse<ProductCategory>>('/ProductCategory/GetPublicProductCategories');
@@ -25,6 +26,7 @@ const fetchProducts = async (): Promise<Product[]> => {
 
 export default function MenuPage() {
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const { offerPreVisibilityDays = 1, offerPostVisibilityDays = 0, isCartEnabled = true, saleProductIds = [], saleStartDate, saleEndDate, isAnnouncementActive, isGlobalSaleActive } = useBusinessSettingsContext();
   const { addToCart } = useCart();
 
@@ -141,41 +143,42 @@ export default function MenuPage() {
                     <div key={`sale-${item.id}`} className="bg-[#faf6ee] border border-[rgba(35,31,26,0.08)] rounded-[14px] shadow-[0px_2px_10px_0px_rgba(138,75,38,0.08),0px_1px_2px_0px_rgba(138,75,38,0.06)] flex flex-col h-full overflow-hidden hover:shadow-[0px_4px_14px_0px_rgba(138,75,38,0.12)] transition-shadow">
                       {/* Image Container */}
                       <div className="p-2 sm:p-2.5">
-                        <div className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center">
+                        <div 
+                          className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center cursor-pointer group"
+                          onClick={() => setSelectedProduct(item)}
+                        >
                           {item.imageUrl ? (
-                            <img src={item.imageUrl} alt={item.name} className={`w-full h-full object-cover ${!isOrderable ? 'grayscale opacity-70' : ''}`} />
+                            <img src={item.imageUrl} alt={item.name} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!isOrderable ? 'grayscale opacity-70' : ''}`} />
                           ) : (
                             <span className="text-[11px] sm:text-xs text-[#6b6259] italic text-center px-2">Image of {item.name}</span>
                           )}
-                          {/* Sale Ribbon */}
-                          {(item.isOnSale || item.saleStatus === 'LIVE') && (
-                            <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center pointer-events-none">
-                              <div className="-rotate-45">
-                                <div className="bg-[#b23a2e] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 w-[100px] sm:w-[120px]">
-                                  <span className="text-white text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase">Sale</span>
-                                </div>
-                              </div>
+                          {/* Top Badges (Sale & Tag) */}
+                          <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-1.5 z-10 pointer-events-none">
+                            <div>
+                              {(item.isOnSale || item.saleStatus === 'LIVE') && (
+                                <span className="inline-block bg-[#b23a2e] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
+                                  Sale
+                                </span>
+                              )}
+                              {(item.saleStatus === 'COMING_SOON' || (isItemFuture && !item.isOnSale)) && (
+                                <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
+                                  Soon
+                                </span>
+                              )}
                             </div>
-                          )}
-                          {(item.saleStatus === 'COMING_SOON' || (isItemFuture && !item.isOnSale)) && (
-                            <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center pointer-events-none">
-                              <div className="-rotate-45">
-                                <div className="bg-[#2f4a3c] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 w-[100px] sm:w-[120px]">
-                                  <span className="text-white text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase">Soon</span>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          {/* Out of Stock Badge */}
+                            {item.tag && (
+                              <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded shadow-sm tracking-wide truncate max-w-[95px] sm:max-w-[120px]" title={item.tag}>
+                                {item.tag}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Out of Stock Centered Overlay */}
                           {item.isAvailable === false && (
-                            <div className="absolute top-1.5 left-1.5 z-10 bg-red-600/90 text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded shadow uppercase tracking-wider">
-                              Out of Stock
-                            </div>
-                          )}
-                          {/* Tag Badge */}
-                          {item.tag && (
-                            <div className="absolute top-1.5 right-1.5 bg-[#2f4a3c] px-1.5 sm:px-2 py-0.5 rounded-md">
-                              <span className="text-white text-[9px] sm:text-[10px] font-semibold tracking-wide">{item.tag}</span>
+                            <div className="absolute inset-0 z-20 bg-black/40 backdrop-blur-[0.5px] flex items-center justify-center p-2 pointer-events-none">
+                              <span className="bg-[#b23a2e] text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded shadow-md uppercase tracking-wider border border-white/20">
+                                Out of Stock
+                              </span>
                             </div>
                           )}
                         </div>
@@ -183,7 +186,13 @@ export default function MenuPage() {
                       {/* Content */}
                       <div className="px-2.5 sm:px-3.5 pb-3 sm:pb-3.5 pt-1 sm:pt-1.5 flex flex-col flex-grow">
                         <div className="flex items-start justify-between gap-1.5 mb-1">
-                          <h3 className="text-xs sm:text-sm lg:text-base font-semibold font-serif text-[#2f4a3c] leading-snug line-clamp-1 flex-grow" title={item.name}>{item.name}</h3>
+                          <h3 
+                            onClick={() => setSelectedProduct(item)}
+                            className="text-xs sm:text-sm lg:text-base font-semibold font-serif text-[#2f4a3c] hover:text-[#b9925b] leading-snug line-clamp-2 min-h-[28px] sm:min-h-[36px] flex-grow cursor-pointer transition-colors" 
+                            title={item.name}
+                          >
+                            {item.name}
+                          </h3>
                           {/* FSSAI Veg / Non-Veg Mark */}
                           <div 
                             className={`flex-shrink-0 w-3.5 h-3.5 border-[1.5px] ${item.isVegetarian !== false ? 'border-[#16a34a]' : 'border-[#dc2626]'} rounded-sm p-[1.5px] flex items-center justify-center bg-white mt-0.5`}
@@ -289,41 +298,42 @@ export default function MenuPage() {
               <div key={item.id} className="bg-[#faf6ee] border border-[rgba(35,31,26,0.08)] rounded-[14px] shadow-[0px_2px_10px_0px_rgba(138,75,38,0.08),0px_1px_2px_0px_rgba(138,75,38,0.06)] flex flex-col h-full overflow-hidden hover:shadow-[0px_4px_14px_0px_rgba(138,75,38,0.12)] transition-shadow">
                 {/* Image Container */}
                 <div className="p-2 sm:p-2.5">
-                  <div className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center">
+                  <div 
+                    className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center cursor-pointer group"
+                    onClick={() => setSelectedProduct(item)}
+                  >
                     {item.imageUrl ? (
-                      <img src={item.imageUrl} alt={item.name} className={`w-full h-full object-cover ${!isOrderable ? 'grayscale opacity-70' : ''}`} />
+                      <img src={item.imageUrl} alt={item.name} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!isOrderable ? 'grayscale opacity-70' : ''}`} />
                     ) : (
                       <span className="text-[11px] sm:text-xs text-[#6b6259] italic text-center px-2">Image of {item.name}</span>
                     )}
-                    {/* Sale Ribbon */}
-                    {(item.isOnSale || item.saleStatus === 'LIVE') && (
-                      <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center pointer-events-none">
-                        <div className="-rotate-45">
-                          <div className="bg-[#b23a2e] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 w-[100px] sm:w-[120px]">
-                            <span className="text-white text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase">Sale</span>
-                          </div>
-                        </div>
+                    {/* Top Badges (Sale & Tag) */}
+                    <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-1.5 z-10 pointer-events-none">
+                      <div>
+                        {(item.isOnSale || item.saleStatus === 'LIVE') && (
+                          <span className="inline-block bg-[#b23a2e] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
+                            Sale
+                          </span>
+                        )}
+                        {(item.saleStatus === 'COMING_SOON' || (isFuture && !item.isOnSale)) && (
+                          <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
+                            Soon
+                          </span>
+                        )}
                       </div>
-                    )}
-                    {(item.saleStatus === 'COMING_SOON' || (isFuture && !item.isOnSale)) && (
-                      <div className="absolute -left-[29px] -top-[25px] w-[113px] h-[113px] flex items-center justify-center pointer-events-none">
-                        <div className="-rotate-45">
-                          <div className="bg-[#2f4a3c] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 w-[100px] sm:w-[120px]">
-                            <span className="text-white text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase">Soon</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {/* Out of Stock Badge */}
+                      {item.tag && (
+                        <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded shadow-sm tracking-wide truncate max-w-[95px] sm:max-w-[120px]" title={item.tag}>
+                          {item.tag}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Out of Stock Centered Overlay */}
                     {item.isAvailable === false && (
-                      <div className="absolute top-1.5 left-1.5 z-10 bg-red-600/90 text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded shadow uppercase tracking-wider">
-                        Out of Stock
-                      </div>
-                    )}
-                    {/* Tag Badge */}
-                    {item.tag && (
-                      <div className="absolute top-1.5 right-1.5 bg-[#2f4a3c] px-1.5 sm:px-2 py-0.5 rounded-md">
-                        <span className="text-white text-[9px] sm:text-[10px] font-semibold tracking-wide">{item.tag}</span>
+                      <div className="absolute inset-0 z-20 bg-black/40 backdrop-blur-[0.5px] flex items-center justify-center p-2 pointer-events-none">
+                        <span className="bg-[#b23a2e] text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded shadow-md uppercase tracking-wider border border-white/20">
+                          Out of Stock
+                        </span>
                       </div>
                     )}
                   </div>
@@ -331,7 +341,13 @@ export default function MenuPage() {
                 {/* Content */}
                 <div className="px-2.5 sm:px-3.5 pb-3 sm:pb-3.5 pt-1 sm:pt-1.5 flex flex-col flex-grow">
                   <div className="flex items-start justify-between gap-1.5 mb-1">
-                    <h3 className="text-xs sm:text-sm lg:text-base font-semibold font-serif text-[#2f4a3c] leading-snug line-clamp-1 flex-grow" title={item.name}>{item.name}</h3>
+                    <h3 
+                      onClick={() => setSelectedProduct(item)}
+                      className="text-xs sm:text-sm lg:text-base font-semibold font-serif text-[#2f4a3c] hover:text-[#b9925b] leading-snug line-clamp-2 min-h-[28px] sm:min-h-[36px] flex-grow cursor-pointer transition-colors" 
+                      title={item.name}
+                    >
+                      {item.name}
+                    </h3>
                     {/* FSSAI Veg / Non-Veg Mark */}
                     <div 
                       className={`flex-shrink-0 w-3.5 h-3.5 border-[1.5px] ${item.isVegetarian !== false ? 'border-[#16a34a]' : 'border-[#dc2626]'} rounded-sm p-[1.5px] flex items-center justify-center bg-white mt-0.5`}
@@ -399,6 +415,14 @@ export default function MenuPage() {
         <div className="mt-12 text-center text-gray-500 italic text-sm">
           Menu items and availability may change. Contact us for the latest offerings.
         </div>
+
+        {/* Product Details Bottom Sheet / Modal */}
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          isCartEnabled={isCartEnabled}
+          onAddToCart={addToCart}
+        />
       </SectionContainer>
     </>
   );
