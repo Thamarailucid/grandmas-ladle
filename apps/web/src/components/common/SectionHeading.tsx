@@ -5,6 +5,7 @@ interface SectionHeadingProps {
   subtitle?: string;
   centered?: boolean;
   light?: boolean;
+  className?: string;
 }
 
 export function SectionHeading({
@@ -12,9 +13,13 @@ export function SectionHeading({
   subtitle,
   centered = true,
   light = false,
+  className = '',
 }: SectionHeadingProps) {
+  const hasCustomMb = className.includes('mb-');
+  const mbClass = hasCustomMb ? '' : 'mb-12 ';
+
   return (
-    <div className={`mb-12 ${centered ? 'text-center flex flex-col items-center' : 'text-left'}`}>
+    <div className={`${mbClass}${centered ? 'text-center flex flex-col items-center' : 'text-left'} ${className}`.trim()}>
       <h2 className={`font-serif text-3xl md:text-4xl uppercase tracking-wider mb-4 ${light ? 'text-warm-cream' : 'text-brand-green'}`}>
         {title}
       </h2>

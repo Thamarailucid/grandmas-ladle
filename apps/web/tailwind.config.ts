@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      spacing: {
+        '15': '3.75rem',
+      },
       colors: {
         'brand-green': '#2C4A3B',
         'warm-cream': '#FAF4E6',

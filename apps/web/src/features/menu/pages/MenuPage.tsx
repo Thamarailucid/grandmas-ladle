@@ -84,18 +84,19 @@ export default function MenuPage() {
         <meta name="description" content="Explore our menu of traditional snacks, ladoos, sundal and festival specials made the way grandma did." />
       </Helmet>
       
-      <SectionContainer bgColor="cream">
+      <SectionContainer bgColor="cream" className="py-16 md:py-15">
         <SectionHeading 
           title="OUR MENU" 
           subtitle="Traditional foods made the way grandma did." 
           centered 
+          className="mb-5"
         />
 
         {isLoadingCategories ? (
           <MinimalLoader text="Loading Menu..." />
         ) : (
           <>
-            <div className="flex overflow-x-auto hide-scrollbar gap-2.5 sm:gap-3.5 py-3 mb-8 sticky top-[64px] sm:top-[74px] z-20 bg-[#faf6ee]/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-6 sm:px-6 border-b border-[#e7e1d2] shadow-sm">
+            <div className="flex overflow-x-auto hide-scrollbar gap-2.5 sm:gap-3.5 py-3 mb-4 sticky top-[64px] sm:top-[74px] z-20 bg-[#faf6ee]/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-6 sm:px-6 border-b border-[#e7e1d2] shadow-sm">
               {isGlobalSaleVisible && saleProducts.length > 0 && (
                 <button
                   onClick={handleSaleTagClick}
@@ -121,7 +122,7 @@ export default function MenuPage() {
 
             {isGlobalSaleVisible && saleProducts.length > 0 && (
               <div id="featured-sale-section" className="mb-14 scroll-mt-32">
-                <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20 pb-2">
+                <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20">
                   <h3 className="text-xl sm:text-2xl font-serif text-[#2C4A3B]">
                     🌟 {isGlobalSaleFuture ? 'Upcoming Sale Items' : 'Featured Sale Items'}
                   </h3>
@@ -246,7 +247,7 @@ export default function MenuPage() {
           )}
 
           <div id="category-products-section" className="scroll-mt-32">
-            <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20 pb-2">
+            <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20">
               <h3 className="text-xl sm:text-2xl font-serif text-[#2C4A3B]">
                 {activeCategoryObj?.name || 'Menu Items'}
               </h3>

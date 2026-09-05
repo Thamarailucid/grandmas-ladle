@@ -38,14 +38,15 @@ export default function SalePage() {
         <meta name="description" content="Shop our limited-time special sale items made the authentic traditional way." />
       </Helmet>
       
-      <SectionContainer bgColor="cream">
+      <SectionContainer bgColor="cream" className="py-16 md:py-15">
         <SectionHeading 
           title="SPECIAL SALE" 
           subtitle="Grab our traditional foods at special prices while they last!" 
           centered 
+          className="mb-5"
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-20 min-h-[50vh]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-20 min-h-[50vh]">
           {isLoadingProducts ? (
             <MinimalLoader text="Loading Sale Items..." />
           ) : !isGlobalSaleVisible || saleProducts.length === 0 ? (
@@ -59,7 +60,7 @@ export default function SalePage() {
             </div>
           ) : (
             <div>
-              <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20 pb-2">
+              <div className="flex items-center justify-between mb-6 border-b border-[#2C4A3B]/20">
                 <h3 className="text-xl sm:text-2xl font-serif text-[#2C4A3B]">
                   🌟 {isGlobalSaleFuture ? 'Upcoming Sale Items' : 'Featured Sale Items'}
                 </h3>
