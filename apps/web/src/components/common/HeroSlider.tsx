@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { BrandButton } from './BrandButton';
 import { apiClient } from '@/lib/apiClient';
 import { ApiListResponse, HeroSlide } from '@grandmas-ladle/shared';
+
+import defaultHeroImg from '@/assets/hero_grandmas_ladle.jpg';
 
 const fetchHeroSlides = async (): Promise<HeroSlide[]> => {
   const response = await apiClient.get<ApiListResponse<HeroSlide>>('/HeroSlide/GetPublicHeroSlides');
@@ -10,6 +13,7 @@ const fetchHeroSlides = async (): Promise<HeroSlide[]> => {
 };
 
 export function HeroSlider() {
+  const navigate = useNavigate();
   const { data: slides = [], isLoading } = useQuery({
     queryKey: ['heroSlides'],
     queryFn: fetchHeroSlides,
@@ -25,18 +29,20 @@ export function HeroSlider() {
     return () => clearInterval(interval);
   }, [slides.length]);
 
+  const containerClasses = "relative w-full h-[calc(100dvh-var(--header-height,72px))] md:h-[calc(100dvh-var(--header-height,80px))] min-h-[460px] max-h-[920px] overflow-hidden bg-[#1a1612]";
+
   if (isLoading) {
-    return <div className="w-full aspect-[16/9] max-h-[80vh] bg-[#F9F6F0] animate-pulse"></div>;
+    return <div className={`${containerClasses} bg-[#F9F6F0] animate-pulse`} />;
   }
 
   // Fallback if no slides exist
   if (slides.length === 0) {
     return (
-      <div className="relative w-full aspect-[16/9] overflow-hidden">
+      <div className={containerClasses}>
         <img
-          src="https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=2070"
-          alt="Grandma's Ladle"
-          className="absolute inset-0 w-full h-full object-cover object-top"
+          src={defaultHeroImg}
+          alt="Grandma's Ladle Authentic Spread"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-6">
@@ -60,50 +66,90 @@ export function HeroSlider() {
   }
 
   return (
-    <div className="relative w-full aspect-[16/9] overflow-hidden">
-      {slides.map((s, index) => (
-        <div
-          key={s.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-        >
-          <img
-            src={s.imageUrl}
-            alt={s.title || 'Hero slide'}
-            className="absolute inset-0 w-full h-full object-cover object-top"
-          />
-          {/* Only show overlay if it's NOT image only */}
-          {!s.isImageOnly && <div className="absolute inset-0 bg-black/40"></div>}
+    <div className={containerClasses}>
+      {slides.map((s, index) => {
+        const hasLink = !!s.ctaLink;
+        const isContain = s.imageFit === 'contain';
+        const isTop = s.imageFit === 'cover-top';
+        const isBottom = s.imageFit === 'cover-bottom';
 
-          {!s.isImageOnly && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-6">
-              <div className="flex flex-col items-center max-w-4xl">
-                {s.title && (
-                  <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold font-serif text-white mb-4 md:mb-6 drop-shadow-lg tracking-wide uppercase">
-                    {s.title}
-                  </h1>
-                )}
-                {s.subtitle && (
-                  <p className="text-sm sm:text-lg md:text-2xl text-white mb-6 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
-                    {s.subtitle}
-                  </p>
-                )}
-                <div className="flex flex-col sm:flex-row gap-3">
-                  {s.ctaText && s.ctaLink && (
-                    <BrandButton variant="primary" href={s.ctaLink}>
-                      {s.ctaText}
-                    </BrandButton>
+        const fitClass = isContain
+          ? 'object-contain object-center'
+          : isTop
+          ? 'object-cover object-top'
+          : isBottom
+          ? 'object-cover object-bottom'
+          : 'object-cover object-center';
+
+        const handleSlideClick = (e: React.MouseEvent) => {
+          // Prevent double navigation if user clicked directly on a CTA button/link
+          if ((e.target as HTMLElement).closest('button, a')) {
+            return;
+          }
+          if (hasLink && s.ctaLink) {
+            if (s.ctaLink.startsWith('http://') || s.ctaLink.startsWith('https://')) {
+              window.open(s.ctaLink, '_blank', 'noopener,noreferrer');
+            } else {
+              navigate(s.ctaLink);
+            }
+          }
+        };
+
+        return (
+          <div
+            key={s.id}
+            onClick={handleSlideClick}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+            } ${hasLink ? 'cursor-pointer group' : ''}`}
+          >
+            {/* If contain mode, show an elegant blurred backdrop of the same image */}
+            {isContain && (
+              <div
+                className="absolute inset-0 -z-10 bg-cover bg-center blur-2xl opacity-40 scale-110"
+                style={{ backgroundImage: `url(${s.imageUrl})` }}
+              />
+            )}
+
+            <img
+              src={s.imageUrl}
+              alt={s.title || 'Hero slide'}
+              className={`absolute inset-0 w-full h-full ${fitClass}`}
+            />
+            {/* Only show dark overlay if it's NOT image only */}
+            {!s.isImageOnly && <div className="absolute inset-0 bg-black/40"></div>}
+
+            {!s.isImageOnly && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-6">
+                <div className="flex flex-col items-center max-w-4xl">
+                  {s.title && (
+                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold font-serif text-white mb-4 md:mb-6 drop-shadow-lg tracking-wide uppercase">
+                      {s.title}
+                    </h1>
                   )}
-                  {s.secondaryCtaText && s.secondaryCtaLink && (
-                    <BrandButton variant="outline" href={s.secondaryCtaLink} className="text-white border-white hover:bg-white hover:text-brand-green">
-                      {s.secondaryCtaText}
-                    </BrandButton>
+                  {s.subtitle && (
+                    <p className="text-sm sm:text-lg md:text-2xl text-white mb-6 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
+                      {s.subtitle}
+                    </p>
                   )}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {s.ctaText && s.ctaLink && (
+                      <BrandButton variant="primary" href={s.ctaLink}>
+                        {s.ctaText}
+                      </BrandButton>
+                    )}
+                    {s.secondaryCtaText && s.secondaryCtaLink && (
+                      <BrandButton variant="outline" href={s.secondaryCtaLink} className="text-white border-white hover:bg-white hover:text-brand-green">
+                        {s.secondaryCtaText}
+                      </BrandButton>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      ))}
+            )}
+          </div>
+        );
+      })}
 
       {/* Dots Indicator */}
       {slides.length > 1 && (

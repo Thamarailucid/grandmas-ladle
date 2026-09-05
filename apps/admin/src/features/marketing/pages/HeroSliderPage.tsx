@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Modal, Form, Input, Switch, InputNumber, Upload, message, Popconfirm, Space, Select } from 'antd';
+import { Table, Button, Modal, Form, Input, Switch, InputNumber, Upload, message, Popconfirm, Space, Select, Tag } from 'antd';
 import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
@@ -70,7 +70,7 @@ export default function HeroSliderPage() {
     } else {
       setEditingSlide(null);
       form.resetFields();
-      form.setFieldsValue({ isActive: true, isImageOnly: false, sortOrder: 0 });
+      form.setFieldsValue({ isActive: true, isImageOnly: false, sortOrder: 0, imageFit: 'cover-center' });
     }
     setIsModalVisible(true);
   };
@@ -114,6 +114,23 @@ export default function HeroSliderPage() {
           onChange={(checked) => updateMutation.mutate({ id: record.id, data: { isActive: checked } })} 
         />
       ),
+    },
+    {
+      title: 'Click Link',
+      dataIndex: 'ctaLink',
+      key: 'ctaLink',
+      render: (link: string) => link ? <Tag color="blue">{link}</Tag> : <span style={{ color: '#aaa' }}>None</span>,
+    },
+    {
+      title: 'Fit Mode',
+      dataIndex: 'imageFit',
+      key: 'imageFit',
+      render: (fit: string) => {
+        if (fit === 'contain') return <Tag color="green">Fit Full Image</Tag>;
+        if (fit === 'cover-top') return <Tag color="orange">Top Focused</Tag>;
+        if (fit === 'cover-bottom') return <Tag color="purple">Bottom Focused</Tag>;
+        return <Tag color="cyan">Fill Screen (Center)</Tag>;
+      },
     },
     {
       title: 'Sort Order',
@@ -187,12 +204,43 @@ export default function HeroSliderPage() {
             <Button icon={<UploadOutlined />} style={{ marginBottom: 24 }}>Upload Image</Button>
           </Upload>
 
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+            <Form.Item name="imageFit" label="Image Display Mode (Screen Fit)" initialValue="cover-center">
+              <Select 
+                options={[
+                  { label: 'Fill Screen (Center Focused)', value: 'cover-center' },
+                  { label: 'Fit Full Image (No Crop / Shows 100% of Image)', value: 'contain' },
+                  { label: 'Fill Screen (Top Focused)', value: 'cover-top' },
+                  { label: 'Fill Screen (Bottom Focused)', value: 'cover-bottom' },
+                ]} 
+              />
+            </Form.Item>
+
+            <Form.Item name="ctaLink" label="Click Navigation Link (Target Page)">
+              <Select 
+                options={[
+                  { label: 'None (Not Clickable)', value: '' },
+                  { label: 'Menu (/menu)', value: '/menu' },
+                  { label: 'Special Sale (/sale)', value: '/sale' },
+                  { label: 'Festivals (/festivals)', value: '/festivals' },
+                  { label: 'Our Story (/our-story)', value: '/our-story' },
+                  { label: 'Corporate (/corporate)', value: '/corporate' },
+                  { label: 'Visit Us (/visit-us)', value: '/visit-us' },
+                ]} 
+                placeholder="Select page to open on click" 
+                allowClear 
+              />
+            </Form.Item>
+          </div>
+
           <div style={{ padding: 16, background: '#f5f5f5', borderRadius: 8, marginBottom: 24 }}>
-            <Form.Item name="isImageOnly" valuePropName="checked" label="Image Only (No Text / CTA Overlay)">
+            <Form.Item name="isImageOnly" valuePropName="checked" label="Image Only (No Text / Buttons Overlay)">
               <Switch checkedChildren="ON" unCheckedChildren="OFF" />
             </Form.Item>
             <div style={{ color: '#666', fontSize: 12, marginTop: -16, marginBottom: 16 }}>
-              If ON, the text and button fields below will be completely hidden on the web app.
+              {isImageOnly 
+                ? 'Text and buttons are hidden. If you selected a Click Navigation Link above, clicking anywhere on this banner image will navigate to that page.' 
+                : 'Text and action buttons will be displayed on top of the slide.'}
             </div>
 
             {!isImageOnly && (
@@ -207,27 +255,12 @@ export default function HeroSliderPage() {
                   <Form.Item name="ctaText" label="Primary Button Text" style={{ flex: 1 }}>
                     <Input placeholder="e.g. ORDER NOW" />
                   </Form.Item>
-                  <Form.Item name="ctaLink" label="Primary Button Link" style={{ flex: 1 }}>
-                    <Select 
-                      options={[
-                        { label: 'Home', value: '/' },
-                        { label: 'Our Story', value: '/our-story' },
-                        { label: 'Menu', value: '/menu' },
-                        { label: 'Corporate', value: '/corporate' },
-                        { label: 'Festivals', value: '/festivals' },
-                        { label: 'Visit Us', value: '/visit-us' },
-                        { label: 'Sale', value: '/sale' },
-                      ]} 
-                      placeholder="Select a page" 
-                      allowClear 
-                    />
-                  </Form.Item>
-                </div>
-                <div style={{ display: 'flex', gap: 16 }}>
                   <Form.Item name="secondaryCtaText" label="Secondary Button Text" style={{ flex: 1 }}>
                     <Input placeholder="e.g. OUR STORY" />
                   </Form.Item>
-                  <Form.Item name="secondaryCtaLink" label="Secondary Button Link" style={{ flex: 1 }}>
+                </div>
+                <div>
+                  <Form.Item name="secondaryCtaLink" label="Secondary Button Link">
                     <Select 
                       options={[
                         { label: 'Home', value: '/' },
@@ -238,7 +271,7 @@ export default function HeroSliderPage() {
                         { label: 'Visit Us', value: '/visit-us' },
                         { label: 'Sale', value: '/sale' },
                       ]} 
-                      placeholder="Select a page" 
+                      placeholder="Select a page for secondary button" 
                       allowClear 
                     />
                   </Form.Item>

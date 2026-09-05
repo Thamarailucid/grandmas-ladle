@@ -440,6 +440,7 @@ export interface HeroSlide {
   secondaryCtaText: string | null;
   secondaryCtaLink: string | null;
   isImageOnly: boolean;
+  imageFit?: 'contain' | 'cover-center' | 'cover-top' | 'cover-bottom' | string;
   sortOrder: number;
   isActive: boolean;
   createdAt: string;
