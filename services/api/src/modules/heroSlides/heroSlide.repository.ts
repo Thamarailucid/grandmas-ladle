@@ -32,8 +32,8 @@ export const createHeroSlide = async (data: any) => {
   }
 
   const query = `
-    INSERT INTO hero_slides (image_url, title, subtitle, cta_text, cta_link, secondary_cta_text, secondary_cta_link, is_image_only, image_fit, sort_order, is_active)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    INSERT INTO hero_slides (image_url, title, subtitle, cta_text, cta_link, secondary_cta_text, secondary_cta_link, is_image_only, image_fit, is_clickable, sort_order, is_active)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     RETURNING *
   `;
   const values = [
@@ -46,6 +46,7 @@ export const createHeroSlide = async (data: any) => {
     data.secondaryCtaLink,
     data.isImageOnly ?? false, 
     data.imageFit ?? 'cover-center',
+    data.isClickable ?? false,
     data.sortOrder ?? 0, 
     data.isActive ?? true
   ];
@@ -72,6 +73,7 @@ export const updateHeroSlide = async (id: string, data: any) => {
     secondaryCtaLink: 'secondary_cta_link',
     isImageOnly: 'is_image_only',
     imageFit: 'image_fit',
+    isClickable: 'is_clickable',
     sortOrder: 'sort_order',
     isActive: 'is_active'
   };
@@ -115,6 +117,7 @@ const mapToDTO = (row: any) => ({
   secondaryCtaLink: row.secondary_cta_link,
   isImageOnly: row.is_image_only,
   imageFit: row.image_fit || 'cover-center',
+  isClickable: row.is_clickable ?? false,
   sortOrder: row.sort_order,
   isActive: row.is_active,
   createdAt: row.created_at,

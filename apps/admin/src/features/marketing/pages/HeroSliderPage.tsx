@@ -31,6 +31,7 @@ export default function HeroSliderPage() {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   const isImageOnly = Form.useWatch('isImageOnly', form);
+  const isClickable = Form.useWatch('isClickable', form);
 
   const { data: slides, isLoading } = useQuery({
     queryKey: ['heroSlides'],
@@ -66,11 +67,21 @@ export default function HeroSliderPage() {
   const handleOpenModal = (slide?: HeroSlide) => {
     if (slide) {
       setEditingSlide(slide);
-      form.setFieldsValue(slide);
+      form.setFieldsValue({
+        ...slide,
+        isClickable: slide.isClickable ?? false,
+      });
     } else {
       setEditingSlide(null);
       form.resetFields();
-      form.setFieldsValue({ isActive: true, isImageOnly: false, sortOrder: 0, imageFit: 'cover-center' });
+      form.setFieldsValue({ 
+        isActive: true, 
+        isImageOnly: false, 
+        isClickable: false,
+        sortOrder: 0, 
+        imageFit: 'cover-center',
+        ctaLink: '/menu'
+      });
     }
     setIsModalVisible(true);
   };
@@ -96,13 +107,13 @@ export default function HeroSliderPage() {
       title: 'Image',
       dataIndex: 'imageUrl',
       key: 'imageUrl',
-      render: (url: string) => <img src={url} alt="Slide" style={{ width: 100, height: 50, objectFit: 'cover' }} />,
+      render: (url: string) => <img src={url} alt="Slide" style={{ width: 100, height: 50, objectFit: 'cover', borderRadius: 4 }} />,
     },
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (text: string, record: HeroSlide) => record.isImageOnly ? <span style={{ color: '#aaa' }}>N/A (Image Only)</span> : text,
+      render: (text: string, record: HeroSlide) => record.isImageOnly ? <Tag color="geekblue">Image Only (No Text)</Tag> : (text || <span style={{ color: '#aaa' }}>Untitled</span>),
     },
     {
       title: 'Active',
@@ -116,10 +127,22 @@ export default function HeroSliderPage() {
       ),
     },
     {
-      title: 'Click Link',
-      dataIndex: 'ctaLink',
-      key: 'ctaLink',
-      render: (link: string) => link ? <Tag color="blue">{link}</Tag> : <span style={{ color: '#aaa' }}>None</span>,
+      title: 'Clickable Route',
+      key: 'isClickable',
+      render: (_: any, record: HeroSlide) => {
+        if (record.isClickable && record.ctaLink) {
+          return (
+            <Space direction="vertical" size={2}>
+              <Tag color="green">Clickable &rarr; {record.ctaLink}</Tag>
+              <span style={{ fontSize: 11, color: '#666' }}>Navigates in same page</span>
+            </Space>
+          );
+        }
+        if (record.ctaLink && !record.isImageOnly) {
+          return <Tag color="blue">Button: {record.ctaLink}</Tag>;
+        }
+        return <Tag color="default">Non-Clickable</Tag>;
+      },
     },
     {
       title: 'Fit Mode',
@@ -204,42 +227,62 @@ export default function HeroSliderPage() {
             <Button icon={<UploadOutlined />} style={{ marginBottom: 24 }}>Upload Image</Button>
           </Upload>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+          <div style={{ marginBottom: 16 }}>
             <Form.Item name="imageFit" label="Image Display Mode (Screen Fit)" initialValue="cover-center">
               <Select 
                 options={[
-                  { label: 'Fill Screen (Center Focused)', value: 'cover-center' },
-                  { label: 'Fit Full Image (No Crop / Shows 100% of Image)', value: 'contain' },
+                  { label: 'Fill Screen (Center Focused) - Standard Hero Layout', value: 'cover-center' },
+                  { label: 'Fit Full Image (100% visible - No Cropping of Top/Bottom)', value: 'contain' },
                   { label: 'Fill Screen (Top Focused)', value: 'cover-top' },
                   { label: 'Fill Screen (Bottom Focused)', value: 'cover-bottom' },
                 ]} 
               />
             </Form.Item>
+          </div>
 
-            <Form.Item name="ctaLink" label="Click Navigation Link (Target Page)">
-              <Select 
-                options={[
-                  { label: 'None (Not Clickable)', value: '' },
-                  { label: 'Menu (/menu)', value: '/menu' },
-                  { label: 'Special Sale (/sale)', value: '/sale' },
-                  { label: 'Festivals (/festivals)', value: '/festivals' },
-                  { label: 'Our Story (/our-story)', value: '/our-story' },
-                  { label: 'Corporate (/corporate)', value: '/corporate' },
-                  { label: 'Visit Us (/visit-us)', value: '/visit-us' },
-                ]} 
-                placeholder="Select page to open on click" 
-                allowClear 
-              />
+          <div style={{ padding: 16, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, marginBottom: 16 }}>
+            <Form.Item name="isClickable" valuePropName="checked" label={<span style={{ fontWeight: 600 }}>Clickable Banner (Navigate on Click)</span>} style={{ marginBottom: 8 }}>
+              <Switch checkedChildren="ENABLED" unCheckedChildren="DISABLED" />
             </Form.Item>
+            <div style={{ color: '#64748b', fontSize: 12, marginBottom: isClickable ? 14 : 0 }}>
+              {isClickable 
+                ? 'When enabled, clicking anywhere on this hero banner immediately navigates to the selected route in the same window (no _blank/new tab).'
+                : 'Turn this ON if you want clicking anywhere on the hero banner to navigate directly to a page.'}
+            </div>
+
+            {isClickable && (
+              <Form.Item 
+                name="ctaLink" 
+                label="Navigate Route (Same Tab)" 
+                rules={[{ required: true, message: 'Please select a destination route' }]}
+                style={{ marginBottom: 0 }}
+              >
+                <Select 
+                  showSearch
+                  placeholder="Select destination route"
+                  options={[
+                    { label: 'Menu (/menu)', value: '/menu' },
+                    { label: 'Special Sale / Offers (/sale)', value: '/sale' },
+                    { label: 'Festivals (/festivals)', value: '/festivals' },
+                    { label: 'Our Story (/our-story)', value: '/our-story' },
+                    { label: 'Corporate Orders (/corporate)', value: '/corporate' },
+                    { label: 'Visit Us (/visit-us)', value: '/visit-us' },
+                    { label: 'Contact Us (/contact)', value: '/contact' },
+                    { label: 'FAQ (/faq)', value: '/faq' },
+                    { label: 'Home Page (/)', value: '/' },
+                  ]} 
+                />
+              </Form.Item>
+            )}
           </div>
 
           <div style={{ padding: 16, background: '#f5f5f5', borderRadius: 8, marginBottom: 24 }}>
             <Form.Item name="isImageOnly" valuePropName="checked" label="Image Only (No Text / Buttons Overlay)">
               <Switch checkedChildren="ON" unCheckedChildren="OFF" />
             </Form.Item>
-            <div style={{ color: '#666', fontSize: 12, marginTop: -16, marginBottom: 16 }}>
+            <div style={{ color: '#666', fontSize: 12, marginTop: -16, marginBottom: isImageOnly ? 0 : 16 }}>
               {isImageOnly 
-                ? 'Text and buttons are hidden. If you selected a Click Navigation Link above, clicking anywhere on this banner image will navigate to that page.' 
+                ? 'Text and buttons are hidden. The clean, high-resolution banner image is displayed. If Clickable Banner is enabled above, clicking the banner navigates smoothly.' 
                 : 'Text and action buttons will be displayed on top of the slide.'}
             </div>
 
@@ -259,17 +302,36 @@ export default function HeroSliderPage() {
                     <Input placeholder="e.g. OUR STORY" />
                   </Form.Item>
                 </div>
-                <div>
+                <div style={{ display: 'grid', gridTemplateColumns: isClickable ? '1fr' : '1fr 1fr', gap: 16 }}>
+                  {!isClickable && (
+                    <Form.Item name="ctaLink" label="Primary Button Link">
+                      <Select 
+                        showSearch
+                        options={[
+                          { label: 'Menu (/menu)', value: '/menu' },
+                          { label: 'Sale (/sale)', value: '/sale' },
+                          { label: 'Festivals (/festivals)', value: '/festivals' },
+                          { label: 'Our Story (/our-story)', value: '/our-story' },
+                          { label: 'Corporate (/corporate)', value: '/corporate' },
+                          { label: 'Visit Us (/visit-us)', value: '/visit-us' },
+                          { label: 'Home (/)', value: '/' },
+                        ]} 
+                        placeholder="Select route" 
+                        allowClear 
+                      />
+                    </Form.Item>
+                  )}
                   <Form.Item name="secondaryCtaLink" label="Secondary Button Link">
                     <Select 
+                      showSearch
                       options={[
-                        { label: 'Home', value: '/' },
-                        { label: 'Our Story', value: '/our-story' },
-                        { label: 'Menu', value: '/menu' },
-                        { label: 'Corporate', value: '/corporate' },
-                        { label: 'Festivals', value: '/festivals' },
-                        { label: 'Visit Us', value: '/visit-us' },
-                        { label: 'Sale', value: '/sale' },
+                        { label: 'Home (/)', value: '/' },
+                        { label: 'Our Story (/our-story)', value: '/our-story' },
+                        { label: 'Menu (/menu)', value: '/menu' },
+                        { label: 'Corporate (/corporate)', value: '/corporate' },
+                        { label: 'Festivals (/festivals)', value: '/festivals' },
+                        { label: 'Visit Us (/visit-us)', value: '/visit-us' },
+                        { label: 'Sale (/sale)', value: '/sale' },
                       ]} 
                       placeholder="Select a page for secondary button" 
                       allowClear 

@@ -23,12 +23,23 @@ export async function runMigrations() {
     const files = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
 
     for (const file of files) {
-      const { rows } = await client.query('SELECT version FROM schema_migrations WHERE version = $1', [file]);
-      if (rows.length === 0) {
-        console.log(`Running migration: ${file}`);
+      if (file === '001_complete_schema.sql') {
+        console.log(`Applying complete schema & updates: ${file}`);
         const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf-8');
         await client.query(sql);
-        await client.query('INSERT INTO schema_migrations (version) VALUES ($1)', [file]);
+        await client.query(`
+          INSERT INTO schema_migrations (version, applied_at)
+          VALUES ($1, NOW())
+          ON CONFLICT (version) DO UPDATE SET applied_at = NOW()
+        `, [file]);
+      } else {
+        const { rows } = await client.query('SELECT version FROM schema_migrations WHERE version = $1', [file]);
+        if (rows.length === 0) {
+          console.log(`Running migration: ${file}`);
+          const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf-8');
+          await client.query(sql);
+          await client.query('INSERT INTO schema_migrations (version, applied_at) VALUES ($1, NOW())', [file]);
+        }
       }
     }
 

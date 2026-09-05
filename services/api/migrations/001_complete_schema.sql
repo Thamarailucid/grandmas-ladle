@@ -338,6 +338,8 @@ CREATE TABLE IF NOT EXISTS hero_slides (
     secondary_cta_text VARCHAR(100),
     secondary_cta_link VARCHAR(255),
     is_image_only BOOLEAN DEFAULT FALSE,
+    image_fit VARCHAR(50) DEFAULT 'cover-center',
+    is_clickable BOOLEAN DEFAULT FALSE,
     sort_order INTEGER DEFAULT 0,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -396,12 +398,27 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 CREATE INDEX IF NOT EXISTS idx_audit_logs_entity ON audit_logs(entity_type, entity_id);
 
 -- ============================================================
--- SCHEMA MIGRATIONS (tracks this file itself)
+-- SCHEMA MIGRATIONS (tracks schema versions)
 -- ============================================================
 CREATE TABLE IF NOT EXISTS schema_migrations (
     version VARCHAR(255) PRIMARY KEY,
     applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- ============================================================
+-- IDEMPOTENT COLUMN UPDATES (Safely updates existing databases on restart)
+-- ============================================================
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_on_sale BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_listed BOOLEAN NOT NULL DEFAULT TRUE;
+ALTER TABLE products ALTER COLUMN is_vegetarian SET DEFAULT TRUE;
+UPDATE products SET is_vegetarian = TRUE WHERE is_vegetarian IS NULL;
+UPDATE products SET is_listed = TRUE WHERE is_listed IS NULL;
 
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS is_approved BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS is_verified BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS product_names TEXT[] DEFAULT '{}';
+UPDATE reviews SET is_approved = TRUE, is_verified = TRUE, is_published = TRUE WHERE is_deleted = FALSE AND is_approved IS FALSE;
+
+ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS image_fit VARCHAR(50) DEFAULT 'cover-center';
+ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS is_clickable BOOLEAN DEFAULT FALSE;
 

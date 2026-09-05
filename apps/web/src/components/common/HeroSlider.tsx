@@ -68,7 +68,7 @@ export function HeroSlider() {
   return (
     <div className={containerClasses}>
       {slides.map((s, index) => {
-        const hasLink = !!s.ctaLink;
+        const isClickableBanner = (s.isClickable || (s.isImageOnly && !!s.ctaLink)) && !!s.ctaLink;
         const isContain = s.imageFit === 'contain';
         const isTop = s.imageFit === 'cover-top';
         const isBottom = s.imageFit === 'cover-bottom';
@@ -86,9 +86,10 @@ export function HeroSlider() {
           if ((e.target as HTMLElement).closest('button, a')) {
             return;
           }
-          if (hasLink && s.ctaLink) {
+          if (isClickableBanner && s.ctaLink) {
+            // Same-page navigation (strictly no _blank)
             if (s.ctaLink.startsWith('http://') || s.ctaLink.startsWith('https://')) {
-              window.open(s.ctaLink, '_blank', 'noopener,noreferrer');
+              window.location.href = s.ctaLink;
             } else {
               navigate(s.ctaLink);
             }
@@ -99,9 +100,11 @@ export function HeroSlider() {
           <div
             key={s.id}
             onClick={handleSlideClick}
+            role={isClickableBanner ? 'link' : undefined}
+            tabIndex={isClickableBanner ? 0 : undefined}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
               index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            } ${hasLink ? 'cursor-pointer group' : ''}`}
+            } ${isClickableBanner ? 'cursor-pointer group' : ''}`}
           >
             {/* If contain mode, show an elegant blurred backdrop of the same image */}
             {isContain && (
@@ -134,12 +137,12 @@ export function HeroSlider() {
                   )}
                   <div className="flex flex-col sm:flex-row gap-3">
                     {s.ctaText && s.ctaLink && (
-                      <BrandButton variant="primary" href={s.ctaLink}>
+                      <BrandButton variant="primary" to={s.ctaLink}>
                         {s.ctaText}
                       </BrandButton>
                     )}
                     {s.secondaryCtaText && s.secondaryCtaLink && (
-                      <BrandButton variant="outline" href={s.secondaryCtaLink} className="text-white border-white hover:bg-white hover:text-brand-green">
+                      <BrandButton variant="outline" to={s.secondaryCtaLink} className="text-white border-white hover:bg-white hover:text-brand-green">
                         {s.secondaryCtaText}
                       </BrandButton>
                     )}
