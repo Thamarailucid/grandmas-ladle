@@ -18,7 +18,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-brand-green text-warm-cream pt-16 pb-24 md:pb-10">
+    <footer className="bg-brand-green text-warm-cream pt-16 pb-28 md:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           
@@ -89,17 +89,24 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-warm-cream/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-warm-cream/60 space-y-3 md:space-y-0 text-center md:text-left">
-          <p>© {currentYear} Grandma's Ladle. All rights reserved.</p>
+        <div className="border-t border-warm-cream/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-warm-cream/60 gap-4 md:gap-0 text-center md:text-left">
+          {/* Left: FSSAI & Udyam */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left gap-0.5">
+            <span className="font-medium text-warm-cream/80">FSSAI Reg. No. {fssaiNumber}</span>
+            <span className="text-[11px] text-warm-cream/50">Udyam (MSME) Registered</span>
+          </div>
+
+          {/* Center: Attribution */}
           <p>
             Designed & Developed by{' '}
             <a href="https://novacodex.in" target="_blank" rel="noopener noreferrer" className="hover:text-antique-brass transition-colors font-medium">
               NovaCodex
             </a>
           </p>
-          <div className="flex flex-col items-center md:items-end text-center md:text-right gap-0.5">
-            <span>FSSAI Reg. No. {fssaiNumber}</span>
-            <span className="text-[11px] text-warm-cream/50">Udyam (MSME) Registered</span>
+
+          {/* Right: Copyright (with buffer from floating WhatsApp button) */}
+          <div className="text-center md:text-right md:pr-20 lg:pr-24">
+            <p>© {currentYear} Grandma's Ladle. All rights reserved.</p>
           </div>
         </div>
       </div>
