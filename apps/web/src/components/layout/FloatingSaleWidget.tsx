@@ -7,14 +7,25 @@ export function FloatingSaleWidget() {
   const { isSaleWidgetActive, saleStartDate, saleEndDate, offerPreVisibilityDays = 1 } = useBusinessSettingsContext();
   const navigate = useNavigate();
   
+  const storageKey = `hideSaleWidget_${saleStartDate || 'default'}`;
+  
+  const [isDismissed, setIsDismissed] = useState(() => {
+    try {
+      return typeof window !== 'undefined' && sessionStorage.getItem(`hideSaleWidget_${saleStartDate || 'default'}`) === 'true';
+    } catch {
+      return false;
+    }
+  });
+  
   const [isVisible, setIsVisible] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [timeLeft, setTimeLeft] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
   const [status, setStatus] = useState<'FUTURE' | 'ACTIVE' | 'ENDED'>('ENDED');
 
   useEffect(() => {
-    const storageKey = `hideSaleWidget_${saleStartDate || 'default'}`;
-    if (sessionStorage.getItem(storageKey) === 'true') {
+    const key = `hideSaleWidget_${saleStartDate || 'default'}`;
+    if (isDismissed || sessionStorage.getItem(key) === 'true') {
+      setIsVisible(false);
       return;
     }
     
@@ -24,6 +35,12 @@ export function FloatingSaleWidget() {
     }
 
     const calculateTime = () => {
+      // If user closed it in this session, never show it again
+      if (sessionStorage.getItem(key) === 'true') {
+        setIsVisible(false);
+        return;
+      }
+
       const now = dayjs();
       const start = saleStartDate ? dayjs(saleStartDate) : null;
       const end = saleEndDate ? dayjs(saleEndDate) : null;
@@ -82,14 +99,18 @@ export function FloatingSaleWidget() {
     calculateTime();
     const interval = setInterval(calculateTime, 1000);
     return () => clearInterval(interval);
-  }, [isSaleWidgetActive, saleStartDate, saleEndDate, offerPreVisibilityDays]);
+  }, [isDismissed, isSaleWidgetActive, saleStartDate, saleEndDate, offerPreVisibilityDays]);
 
-  if (!isVisible) return null;
+  if (!isVisible || isDismissed) return null;
 
   const handleClose = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const storageKey = `hideSaleWidget_${saleStartDate || 'default'}`;
-    sessionStorage.setItem(storageKey, 'true');
+    e.preventDefault();
+    const key = `hideSaleWidget_${saleStartDate || 'default'}`;
+    try {
+      sessionStorage.setItem(key, 'true');
+    } catch {}
+    setIsDismissed(true);
     setIsVisible(false);
   };
 
@@ -101,8 +122,9 @@ export function FloatingSaleWidget() {
       className="fixed bottom-24 right-6 z-40 cursor-pointer group hover:scale-105 transition-transform duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] flex flex-col items-end"
     >
       <button 
+        type="button"
         onClick={handleClose}
-        className="absolute -top-3 -right-3 bg-white text-gray-500 rounded-full w-6 h-6 flex items-center justify-center shadow-md hover:bg-gray-100 hover:text-gray-800 z-50 border border-gray-200 text-xs font-bold"
+        className="absolute -top-3 -right-3 bg-white text-gray-600 hover:text-black rounded-full w-7 h-7 flex items-center justify-center shadow-lg hover:bg-gray-100 z-50 border border-gray-300 text-sm font-bold cursor-pointer transition-all active:scale-90"
         aria-label="Close"
       >
         ✕
