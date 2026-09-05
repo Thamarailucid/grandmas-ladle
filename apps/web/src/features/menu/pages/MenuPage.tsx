@@ -152,31 +152,43 @@ export default function MenuPage() {
                           ) : (
                             <span className="text-[11px] sm:text-xs text-[#6b6259] italic text-center px-2">Image of {item.name}</span>
                           )}
-                          {/* Top Badges (Sale & Tag) */}
-                          <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-1.5 z-10 pointer-events-none">
-                            <div>
-                              {(item.isOnSale || item.saleStatus === 'LIVE') && (
-                                <span className="inline-block bg-[#b23a2e] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
-                                  Sale
-                                </span>
-                              )}
-                              {(item.saleStatus === 'COMING_SOON' || (isItemFuture && !item.isOnSale)) && (
-                                <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
-                                  Soon
-                                </span>
-                              )}
+                          {/* 45° Diagonal Sale Ribbon (Figma Design) */}
+                          {(item.isOnSale || item.saleStatus === 'LIVE') && (
+                            <div className="absolute -left-[26px] -top-[22px] sm:-left-[29px] sm:-top-[25px] w-[95px] sm:w-[114px] h-[95px] sm:h-[114px] flex items-center justify-center pointer-events-none z-10">
+                              <div className="-rotate-45">
+                                <div className="bg-[#b23a2e] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 sm:py-1.5 w-[105px] sm:w-[130px]">
+                                  <span className="text-white text-[9px] sm:text-[11px] font-semibold tracking-wider uppercase">
+                                    Sale
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            {item.tag && (
-                              <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded shadow-sm tracking-wide truncate max-w-[95px] sm:max-w-[120px]" title={item.tag}>
+                          )}
+                          {(item.saleStatus === 'COMING_SOON' || (isItemFuture && !item.isOnSale)) && (
+                            <div className="absolute -left-[26px] -top-[22px] sm:-left-[29px] sm:-top-[25px] w-[95px] sm:w-[114px] h-[95px] sm:h-[114px] flex items-center justify-center pointer-events-none z-10">
+                              <div className="-rotate-45">
+                                <div className="bg-[#2f4a3c] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 sm:py-1.5 w-[105px] sm:w-[130px]">
+                                  <span className="text-white text-[9px] sm:text-[11px] font-semibold tracking-wider uppercase">
+                                    Soon
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Right Side Normal Tag (Figma Design) */}
+                          {item.tag && (
+                            <div className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 z-10 bg-[#2f4a3c] px-2 sm:px-3 py-0.5 sm:py-1 rounded-[6px] shadow-sm max-w-[85px] sm:max-w-[125px] pointer-events-none">
+                              <span className="block text-white text-[9px] sm:text-[11px] font-semibold tracking-wide truncate" title={item.tag}>
                                 {item.tag}
                               </span>
-                            )}
-                          </div>
+                            </div>
+                          )}
 
-                          {/* Out of Stock Centered Overlay */}
+                          {/* Out of Stock Centered Overlay (Zero Collision, All Screens Clean) */}
                           {item.isAvailable === false && (
-                            <div className="absolute inset-0 z-20 bg-black/40 backdrop-blur-[0.5px] flex items-center justify-center p-2 pointer-events-none">
-                              <span className="bg-[#b23a2e] text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded shadow-md uppercase tracking-wider border border-white/20">
+                            <div className="absolute inset-0 z-20 bg-black/45 backdrop-blur-[0.5px] flex items-center justify-center p-2 pointer-events-none">
+                              <span className="bg-[#b23a2e] text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded shadow-md uppercase tracking-wider border border-white/20">
                                 Out of Stock
                               </span>
                             </div>
@@ -307,31 +319,43 @@ export default function MenuPage() {
                     ) : (
                       <span className="text-[11px] sm:text-xs text-[#6b6259] italic text-center px-2">Image of {item.name}</span>
                     )}
-                    {/* Top Badges (Sale & Tag) */}
-                    <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-1.5 z-10 pointer-events-none">
-                      <div>
-                        {(item.isOnSale || item.saleStatus === 'LIVE') && (
-                          <span className="inline-block bg-[#b23a2e] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
-                            Sale
-                          </span>
-                        )}
-                        {(item.saleStatus === 'COMING_SOON' || (isFuture && !item.isOnSale)) && (
-                          <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
-                            Soon
-                          </span>
-                        )}
+                    {/* 45° Diagonal Sale Ribbon (Figma Design) */}
+                    {(item.isOnSale || item.saleStatus === 'LIVE') && (
+                      <div className="absolute -left-[26px] -top-[22px] sm:-left-[29px] sm:-top-[25px] w-[95px] sm:w-[114px] h-[95px] sm:h-[114px] flex items-center justify-center pointer-events-none z-10">
+                        <div className="-rotate-45">
+                          <div className="bg-[#b23a2e] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 sm:py-1.5 w-[105px] sm:w-[130px]">
+                            <span className="text-white text-[9px] sm:text-[11px] font-semibold tracking-wider uppercase">
+                              Sale
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      {item.tag && (
-                        <span className="inline-block bg-[#2f4a3c] text-white text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded shadow-sm tracking-wide truncate max-w-[95px] sm:max-w-[120px]" title={item.tag}>
+                    )}
+                    {(item.saleStatus === 'COMING_SOON' || (isFuture && !item.isOnSale)) && (
+                      <div className="absolute -left-[26px] -top-[22px] sm:-left-[29px] sm:-top-[25px] w-[95px] sm:w-[114px] h-[95px] sm:h-[114px] flex items-center justify-center pointer-events-none z-10">
+                        <div className="-rotate-45">
+                          <div className="bg-[#2f4a3c] drop-shadow-[0px_2px_2.5px_rgba(0,0,0,0.18)] flex flex-col items-center py-1 sm:py-1.5 w-[105px] sm:w-[130px]">
+                            <span className="text-white text-[9px] sm:text-[11px] font-semibold tracking-wider uppercase">
+                              Soon
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Right Side Normal Tag (Figma Design) */}
+                    {item.tag && (
+                      <div className="absolute top-2 right-2 sm:top-2.5 sm:right-2.5 z-10 bg-[#2f4a3c] px-2 sm:px-3 py-0.5 sm:py-1 rounded-[6px] shadow-sm max-w-[85px] sm:max-w-[125px] pointer-events-none">
+                        <span className="block text-white text-[9px] sm:text-[11px] font-semibold tracking-wide truncate" title={item.tag}>
                           {item.tag}
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
 
-                    {/* Out of Stock Centered Overlay */}
+                    {/* Out of Stock Centered Overlay (Zero Collision, All Screens Clean) */}
                     {item.isAvailable === false && (
-                      <div className="absolute inset-0 z-20 bg-black/40 backdrop-blur-[0.5px] flex items-center justify-center p-2 pointer-events-none">
-                        <span className="bg-[#b23a2e] text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded shadow-md uppercase tracking-wider border border-white/20">
+                      <div className="absolute inset-0 z-20 bg-black/45 backdrop-blur-[0.5px] flex items-center justify-center p-2 pointer-events-none">
+                        <span className="bg-[#b23a2e] text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded shadow-md uppercase tracking-wider border border-white/20">
                           Out of Stock
                         </span>
                       </div>
