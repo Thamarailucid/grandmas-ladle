@@ -36,6 +36,7 @@ export const submitCustomerReview = async (data: any) => {
     customerLocation: data.customerLocation || null,
     rating: data.rating,
     content: data.content,
+    productNames: Array.isArray(data.productNames) ? data.productNames : [],
     isApproved: false,
     isPublished: false,
     isVerified: false,

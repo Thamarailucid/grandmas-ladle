@@ -10,6 +10,7 @@ const mapReviewToDto = (row: any) => ({
   isPublished: row.is_published !== false,
   isApproved: row.is_approved !== false,
   isVerified: Boolean(row.is_verified),
+  productNames: Array.isArray(row.product_names) ? row.product_names : [],
   sortOrder: row.sort_order ?? 0,
   createdAt: row.created_at,
   updatedAt: row.updated_at
@@ -35,8 +36,8 @@ export const createReview = async (data: any) => {
   const query = `
     INSERT INTO reviews (
       id, customer_name, customer_location, rating, content, admin_reply, 
-      is_published, is_approved, is_verified, sort_order
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+      is_published, is_approved, is_verified, product_names, sort_order
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
     RETURNING *
   `;
   const values = [
@@ -49,6 +50,7 @@ export const createReview = async (data: any) => {
     data.isPublished ?? false,
     data.isApproved ?? false,
     data.isVerified ?? false,
+    Array.isArray(data.productNames) ? data.productNames : [],
     data.sortOrder ?? 0
   ];
   const result = await database.query(query, values);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Rate, message, Spin } from 'antd';
+import { Modal, Form, Input, Rate, Select, message, Spin } from 'antd';
 import { StarFilled, CheckCircleFilled, EditOutlined, SafetyCertificateFilled } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Marquee from 'react-fast-marquee';
@@ -13,6 +13,7 @@ interface ReviewItem {
   rating: number;
   content: string;
   isVerified?: boolean;
+  productNames?: string[];
   adminReply?: string | null;
   createdAt?: string;
 }
@@ -30,6 +31,7 @@ const FALLBACK_REVIEWS: ReviewItem[] = [
     customerLocation: 'Indiranagar, Bengaluru',
     rating: 5,
     isVerified: true,
+    productNames: ['Kai Murukku', 'Ribbon Pakoda'],
     content: 'The Kai Murukku and Ribbon Pakoda remind me exactly of my grandmother’s kitchen in Thanjavur. Crisp, authentic aroma of pure butter, and zero oily aftertaste.',
     createdAt: '2026-09-02T10:30:00Z',
     adminReply: 'Thank you Ananya! Preserving that authentic grandmother taste is our greatest mission.'
@@ -40,6 +42,7 @@ const FALLBACK_REVIEWS: ReviewItem[] = [
     customerLocation: 'Koramangala, Bengaluru',
     rating: 5,
     isVerified: true,
+    productNames: ['Corporate Gift Snack Box'],
     content: 'Ordered 15 corporate snack gift boxes for our team celebration. Everyone was stunned by the taste and packaging quality. Delivered right on schedule!',
     createdAt: '2026-08-28T14:15:00Z',
     adminReply: null
@@ -50,6 +53,7 @@ const FALLBACK_REVIEWS: ReviewItem[] = [
     customerLocation: 'Jayanagar, Bengaluru',
     rating: 5,
     isVerified: true,
+    productNames: ['Besan Ladoo', 'Nei Urundai'],
     content: 'The Besan Ladoos and Nei Urundai melt effortlessly in your mouth. Pure country ghee aroma! Truly feels like home.',
     createdAt: '2026-08-25T09:45:00Z',
     adminReply: 'Warm gratitude Kavitha! We use only traditional A2 bilona ghee in all our sweets.'
@@ -60,6 +64,7 @@ const FALLBACK_REVIEWS: ReviewItem[] = [
     customerLocation: 'Malleshwaram, Bengaluru',
     rating: 5,
     isVerified: true,
+    productNames: ['Seedai', 'South Indian Mixture'],
     content: 'The Seedai and Mixture are simply unmatched in Bengaluru. Perfectly balanced spices and fresh crunch in every single bite.',
     createdAt: '2026-08-20T16:20:00Z',
     adminReply: null
@@ -70,6 +75,7 @@ const FALLBACK_REVIEWS: ReviewItem[] = [
     customerLocation: 'HSR Layout, Bengaluru',
     rating: 5,
     isVerified: true,
+    productNames: ['Pepper Thattai'],
     content: 'Our family has become addicted to the Pepper Thattai! Authentic taste, wholesome ingredients, and wonderful customer service.',
     createdAt: '2026-08-15T11:10:00Z',
     adminReply: null
@@ -86,6 +92,17 @@ export function CustomerReviewsSection() {
     queryKey: ['PublishedReviews'],
     queryFn: () => apiClient.get('/Review/GetPublishedReviews').then(res => res.data),
   });
+
+  // Fetch products for customer to select what they bought
+  const { data: productsData } = useQuery({
+    queryKey: ['PublicProductsForReview'],
+    queryFn: () => apiClient.get('/Product/GetPublicProducts').then(res => res.data.data || []),
+  });
+
+  const productOptions = (productsData || []).map((p: any) => ({
+    label: p.name,
+    value: p.name
+  }));
 
   const reviews: ReviewItem[] = reviewsResponse?.data && reviewsResponse.data.length > 0
     ? reviewsResponse.data
@@ -163,17 +180,21 @@ export function CustomerReviewsSection() {
             </div>
           </div>
 
-          {/* Write a Review Button */}
+          {/* Write a Review Button - Crisp White Text */}
           <button
+            type="button"
             onClick={() => {
               form.resetFields();
-              form.setFieldsValue({ rating: 5 });
+              form.setFieldsValue({ rating: 5, productNames: [] });
               setIsModalOpen(true);
             }}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#2C4A3B] text-brand-cream font-medium text-sm tracking-wide shadow hover:bg-[#233b2f] active:scale-[0.98] transition-all duration-200"
+            style={{ backgroundColor: '#2C4A3B', color: '#FFFFFF' }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl !text-white font-semibold text-sm tracking-wide shadow-md hover:opacity-95 active:scale-[0.98] transition-all duration-200 cursor-pointer"
           >
-            <EditOutlined className="text-base" />
-            <span>Write a Customer Review</span>
+            <EditOutlined style={{ color: '#FFFFFF', fontSize: '16px' }} />
+            <span style={{ color: '#FFFFFF' }} className="!text-white font-semibold text-sm">
+              Write a Customer Review
+            </span>
           </button>
         </div>
       </div>
@@ -202,6 +223,7 @@ export function CustomerReviewsSection() {
                   rating={review.rating}
                   content={review.content}
                   isVerified={review.isVerified}
+                  productNames={review.productNames}
                   adminReply={review.adminReply}
                   createdAt={review.createdAt}
                 />
@@ -227,6 +249,7 @@ export function CustomerReviewsSection() {
           style: {
             background: '#2C4A3B',
             borderColor: '#2C4A3B',
+            color: '#FFFFFF',
             borderRadius: '8px',
             padding: '0 24px',
             height: '40px'
@@ -235,14 +258,14 @@ export function CustomerReviewsSection() {
         cancelButtonProps={{
           style: { borderRadius: '8px', height: '40px' }
         }}
-        width={540}
+        width={560}
         destroyOnClose
       >
         <p className="text-xs text-brand-dark-brown/70 mb-5">
           Your authentic feedback helps other families discover genuine traditional snacks. All reviews are vetted to ensure authenticity.
         </p>
 
-        <Form form={form} layout="vertical" initialValues={{ rating: 5 }}>
+        <Form form={form} layout="vertical" initialValues={{ rating: 5, productNames: [] }}>
           <Form.Item
             name="rating"
             label={<span className="font-medium text-brand-dark-brown">Your Rating</span>}
@@ -271,6 +294,20 @@ export function CustomerReviewsSection() {
               placeholder="e.g. Indiranagar, Bengaluru"
               size="large"
               className="rounded-lg"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="productNames"
+            label={<span className="font-medium text-brand-dark-brown">Items you ordered / tasted (Optional)</span>}
+          >
+            <Select
+              mode="multiple"
+              allowClear
+              placeholder="Select products you enjoyed (e.g. Kai Murukku, Besan Ladoo)"
+              size="large"
+              className="w-full rounded-lg"
+              options={productOptions}
             />
           </Form.Item>
 

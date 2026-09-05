@@ -15,6 +15,7 @@ export const getPublishedReviews = async (req: Request, res: Response, next: Nex
       title: d.title,
       content: d.content,
       isVerified: d.isVerified,
+      productNames: d.productNames,
       adminReply: d.adminReply,
       createdAt: d.createdAt
     }));
@@ -35,7 +36,7 @@ export const getReviewStats = async (req: Request, res: Response, next: NextFunc
 
 export const submitCustomerReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { customerName, customerLocation, rating, content } = req.body;
+    const { customerName, customerLocation, rating, content, productNames } = req.body;
     if (!customerName || !customerName.trim()) {
       return res.status(400).json({ success: false, message: 'Customer name is required' });
     }
@@ -51,7 +52,8 @@ export const submitCustomerReview = async (req: Request, res: Response, next: Ne
       customerName: customerName.trim(),
       customerLocation: customerLocation ? customerLocation.trim() : null,
       rating: numRating,
-      content: content.trim()
+      content: content.trim(),
+      productNames: Array.isArray(productNames) ? productNames : []
     });
 
     res.status(201).json({

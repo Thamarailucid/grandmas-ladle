@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Table,
   Button,
@@ -17,7 +17,10 @@ import {
   Tag,
   Tooltip,
   Radio,
-  Typography
+  Typography,
+  Select,
+  Descriptions,
+  Divider
 } from 'antd';
 import {
   CheckCircleFilled,
@@ -29,7 +32,10 @@ import {
   SafetyCertificateFilled,
   EditOutlined,
   DeleteOutlined,
-  EnvironmentOutlined
+  EnvironmentOutlined,
+  ShoppingOutlined,
+  EyeOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
@@ -47,6 +53,7 @@ interface Review {
   isApproved: boolean;
   isPublished: boolean;
   isVerified: boolean;
+  productNames?: string[];
   createdAt: string;
 }
 
@@ -55,13 +62,73 @@ export default function ReviewsPage() {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewingReview, setViewingReview] = useState<Review | null>(null);
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'HIDDEN'>('ALL');
+
+  // Mouse drag-to-scroll refs
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const isDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    // Don't drag if user is clicking interactive controls
+    if (target.closest('button, input, .ant-switch, a, .ant-rate, .ant-tag, .ant-popover, .ant-modal, .ant-table-pagination')) {
+      return;
+    }
+    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
+    if (!container) return;
+    isDownRef.current = true;
+    startXRef.current = e.pageX - container.offsetLeft;
+    scrollLeftRef.current = container.scrollLeft;
+    container.style.cursor = 'grabbing';
+    container.style.userSelect = 'none';
+  };
+
+  const handleMouseLeave = () => {
+    isDownRef.current = false;
+    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
+    if (container) {
+      container.style.cursor = 'default';
+      container.style.removeProperty('user-select');
+    }
+  };
+
+  const handleMouseUp = () => {
+    isDownRef.current = false;
+    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
+    if (container) {
+      container.style.cursor = 'default';
+      container.style.removeProperty('user-select');
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDownRef.current) return;
+    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
+    if (!container) return;
+    e.preventDefault();
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startXRef.current) * 1.3;
+    container.scrollLeft = scrollLeftRef.current - walk;
+  };
 
   // Queries
   const { data: reviewsData = [], isLoading } = useQuery<Review[]>({
     queryKey: ['reviews'],
     queryFn: () => apiClient.get('/Review/GetReviews').then((res: any) => res.data.data || []),
   });
+
+  const { data: productsData = [] } = useQuery({
+    queryKey: ['adminProductsList'],
+    queryFn: () => apiClient.get('/Product/GetProducts').then((res: any) => res.data.data || []),
+  });
+
+  const productOptions = productsData.map((p: any) => ({
+    label: p.name,
+    value: p.name
+  }));
 
   // Mutations
   const createMutation = useMutation({
@@ -132,6 +199,7 @@ export default function ReviewsPage() {
       isApproved: true,
       isPublished: true,
       isVerified: true,
+      productNames: []
     });
     setIsModalVisible(true);
   };
@@ -147,6 +215,7 @@ export default function ReviewsPage() {
       isApproved: record.isApproved,
       isPublished: record.isPublished,
       isVerified: record.isVerified,
+      productNames: record.productNames || []
     });
     setIsModalVisible(true);
   };
@@ -191,7 +260,7 @@ export default function ReviewsPage() {
     {
       title: 'Customer',
       key: 'customer',
-      width: 200,
+      width: 180,
       render: (_: any, record: Review) => (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -203,8 +272,8 @@ export default function ReviewsPage() {
             )}
           </div>
           {record.customerLocation && (
-            <div style={{ fontSize: 12, color: '#8c8c8c', marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <EnvironmentOutlined style={{ fontSize: 11 }} />
+            <div style={{ fontSize: 12, color: '#8c8c8c', marginTop: 3, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <EnvironmentOutlined style={{ fontSize: 12, color: '#8c8c8c' }} />
               <span>{record.customerLocation}</span>
             </div>
           )}
@@ -215,64 +284,87 @@ export default function ReviewsPage() {
       title: 'Rating',
       dataIndex: 'rating',
       key: 'rating',
-      width: 140,
+      width: 120,
       render: (rating: number) => (
         <Space direction="vertical" size={2}>
-          <Rate disabled defaultValue={rating} style={{ fontSize: 13, color: '#f59e0b' }} />
-          <Tag color="gold" style={{ fontSize: 11, padding: '0 6px' }}>{rating}.0 ★</Tag>
+          <Rate disabled defaultValue={rating} style={{ fontSize: 12, color: '#f59e0b' }} />
+          <Tag color="gold" style={{ fontSize: 11, padding: '0 6px', margin: 0 }}>{rating}.0 / 5</Tag>
         </Space>
+      ),
+    },
+    {
+      title: 'Items Ordered',
+      key: 'productNames',
+      width: 180,
+      render: (_: any, record: Review) => {
+        if (!record.productNames || record.productNames.length === 0) {
+          return <span style={{ color: '#bfbfbf', fontSize: 12 }}>General review</span>;
+        }
+        return (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            {record.productNames.map((p, idx) => (
+              <Tag key={idx} color="green" icon={<ShoppingOutlined />} style={{ fontSize: 11, margin: 0 }}>
+                {p}
+              </Tag>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
+      title: 'Review Content & Reply',
+      key: 'content',
+      width: 280,
+      render: (_: any, record: Review) => (
+        <div>
+          <Paragraph
+            ellipsis={{ rows: 2, symbol: '...' }}
+            style={{ marginBottom: 4, color: '#262626', fontSize: 13 }}
+          >
+            "{record.content}"
+          </Paragraph>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Button
+              type="link"
+              size="small"
+              icon={<EyeOutlined />}
+              onClick={() => setViewingReview(record)}
+              style={{ padding: 0, fontSize: 12, color: '#2C4A3B' }}
+            >
+              View Full Review
+            </Button>
+            {record.adminReply && (
+              <Tag color="blue" icon={<MessageOutlined />} style={{ fontSize: 10, margin: 0 }}>
+                Replied
+              </Tag>
+            )}
+          </div>
+        </div>
       ),
     },
     {
       title: 'Date & Time',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      width: 160,
+      width: 140,
       render: (dateStr: string) => {
         if (!dateStr) return '-';
         const d = dayjs(dateStr);
         return (
           <div>
-            <div style={{ fontWeight: 500, color: '#262626' }}>{d.format('DD MMM YYYY')}</div>
+            <div style={{ fontWeight: 500, color: '#262626', fontSize: 13 }}>{d.format('DD MMM YYYY')}</div>
             <div style={{ fontSize: 12, color: '#8c8c8c' }}>{d.format('hh:mm A')}</div>
           </div>
         );
       },
     },
     {
-      title: 'Review & Reply',
-      key: 'content',
-      render: (_: any, record: Review) => (
-        <div style={{ maxWidth: 360 }}>
-          <Paragraph
-            ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}
-            style={{ marginBottom: record.adminReply ? 6 : 0, color: '#1f1f1f' }}
-          >
-            "{record.content}"
-          </Paragraph>
-          {record.adminReply && (
-            <div style={{
-              background: '#f6ffed',
-              border: '1px solid #b7eb8f',
-              borderRadius: 6,
-              padding: '6px 10px',
-              fontSize: 12,
-              marginTop: 6
-            }}>
-              <Text strong style={{ color: '#389e0d' }}>Grandma's Ladle Reply:</Text>
-              <div style={{ color: '#262626', marginTop: 2 }}>{record.adminReply}</div>
-            </div>
-          )}
-        </div>
-      ),
-    },
-    {
       title: 'Approval',
       key: 'isApproved',
-      width: 130,
+      width: 110,
       render: (_: any, record: Review) => (
         <Space direction="vertical" size={4}>
-          <Tag color={record.isApproved ? 'success' : 'warning'} icon={record.isApproved ? <CheckOutlined /> : <ClockCircleOutlined />}>
+          <Tag color={record.isApproved ? 'success' : 'warning'} icon={record.isApproved ? <CheckOutlined /> : <ClockCircleOutlined />} style={{ margin: 0 }}>
             {record.isApproved ? 'Approved' : 'Pending'}
           </Tag>
           <Switch
@@ -289,10 +381,10 @@ export default function ReviewsPage() {
     {
       title: 'Listed (Web)',
       key: 'isPublished',
-      width: 130,
+      width: 110,
       render: (_: any, record: Review) => (
         <Space direction="vertical" size={4}>
-          <Tag color={record.isPublished ? 'processing' : 'default'}>
+          <Tag color={record.isPublished ? 'processing' : 'default'} style={{ margin: 0 }}>
             {record.isPublished ? 'Live on Web' : 'Hidden'}
           </Tag>
           <Switch
@@ -309,11 +401,11 @@ export default function ReviewsPage() {
     {
       title: 'Verified Buyer',
       key: 'isVerified',
-      width: 130,
+      width: 110,
       render: (_: any, record: Review) => (
         <Space direction="vertical" size={4}>
-          <Tag color={record.isVerified ? 'blue' : 'default'} icon={record.isVerified ? <CheckCircleFilled /> : undefined}>
-            {record.isVerified ? 'Verified' : 'Unverified'}
+          <Tag color={record.isVerified ? 'blue' : 'default'} icon={record.isVerified ? <CheckCircleFilled /> : undefined} style={{ margin: 0 }}>
+            {record.isVerified ? 'Verified' : 'Regular'}
           </Tag>
           <Switch
             size="small"
@@ -329,7 +421,8 @@ export default function ReviewsPage() {
     {
       title: 'Actions',
       key: 'actions',
-      width: 110,
+      width: 90,
+      fixed: 'right' as const,
       render: (_: any, record: Review) => (
         <Space size="small">
           <Button
@@ -359,13 +452,13 @@ export default function ReviewsPage() {
   ];
 
   return (
-    <div style={{ padding: '24px', maxWidth: 1400, margin: '0 auto' }}>
+    <div style={{ padding: '24px', maxWidth: 1440, margin: '0 auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#1f1f1f' }}>Customer Reviews Moderation</h2>
           <p style={{ margin: '4px 0 0', color: '#666', fontSize: 14 }}>
-            Manage customer feedback, trust badges, approval moderation, and web visibility.
+            Moderate customer reviews, verify purchasers with blue tick badges, and control web app visibility.
           </p>
         </div>
         <Button
@@ -424,7 +517,7 @@ export default function ReviewsPage() {
         </Col>
       </Row>
 
-      {/* Main Table Card */}
+      {/* Main Table Card with Mouse Drag-to-Scroll */}
       <Card
         bordered={false}
         style={{ borderRadius: 12, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}
@@ -445,15 +538,182 @@ export default function ReviewsPage() {
           </div>
         }
       >
-        <Table
-          columns={columns}
-          dataSource={filteredData}
-          rowKey="id"
-          loading={isLoading}
-          scroll={{ x: 1000 }}
-          pagination={{ pageSize: 10, showSizeChanger: true }}
-        />
+        <div
+          ref={tableContainerRef}
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          style={{ cursor: 'grab', userSelect: 'auto' }}
+        >
+          <Table
+            columns={columns}
+            dataSource={filteredData}
+            rowKey="id"
+            loading={isLoading}
+            scroll={{ x: 1300 }}
+            tableLayout="fixed"
+            pagination={{ pageSize: 10, showSizeChanger: true }}
+          />
+        </div>
       </Card>
+
+      {/* View Full Review Details Popup Modal */}
+      <Modal
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 18, fontWeight: 700, color: '#2C4A3B' }}>
+            <SafetyCertificateFilled style={{ color: '#2C4A3B' }} />
+            <span>Customer Review Details</span>
+          </div>
+        }
+        open={!!viewingReview}
+        onCancel={() => setViewingReview(null)}
+        footer={[
+          <Button key="close" onClick={() => setViewingReview(null)}>
+            Close
+          </Button>,
+          <Button
+            key="edit"
+            type="primary"
+            style={{ background: '#2C4A3B', borderColor: '#2C4A3B' }}
+            onClick={() => {
+              const r = viewingReview;
+              setViewingReview(null);
+              if (r) handleEdit(r);
+            }}
+          >
+            Edit / Reply
+          </Button>
+        ]}
+        width={650}
+      >
+        {viewingReview && (
+          <div style={{ marginTop: 16 }}>
+            {/* Customer Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', background: '#FAF6EE', padding: 16, borderRadius: 10, marginBottom: 16 }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Text strong style={{ fontSize: 18, color: '#1f1f1f' }}>{viewingReview.customerName}</Text>
+                  {viewingReview.isVerified && (
+                    <Tag color="blue" icon={<CheckCircleFilled />}>Verified Buyer</Tag>
+                  )}
+                </div>
+                {viewingReview.customerLocation && (
+                  <div style={{ color: '#666', fontSize: 13, marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <EnvironmentOutlined style={{ fontSize: 12 }} />
+                    <span>{viewingReview.customerLocation}</span>
+                  </div>
+                )}
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end' }}>
+                  <Rate disabled defaultValue={viewingReview.rating} style={{ fontSize: 16, color: '#f59e0b' }} />
+                  <span style={{ fontWeight: 700, fontSize: 16, color: '#d48806', marginLeft: 4 }}>
+                    {viewingReview.rating}.0 / 5
+                  </span>
+                </div>
+                <div style={{ fontSize: 12, color: '#8c8c8c', marginTop: 4 }}>
+                  {dayjs(viewingReview.createdAt).format('DD MMMM YYYY, hh:mm A')}
+                </div>
+              </div>
+            </div>
+
+            {/* Products Purchased if any */}
+            {viewingReview.productNames && viewingReview.productNames.length > 0 && (
+              <div style={{ marginBottom: 16 }}>
+                <Text strong style={{ fontSize: 13, color: '#666', display: 'block', marginBottom: 6 }}>
+                  Items Purchased / Reviewed:
+                </Text>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {viewingReview.productNames.map((p, idx) => (
+                    <Tag key={idx} color="green" icon={<ShoppingOutlined />} style={{ padding: '3px 8px', fontSize: 13 }}>
+                      {p}
+                    </Tag>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Review Content */}
+            <div style={{ marginBottom: 16 }}>
+              <Text strong style={{ fontSize: 13, color: '#666', display: 'block', marginBottom: 6 }}>
+                Customer Feedback:
+              </Text>
+              <div style={{
+                background: '#ffffff',
+                border: '1px solid #e8e8e8',
+                borderRadius: 8,
+                padding: '14px 16px',
+                fontSize: 15,
+                lineHeight: 1.6,
+                color: '#262626',
+                fontStyle: 'italic'
+              }}>
+                "{viewingReview.content}"
+              </div>
+            </div>
+
+            {/* Official Reply */}
+            <div style={{ marginBottom: 16 }}>
+              <Text strong style={{ fontSize: 13, color: '#666', display: 'block', marginBottom: 6 }}>
+                Official Reply from Grandma's Ladle:
+              </Text>
+              {viewingReview.adminReply ? (
+                <div style={{
+                  background: '#f6ffed',
+                  border: '1px solid #b7eb8f',
+                  borderRadius: 8,
+                  padding: '12px 16px',
+                  fontSize: 14,
+                  lineHeight: 1.6,
+                  color: '#262626'
+                }}>
+                  {viewingReview.adminReply}
+                </div>
+              ) : (
+                <div style={{ color: '#8c8c8c', fontStyle: 'italic', fontSize: 13 }}>
+                  No reply posted yet. Click "Edit / Reply" to write a response.
+                </div>
+              )}
+            </div>
+
+            {/* Quick Status Bar */}
+            <Divider style={{ margin: '16px 0' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fafafa', padding: '10px 16px', borderRadius: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 500 }}>Approved:</span>
+                <Switch
+                  checked={viewingReview.isApproved}
+                  onChange={(checked) => {
+                    toggleApprovalMutation.mutate({ id: viewingReview.id, isApproved: checked });
+                    setViewingReview({ ...viewingReview, isApproved: checked });
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 500 }}>Live on Web:</span>
+                <Switch
+                  checked={viewingReview.isPublished}
+                  onChange={(checked) => {
+                    togglePublishMutation.mutate({ id: viewingReview.id, isPublished: checked });
+                    setViewingReview({ ...viewingReview, isPublished: checked });
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 500 }}>Verified Badge:</span>
+                <Switch
+                  checked={viewingReview.isVerified}
+                  onChange={(checked) => {
+                    toggleVerifyMutation.mutate({ id: viewingReview.id, isVerified: checked });
+                    setViewingReview({ ...viewingReview, isVerified: checked });
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
 
       {/* Modal for Add / Edit */}
       <Modal
@@ -464,7 +724,7 @@ export default function ReviewsPage() {
         confirmLoading={createMutation.isPending || updateMutation.isPending}
         okText={editingId ? 'Save Changes' : 'Create Review'}
         okButtonProps={{ style: { background: '#2C4A3B', borderColor: '#2C4A3B' } }}
-        width={600}
+        width={620}
       >
         <Form form={form} layout="vertical">
           <Row gutter={16}>
@@ -493,6 +753,18 @@ export default function ReviewsPage() {
             rules={[{ required: true, message: 'Please select a star rating' }]}
           >
             <Rate style={{ color: '#f59e0b', fontSize: 22 }} />
+          </Form.Item>
+
+          <Form.Item
+            name="productNames"
+            label="Products Ordered / Reviewed (Optional)"
+          >
+            <Select
+              mode="multiple"
+              allowClear
+              placeholder="Select products"
+              options={productOptions}
+            />
           </Form.Item>
 
           <Form.Item

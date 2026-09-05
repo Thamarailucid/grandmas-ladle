@@ -285,6 +285,7 @@ export interface Review {
   isPublished: boolean;
   isApproved: boolean;
   isVerified: boolean;
+  productNames?: string[];
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -311,6 +312,7 @@ export interface CreateReviewRequest {
   isPublished?: boolean;
   isApproved?: boolean;
   isVerified?: boolean;
+  productNames?: string[];
   sortOrder?: number;
 }
 
@@ -319,6 +321,7 @@ export interface SubmitCustomerReviewRequest {
   customerLocation?: string;
   rating: number;
   content: string;
+  productNames?: string[];
 }
 
 // === FAQ Types ===

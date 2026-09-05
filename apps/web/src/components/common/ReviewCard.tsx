@@ -1,5 +1,5 @@
 import React from 'react';
-import { StarFilled, CheckCircleFilled } from '@ant-design/icons';
+import { StarFilled, CheckCircleFilled, EnvironmentOutlined, ShoppingOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
 export interface ReviewCardProps {
@@ -9,6 +9,7 @@ export interface ReviewCardProps {
   rating: number;
   content: string;
   isVerified?: boolean;
+  productNames?: string[];
   adminReply?: string | null;
   createdAt?: string | null;
 }
@@ -20,6 +21,7 @@ export function ReviewCard({
   rating,
   content,
   isVerified = true,
+  productNames,
   adminReply,
   createdAt
 }: ReviewCardProps) {
@@ -30,7 +32,7 @@ export function ReviewCard({
     <div className="w-[320px] sm:w-[380px] bg-white p-6 sm:p-7 rounded-2xl shadow-sm border border-brand-terracotta/10 flex flex-col justify-between flex-shrink-0 transition-all duration-300 hover:shadow-md hover:border-brand-terracotta/20 select-none text-left">
       <div>
         {/* Header: Stars + Date */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex text-[#f59e0b] gap-1">
             {[...Array(5)].map((_, i) => (
               <StarFilled
@@ -46,8 +48,23 @@ export function ReviewCard({
           )}
         </div>
 
+        {/* Product(s) purchased tags if present */}
+        {productNames && productNames.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {productNames.map((product, idx) => (
+              <span
+                key={idx}
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-brand-green bg-[#FAF6EE] border border-brand-green/20 px-2 py-0.5 rounded-md"
+              >
+                <ShoppingOutlined style={{ fontSize: '10px' }} />
+                <span>{product}</span>
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Review Quote */}
-        <blockquote className="font-outfit text-brand-dark-brown/85 text-base leading-relaxed italic mb-5 line-clamp-4">
+        <blockquote className="font-outfit text-brand-dark-brown/85 text-base leading-relaxed italic mb-4 line-clamp-4">
           "{content}"
         </blockquote>
       </div>
@@ -80,7 +97,7 @@ export function ReviewCard({
             </div>
             {displayLocation && (
               <div className="text-xs text-brand-dark-brown/55 mt-0.5 flex items-center gap-1">
-                <span>📍</span>
+                <EnvironmentOutlined style={{ fontSize: '11px', color: '#8c8c8c' }} />
                 <span>{displayLocation}</span>
               </div>
             )}
