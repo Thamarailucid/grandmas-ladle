@@ -19,10 +19,12 @@ import {
 } from '@ant-design/icons';
 import { clearAuth } from '@/stores/authStore';
 import logoImg from '@/assets/logo.jpg';
+import { useTableDragScroll } from '@/hooks/useTableDragScroll';
 
 const { Header, Sider, Content } = Layout;
 
 export function AdminLayout() {
+  useTableDragScroll();
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);

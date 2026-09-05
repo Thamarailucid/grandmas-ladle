@@ -32,3 +32,39 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(136, 136, 136, 0.7) !important;
 }
+
+/* Table drag-to-scroll cursor and interaction styles */
+.ant-table-content,
+.ant-table-body {
+  cursor: grab;
+}
+
+.ant-table-content:active,
+.ant-table-body:active,
+.ant-table-content.table-is-dragging,
+.ant-table-body.table-is-dragging,
+body.table-drag-scrolling,
+body.table-drag-scrolling * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
+/* Ensure interactive controls maintain pointer/default cursors */
+.ant-table-content button,
+.ant-table-content a,
+.ant-table-content .ant-switch,
+.ant-table-content input,
+.ant-table-content select,
+.ant-table-content .ant-select,
+.ant-table-content .ant-btn,
+.ant-table-content .ant-pagination,
+.ant-table-body button,
+.ant-table-body a,
+.ant-table-body .ant-switch,
+.ant-table-body input,
+.ant-table-body select,
+.ant-table-body .ant-select,
+.ant-table-body .ant-btn,
+.ant-table-body .ant-pagination {
+  cursor: pointer;
+}

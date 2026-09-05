@@ -31,7 +31,9 @@ export const getPublicProducts = async (req: Request, res: Response, next: NextF
       saleProductIds = activeCampaign.productIds || [];
     }
 
-    const publicData = result.data.map((d: any) => {
+    const publicData = result.data
+      .filter((d: any) => d.isListed !== false)
+      .map((d: any) => {
       // Determine if product is in an active global campaign
       const isInCampaignSale = isGlobalCampaignActive && saleProductIds.includes(d.id);
       

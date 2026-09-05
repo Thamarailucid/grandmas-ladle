@@ -69,6 +69,7 @@ export interface Product {
   imageUrl: string | null;
   isAvailable: boolean;
   isVegetarian?: boolean;
+  isListed?: boolean;
   spiceLevel?: number;
   preparationTimeMinutes?: number;
   sortOrder: number;
@@ -93,6 +94,7 @@ export interface CreateProductRequest {
   isAvailable?: boolean;
   isVegetarian?: boolean;
   isOnSale?: boolean;
+  isListed?: boolean;
   spiceLevel?: number;
   preparationTimeMinutes?: number;
   tag?: string;

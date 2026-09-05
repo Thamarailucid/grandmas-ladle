@@ -45,11 +45,12 @@ export default function MenuPage() {
     }
   }, [categories, activeCategoryId]);
 
-  const displayedItems = products.filter(item => item.categoryId === activeCategoryId);
+  const publicProducts = products.filter(item => item.isListed !== false);
+  const displayedItems = publicProducts.filter(item => item.categoryId === activeCategoryId);
   const activeCategoryObj = categories.find(c => c.id === activeCategoryId);
 
   const now = dayjs();
-  const saleProducts = products.filter(p => p.isOnSale || p.saleStatus === 'LIVE' || p.saleStatus === 'COMING_SOON' || saleProductIds.includes(p.id));
+  const saleProducts = publicProducts.filter(p => p.isOnSale || p.saleStatus === 'LIVE' || p.saleStatus === 'COMING_SOON' || saleProductIds.includes(p.id));
   const isGlobalSaleVisible = (isGlobalSaleActive && (!saleEndDate || now.isBefore(dayjs(saleEndDate).add(offerPostVisibilityDays, 'day')))) || saleProducts.length > 0;
   const isGlobalSaleFuture = isGlobalSaleActive && saleStartDate && now.isBefore(dayjs(saleStartDate));
 

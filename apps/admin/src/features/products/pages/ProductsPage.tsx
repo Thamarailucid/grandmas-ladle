@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, Switch, Popconfirm, message, Space, Typography, Upload, DatePicker } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, Switch, Popconfirm, message, Space, Typography, Upload, DatePicker, Tag } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
 import { Product, ProductCategory, ApiListResponse, ApiResponse } from '@grandmas-ladle/shared';
@@ -117,6 +117,7 @@ export default function ProductsPage() {
       setEditingProduct(record);
       form.setFieldsValue({
         ...record,
+        isListed: record.isListed !== false,
         isAvailable: record.isAvailable !== false,
         isVegetarian: record.isVegetarian !== false,
         isOnSale: Boolean(record.isOnSale),
@@ -127,6 +128,7 @@ export default function ProductsPage() {
       setEditingProduct(null);
       form.resetFields();
       form.setFieldsValue({
+        isListed: true,
         isAvailable: true,
         isVegetarian: true,
         isOnSale: false,
@@ -145,6 +147,7 @@ export default function ProductsPage() {
     form.validateFields().then((values) => {
       const payload = {
         ...values,
+        isListed: values.isListed !== false,
         isAvailable: values.isAvailable !== false,
         isVegetarian: values.isVegetarian !== false,
         isOnSale: Boolean(values.isOnSale),
@@ -182,7 +185,14 @@ export default function ProductsPage() {
       key: 'name',
       render: (name: string, record: Product) => (
         <div>
-          <div style={{ fontWeight: 600, color: '#1e293b' }}>{name}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontWeight: 600, color: '#1e293b' }}>{name}</span>
+            {record.isListed === false && (
+              <Tag color="default" style={{ fontSize: 10, padding: '0 4px', lineHeight: '16px', margin: 0 }}>
+                Hidden
+              </Tag>
+            )}
+          </div>
           {record.shortDescription && (
             <div style={{ fontSize: 12, color: '#64748b', maxWidth: 220, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {record.shortDescription}
@@ -226,6 +236,21 @@ export default function ProductsPage() {
       title: 'Portion',
       key: 'portionSize',
       render: (_: any, record: Product) => `${record.portionSize || ''} ${record.unit || ''}`.trim(),
+    },
+    {
+      title: 'Listed (Web)',
+      dataIndex: 'isListed',
+      key: 'isListed',
+      render: (isListed: boolean, record: Product) => (
+        <Switch
+          checked={isListed !== false}
+          checkedChildren="Listed"
+          unCheckedChildren="Hidden"
+          style={{ backgroundColor: isListed !== false ? '#2C4A3B' : undefined }}
+          onChange={(checked) => toggleFieldMutation.mutate({ id: record.id, data: { isListed: checked } })}
+          loading={toggleFieldMutation.isPending}
+        />
+      ),
     },
     {
       title: 'Availability',
@@ -327,12 +352,14 @@ export default function ProductsPage() {
         </Button>
       </div>
 
-      <Table scroll={{ x: 'max-content' }}
+      <Table 
+        scroll={{ x: 'max-content' }}
         dataSource={products || []}
         columns={columns}
         rowKey="id"
         loading={isLoadingProducts || isLoadingCategories}
         pagination={{ defaultPageSize: 10 }}
+        rowClassName={(record: Product) => record.isListed === false ? 'opacity-70 bg-slate-50' : ''}
       />
 
       <Modal
@@ -429,8 +456,18 @@ export default function ProductsPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
+                      <div style={{ fontWeight: 500, fontSize: '13px' }}>Listed on Website</div>
+                      <div style={{ fontSize: '11px', color: '#64748b' }}>Show on customer web app (turn OFF to hide completely)</div>
+                    </div>
+                    <Form.Item name="isListed" valuePropName="checked" noStyle initialValue={true}>
+                      <Switch checkedChildren="Listed" unCheckedChildren="Hidden" />
+                    </Form.Item>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
                       <div style={{ fontWeight: 500, fontSize: '13px' }}>In Stock (Available)</div>
-                      <div style={{ fontSize: '11px', color: '#64748b' }}>Item can be purchased by customers</div>
+                      <div style={{ fontSize: '11px', color: '#64748b' }}>Item can be purchased (turn OFF for 'Out of Stock')</div>
                     </div>
                     <Form.Item name="isAvailable" valuePropName="checked" noStyle initialValue={true}>
                       <Switch checkedChildren="In Stock" unCheckedChildren="Out" />
