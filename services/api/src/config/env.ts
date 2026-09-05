@@ -1,5 +1,41 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { z } from 'zod';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Determine environment mode (defaults to 'development')
+const currentEnv = process.env.NODE_ENV || 'development';
+
+// Search directories: services/api and monorepo root
+const candidateDirs = [
+  path.resolve(__dirname, '../../'),       // services/api/
+  path.resolve(__dirname, '../../../../'), // monorepo root
+];
+
+// Load priority:
+// 1. .env.{NODE_ENV}.local
+// 2. .env.{NODE_ENV} (e.g., .env.development or .env.production)
+// 3. .env.local
+// 4. .env
+const envFileNames = [
+  `.env.${currentEnv}.local`,
+  `.env.${currentEnv}`,
+  '.env.local',
+  '.env',
+];
+
+for (const dir of candidateDirs) {
+  for (const envFile of envFileNames) {
+    const fullPath = path.join(dir, envFile);
+    if (fs.existsSync(fullPath)) {
+      dotenv.config({ path: fullPath });
+    }
+  }
+}
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
