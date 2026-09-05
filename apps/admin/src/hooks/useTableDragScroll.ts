@@ -116,41 +116,14 @@ export function useTableDragScroll() {
       document.body.classList.remove('table-drag-scrolling');
     };
 
-    // Support mouse wheel scrolling horizontally when hovering over a wide table
-    const handleWheel = (e: WheelEvent) => {
-      // If user holds Shift, browser already scrolls horizontally
-      if (e.shiftKey) return;
-
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-
-      const container = target.closest('.ant-table-content, .ant-table-body') as HTMLElement | null;
-      if (!container || container.scrollWidth <= container.clientWidth + 1) {
-        return;
-      }
-
-      // Check if user is scrolling vertically with the mouse wheel
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        const canScrollRight = e.deltaY > 0 && container.scrollLeft < container.scrollWidth - container.clientWidth - 1;
-        const canScrollLeft = e.deltaY < 0 && container.scrollLeft > 1;
-
-        if (canScrollRight || canScrollLeft) {
-          container.scrollLeft += e.deltaY;
-          e.preventDefault();
-        }
-      }
-    };
-
     document.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
       document.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('wheel', handleWheel);
       document.body.classList.remove('table-drag-scrolling');
     };
   }, []);

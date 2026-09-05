@@ -65,55 +65,6 @@ export default function ReviewsPage() {
   const [viewingReview, setViewingReview] = useState<Review | null>(null);
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'HIDDEN'>('ALL');
 
-  // Mouse drag-to-scroll refs
-  const tableContainerRef = useRef<HTMLDivElement>(null);
-  const isDownRef = useRef(false);
-  const startXRef = useRef(0);
-  const scrollLeftRef = useRef(0);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    // Don't drag if user is clicking interactive controls
-    if (target.closest('button, input, .ant-switch, a, .ant-rate, .ant-tag, .ant-popover, .ant-modal, .ant-table-pagination')) {
-      return;
-    }
-    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
-    if (!container) return;
-    isDownRef.current = true;
-    startXRef.current = e.pageX - container.offsetLeft;
-    scrollLeftRef.current = container.scrollLeft;
-    container.style.cursor = 'grabbing';
-    container.style.userSelect = 'none';
-  };
-
-  const handleMouseLeave = () => {
-    isDownRef.current = false;
-    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
-    if (container) {
-      container.style.cursor = 'default';
-      container.style.removeProperty('user-select');
-    }
-  };
-
-  const handleMouseUp = () => {
-    isDownRef.current = false;
-    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
-    if (container) {
-      container.style.cursor = 'default';
-      container.style.removeProperty('user-select');
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDownRef.current) return;
-    const container = tableContainerRef.current?.querySelector('.ant-table-body') as HTMLElement || tableContainerRef.current?.querySelector('.ant-table-content') as HTMLElement;
-    if (!container) return;
-    e.preventDefault();
-    const x = e.pageX - container.offsetLeft;
-    const walk = (x - startXRef.current) * 1.3;
-    container.scrollLeft = scrollLeftRef.current - walk;
-  };
-
   // Queries
   const { data: reviewsData = [], isLoading } = useQuery<Review[]>({
     queryKey: ['reviews'],
@@ -538,24 +489,15 @@ export default function ReviewsPage() {
           </div>
         }
       >
-        <div
-          ref={tableContainerRef}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseLeave}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          style={{ cursor: 'grab', userSelect: 'auto' }}
-        >
-          <Table
-            columns={columns}
-            dataSource={filteredData}
-            rowKey="id"
-            loading={isLoading}
-            scroll={{ x: 1300 }}
-            tableLayout="fixed"
-            pagination={{ pageSize: 10, showSizeChanger: true }}
-          />
-        </div>
+        <Table
+          columns={columns}
+          dataSource={filteredData}
+          rowKey="id"
+          loading={isLoading}
+          scroll={{ x: 1300 }}
+          tableLayout="fixed"
+          pagination={{ pageSize: 10, showSizeChanger: true }}
+        />
       </Card>
 
       {/* View Full Review Details Popup Modal */}
