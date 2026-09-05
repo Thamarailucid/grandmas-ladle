@@ -3,6 +3,15 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --header-height: 72px;
+  }
+  @media (min-width: 768px) {
+    :root {
+      --header-height: 80px;
+    }
+  }
+
   body {
     @apply bg-warm-cream text-dark-brown;
   }

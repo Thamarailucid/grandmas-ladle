@@ -18,7 +18,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-brand-green text-warm-cream pt-16 pb-8">
+    <footer className="bg-brand-green text-warm-cream pt-16 pb-24 md:pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           
@@ -89,7 +89,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-warm-cream/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-warm-cream/60 space-y-2 md:space-y-0">
+        <div className="border-t border-warm-cream/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-warm-cream/60 space-y-3 md:space-y-0 text-center md:text-left">
           <p>© {currentYear} Grandma's Ladle. All rights reserved.</p>
           <p>
             Designed & Developed by{' '}
@@ -97,7 +97,10 @@ export function Footer() {
               NovaCodex
             </a>
           </p>
-          <p>FSSAI Reg. No. {fssaiNumber} · Udyam (MSME) Registered</p>
+          <div className="flex flex-col items-center md:items-end text-center md:text-right gap-0.5">
+            <span>FSSAI Reg. No. {fssaiNumber}</span>
+            <span className="text-[11px] text-warm-cream/50">Udyam (MSME) Registered</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Drawer } from 'antd';
 import { ShoppingCartOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
@@ -15,6 +15,7 @@ export function Header() {
   const { isAnnouncementActive, announcementText, announcementLink, isCartEnabled, saleStartDate, saleEndDate } = useBusinessSettingsContext();
   const { items, totalItems, totalPrice, removeFromCart, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -39,6 +40,32 @@ export function Header() {
     }
   }
 
+  // Dynamically measure header height and update --header-height on document root
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+
+    const updateHeight = () => {
+      const height = el.offsetHeight;
+      if (height > 0) {
+        document.documentElement.style.setProperty('--header-height', `${height}px`);
+      }
+    };
+
+    updateHeight();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateHeight();
+    });
+    resizeObserver.observe(el);
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, [shouldShowAnnouncement]);
+
   const navLinks = [
     { label: 'HOME', path: '/' },
     { label: 'OUR STORY', path: '/our-story' },
@@ -50,8 +77,9 @@ export function Header() {
 
   return (
     <header
+      ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-warm-cream border-b border-antique-brass/20 ${
-        isScrolled && !shouldShowAnnouncement ? 'shadow-md' : ''
+        isScrolled ? 'shadow-sm' : ''
       }`}
     >
       {shouldShowAnnouncement && (
@@ -66,7 +94,7 @@ export function Header() {
           </Marquee>
         </div>
       )}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-16 md:h-18' : 'h-[72px] md:h-[80px]'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-[72px] md:h-[80px]">
         <Link to="/" className="flex items-center gap-2.5 group">
           <img 
             src={logoImg} 
@@ -198,7 +226,12 @@ export function Header() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold font-fraunces text-[#2C4A3B] truncate">{item.product.name}</div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold font-fraunces text-[#2C4A3B] truncate">{item.product.name}</span>
+                        {item.product.isAvailable === false && (
+                          <span className="text-[9px] font-bold text-red-600 bg-red-50 border border-red-200 px-1 py-0.5 rounded flex-shrink-0">Out of Stock</span>
+                        )}
+                      </div>
                       <div className="text-sm text-[#B8925A] font-medium">₹{item.product.price}</div>
                     </div>
                     <div className="flex items-center space-x-2 flex-shrink-0">
@@ -218,7 +251,7 @@ export function Header() {
                 </div>
                 <a
                   href={createWhatsAppBulkOrderUrl(
-                    items.map(i => ({ name: i.product.name, quantity: i.quantity, price: Number(i.product.price) })),
+                    items.filter(i => i.product.isAvailable !== false).map(i => ({ name: i.product.name, quantity: i.quantity, price: Number(i.product.price) })),
                     totalPrice
                   )}
                   target="_blank"

@@ -98,7 +98,10 @@ export default function MenuPage() {
           <MinimalLoader text="Loading Menu..." />
         ) : (
           <>
-            <div className="flex overflow-x-auto hide-scrollbar gap-2.5 sm:gap-3.5 py-3 mb-4 sticky top-[64px] sm:top-[74px] z-20 bg-[#faf6ee]/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-6 sm:px-6 border-b border-[#e7e1d2] shadow-sm">
+            <div 
+              style={{ top: 'var(--header-height, 72px)' }}
+              className="flex overflow-x-auto hide-scrollbar gap-2.5 sm:gap-3.5 py-2.5 mb-6 sticky z-20 bg-warm-cream -mx-4 px-4 sm:-mx-6 sm:px-6"
+            >
               {isGlobalSaleVisible && saleProducts.length > 0 && (
                 <button
                   onClick={handleSaleTagClick}
