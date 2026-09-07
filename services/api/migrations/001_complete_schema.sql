@@ -425,7 +425,7 @@ WHERE customer_name IN ('Ananya Sundaram', 'Rahul Menon', 'Kavitha Ramachandran'
 ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS image_fit VARCHAR(50) DEFAULT 'cover-center';
 ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS is_clickable BOOLEAN DEFAULT FALSE;
 
--- Ensure Business Settings
+-- Ensure Business Settings (only creates default row if table is completely empty)
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM business_settings) THEN
@@ -452,81 +452,5 @@ BEGIN
     END IF;
 END $$;
 
--- Ensure Product Categories
-INSERT INTO product_categories (id, name, slug, description, sort_order) VALUES
-(gen_random_uuid(), 'Traditional Snacks', 'traditional-snacks', 'Handcrafted traditional savory snacks', 1),
-(gen_random_uuid(), 'Ladoos & Sweet Bites', 'ladoos-sweet-bites', 'Traditional sweets and authentic handcrafted ladoos', 2),
-(gen_random_uuid(), 'Traditional & Wholesome', 'traditional-wholesome', 'Wholesome everyday items, sundal and traditional drinks', 3),
-(gen_random_uuid(), 'Festival & Seasonal', 'festival-seasonal', 'Special seasonal and festival preparations', 4)
-ON CONFLICT (slug) DO UPDATE SET 
-    name = EXCLUDED.name,
-    description = EXCLUDED.description,
-    is_active = TRUE,
-    is_deleted = FALSE;
-
--- Ensure Festivals
-INSERT INTO festivals (id, name, slug, description, is_active, sort_order) VALUES
-(gen_random_uuid(), 'Ganesh Chaturthi', 'ganesh-chaturthi', 'Modakam, Kozhukattai, and festive savouries made fresh for the festival', TRUE, 1),
-(gen_random_uuid(), 'Krishna Jayanthi', 'krishna-jayanthi', 'Murukku, seedai, and traditional festival snack offerings', TRUE, 2),
-(gen_random_uuid(), 'Navaratri', 'navaratri', 'Nine days of wholesome traditional sundal varieties and festive savouries', TRUE, 3),
-(gen_random_uuid(), 'Diwali', 'diwali', 'Pure desi ghee sweets, crispy murukku, and festive gift boxes', TRUE, 4),
-(gen_random_uuid(), 'Pongal', 'pongal', 'Harvest festival seasonal preparations and traditional delicacies', TRUE, 5)
-ON CONFLICT (slug) DO UPDATE SET 
-    name = EXCLUDED.name,
-    description = EXCLUDED.description,
-    is_active = TRUE,
-    is_deleted = FALSE;
-
--- Ensure Authentic Product Catalog
-INSERT INTO products (id, category_id, name, slug, short_description, description, price, is_available, is_listed, is_vegetarian, sort_order)
-SELECT 
-    gen_random_uuid(),
-    c.id,
-    p.name,
-    p.slug,
-    p.short_desc,
-    p.description,
-    p.price,
-    TRUE,
-    TRUE,
-    TRUE,
-    p.sort_order
-FROM (VALUES
-    -- Festival & Seasonal
-    ('festival-seasonal', 'Modakam / Kozhukattai (Poornam)', 'modakam-kozhukattai-poornam', 'Handcrafted steamed rice flour dumplings filled with fresh coconut and organic jaggery.', 'Handcrafted steamed rice flour dumplings filled with fresh grated coconut and organic jaggery. Our flagship Ganesh Chaturthi delicacy made fresh on order.', 180.00, 1),
-    ('festival-seasonal', 'Uppu Kozhukattai (Savoury Modakam)', 'uppu-kozhukattai', 'Steamed savoury rice dumplings tempered with mustard, urad dal, and green chilies.', 'Steamed savoury rice dumplings tempered with mustard seeds, urad dal, curry leaves, and green chilies. A traditional festive savory favourite.', 160.00, 2),
-    ('festival-seasonal', 'Ellu Kozhukattai', 'ellu-kozhukattai', 'Traditional steamed dumplings filled with roasted sesame seeds and jaggery.', 'Traditional steamed dumplings filled with aromatic roasted sesame seeds and organic jaggery. Nutritious and deeply flavourful.', 170.00, 3),
-    ('festival-seasonal', 'Ganesh Chaturthi Festival Combo Box', 'ganesh-chaturthi-combo-box', 'Assorted box with 6 sweet modakams, 6 savoury modakams, fresh sundal, and handmade kai murukku.', 'A complete celebration pack for home poojas: 6 sweet poornam modakams, 6 savoury modakams, portion of fresh traditional sundal, and crisp handmade kai murukku.', 450.00, 4),
-
-    -- Traditional Snacks
-    ('traditional-snacks', 'Kai Murukku', 'kai-murukku', 'Handcrafted traditional crispy twisted murukku, made with love and pure butter.', 'Handcrafted traditional crispy twisted murukku, made with love, pure butter, and authentic freshly milled rice flour.', 150.00, 5),
-    ('traditional-snacks', 'Ribbon Pakoda', 'ribbon-pakoda', 'Crisp, melt-in-mouth golden ribbon sev prepared with pure butter and mild spices.', 'Crisp, melt-in-mouth golden ribbon sev prepared with pure butter and mild spices. Perfect accompaniment for evening tea.', 140.00, 6),
-    ('traditional-snacks', 'Seedai (Uppu Seedai)', 'seedai-uppu-seedai', 'Crunchy traditional round savoury bites made with rice flour, roasted urad dal, and butter.', 'Crunchy traditional round savoury bites made with rice flour, roasted urad dal, and pure butter. A festive household staple.', 130.00, 7),
-    ('traditional-snacks', 'Pepper Thattai', 'pepper-thattai', 'Crispy spiced rice crackers infused with coarsely cracked black pepper and curry leaves.', 'Crispy spiced rice crackers infused with coarsely cracked black pepper and fresh curry leaves. Authentic South Indian crunch.', 140.00, 8),
-    ('traditional-snacks', 'Kuzhi Paniyaram', 'kuzhi-paniyaram', 'Soft and fluffy paniyarams, perfect for a wholesome evening snack.', 'Soft and fluffy paniyarams with golden crispy edges, perfect for a wholesome evening snack.', 120.00, 9),
-
-    -- Ladoos & Sweet Bites
-    ('ladoos-sweet-bites', 'Nei Urundai (Ghee Ladoo)', 'nei-urundai-ghee-ladoo', 'Traditional roasted moong dal and pure country ghee balls infused with cardamom.', 'Traditional roasted moong dal and pure country ghee balls infused with aromatic cardamom. Melts effortlessly in your mouth.', 210.00, 10),
-    ('ladoos-sweet-bites', 'Besan Ladoo', 'besan-ladoo', 'Fragrant roasted gram flour sweet balls infused with pure desi ghee.', 'Fragrant roasted gram flour sweet balls infused with pure desi ghee, organic sugar, and cardamom.', 200.00, 11),
-    ('ladoos-sweet-bites', 'Peanut & Dates Ladoo', 'peanut-dates-ladoo', 'A healthy and sweet blend of roasted peanuts and premium dates with no refined sugar.', 'A nutritious sweet blend of roasted peanuts and premium dates with no refined sugar. Pure guilt-free indulgence.', 190.00, 12),
-    ('ladoos-sweet-bites', 'Sesame Ladoo (Ellu Urundai)', 'sesame-ladoo', 'Nutritious sesame seeds rolled into bite-sized sweets with pure jaggery.', 'Nutritious sesame seeds rolled into bite-sized traditional sweets with pure organic jaggery.', 180.00, 13),
-    ('ladoos-sweet-bites', 'Multiseed Ladoo', 'multiseed-ladoo', 'Power-packed ladoos made with a healthy mix of roasted seeds and nuts.', 'Power-packed ladoos made with a healthy mix of roasted pumpkin seeds, sunflower seeds, flax seeds, and nuts.', 220.00, 14),
-
-    -- Traditional & Wholesome
-    ('traditional-wholesome', 'Sundal', 'sundal', 'Wholesome tempered legumes with fresh coconut and mustard, a staple from Grandma''s kitchen.', 'Wholesome tempered legumes with fresh grated coconut, mustard seeds, and curry leaves. Nutritious and authentic.', 80.00, 15),
-    ('traditional-wholesome', 'Ragi Malt', 'ragi-malt', 'Nutritious and comforting sprouted ragi based traditional malt drink.', 'Nutritious and comforting sprouted ragi based traditional malt drink, packed with calcium and natural goodness.', 90.00, 16),
-    ('traditional-wholesome', 'Ulundhu Kanji', 'ulundhu-kanji', 'Healthy black gram porridge, known for its strengthening traditional properties.', 'Healthy black gram porridge prepared with garlic, cumin, and fresh coconut, known for its strengthening traditional properties.', 110.00, 17)
-) AS p(category_slug, name, slug, short_desc, description, price, sort_order)
-JOIN product_categories c ON c.slug = p.category_slug
-ON CONFLICT (slug) DO UPDATE SET 
-    category_id = EXCLUDED.category_id,
-    name = EXCLUDED.name,
-    short_description = EXCLUDED.short_description,
-    description = EXCLUDED.description,
-    price = EXCLUDED.price,
-    is_available = TRUE,
-    is_listed = TRUE,
-    is_vegetarian = TRUE,
-    is_deleted = FALSE;
 
 

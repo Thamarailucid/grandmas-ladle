@@ -36,62 +36,28 @@ export async function seed() {
       console.log('✅ NovaCodex Admin user created');
     }
 
-    // Categories
-    const categories = [
-      { name: 'Traditional Snacks', slug: 'traditional-snacks', description: 'Authentic savory snacks' },
-      { name: 'Ladoos & Sweet Bites', slug: 'ladoos-sweet-bites', description: 'Traditional sweets and ladoos' },
-      { name: 'Traditional & Wholesome', slug: 'traditional-wholesome', description: 'Wholesome everyday items' },
-      { name: 'Festival & Seasonal', slug: 'festival-seasonal', description: 'Special seasonal preparations' },
-    ];
-
-    for (let i = 0; i < categories.length; i++) {
-      const cat = categories[i];
-      await client.query(
-        `INSERT INTO product_categories (id, name, slug, description, sort_order) 
-         VALUES ($1, $2, $3, $4, $5) 
-         ON CONFLICT (slug) DO NOTHING`,
-        [uuidv4(), cat.name, cat.slug, cat.description, i]
-      );
-    }
-    console.log('✅ Product categories created');
-
-    // Business settings
+    // Business settings (only if empty)
     const { rowCount: settingsCount } = await client.query('SELECT id FROM business_settings');
     if (settingsCount === 0) {
       await client.query(
         `INSERT INTO business_settings (
-          id, business_name, phone, whatsapp, email, address, opening_hours, fssai_number, udyam_registered
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          id, business_name, phone, whatsapp, email, address, opening_hours, fssai_number, udyam_registered, google_maps_url
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
         [
           uuidv4(),
           "Grandma's Ladle",
           '9841207516',
-          '9841207516',
+          '919841207516',
           'grandmasladle1269@gmail.com',
           'No.26/2, 4th Cross, Sawmill Road, New Thippasandra, Bangalore-560075',
           '10:00 AM TO 8:00 PM',
           '21226010006642',
-          true
+          true,
+          'https://maps.google.com/maps?q=12.9750239,77.6540696&hl=en&z=17&output=embed'
         ]
       );
-      console.log('✅ Business settings created');
+      console.log('✅ Business settings initialized');
     }
-
-    // FAQs
-    const faqs = [
-      { q: 'How long do the products stay fresh?', a: 'Our products are made without preservatives and typically stay fresh for 2-4 weeks when stored in an airtight container.' },
-      { q: 'Do you use any preservatives?', a: 'No, we never use any artificial preservatives, colors, or flavors in our products. Everything is made traditionally.' },
-      { q: 'Can I place a bulk order for a wedding or event?', a: 'Yes! Please use our Corporate Enquiry form or contact us directly for bulk orders and event catering.' },
-    ];
-
-    for (let i = 0; i < faqs.length; i++) {
-      const faq = faqs[i];
-      await client.query(
-        'INSERT INTO faqs (id, question, answer, sort_order) SELECT $1, $2, $3, $4 WHERE NOT EXISTS (SELECT 1 FROM faqs WHERE question = $2)',
-        [uuidv4(), faq.q, faq.a, i]
-      );
-    }
-    console.log('✅ FAQs created');
 
     await client.query('COMMIT');
     console.log('✅ Seeding completed successfully');

@@ -68,7 +68,7 @@ export function HeroSlider() {
   return (
     <div className={containerClasses}>
       {slides.map((s, index) => {
-        const isClickableBanner = (Boolean(s.isClickable) || Boolean(s.isImageOnly)) && Boolean(s.ctaLink);
+        const isClickableBanner = Boolean(s.isClickable) && Boolean(s.ctaLink);
         const isContain = s.imageFit === 'contain';
         const isTop = s.imageFit === 'cover-top';
         const isBottom = s.imageFit === 'cover-bottom';
@@ -82,26 +82,27 @@ export function HeroSlider() {
           : 'object-cover object-center';
 
         const handleSlideClick = (e: React.MouseEvent) => {
+          if (!isClickableBanner || !s.ctaLink) {
+            return;
+          }
           // Prevent double navigation if user clicked directly on a CTA button/link
           if ((e.target as HTMLElement).closest('button, a')) {
             return;
           }
-          if (isClickableBanner && s.ctaLink) {
-            const target = s.ctaLink.trim();
-            // Same-page navigation (strictly no _blank)
-            if (target.startsWith('http://') || target.startsWith('https://')) {
-              window.location.href = target;
-            } else {
-              const route = target.startsWith('/') ? target : `/${target}`;
-              navigate(route);
-            }
+          const target = s.ctaLink.trim();
+          // Same-page navigation (strictly no _blank)
+          if (target.startsWith('http://') || target.startsWith('https://')) {
+            window.location.href = target;
+          } else {
+            const route = target.startsWith('/') ? target : `/${target}`;
+            navigate(route);
           }
         };
 
         return (
           <div
             key={s.id}
-            onClick={handleSlideClick}
+            onClick={isClickableBanner ? handleSlideClick : undefined}
             role={isClickableBanner ? 'link' : undefined}
             tabIndex={isClickableBanner ? 0 : undefined}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
