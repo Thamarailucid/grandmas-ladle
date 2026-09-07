@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { useBusinessSettingsContext } from '@/contexts/BusinessSettingsContext';
+import { formatDisplayPhone } from '@/lib/whatsapp';
 
 export default function PrivacyPolicyPage() {
   const { phone, email, address, fssaiNumber } = useBusinessSettingsContext();
@@ -120,7 +121,7 @@ export default function PrivacyPolicyPage() {
               <p><strong>Grandma's Ladle</strong></p>
               <p>Address: {address}</p>
               <p>Email: <a href={`mailto:${email}`} className="text-brand-green underline">{email}</a></p>
-              <p>Phone: +91 {phone || '9841207516'}</p>
+              <p>Phone: {formatDisplayPhone(phone)}</p>
               <p>FSSAI Registration No.: {displayFssai}</p>
             </div>
           </div>

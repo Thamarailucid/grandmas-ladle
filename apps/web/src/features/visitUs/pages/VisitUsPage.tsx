@@ -97,18 +97,8 @@ export default function VisitUsPage() {
                 <div className="mb-4">
                   <h4 className="font-bold text-[#B85C3E] mb-1.5">Opening Hours:</h4>
                   <div className="bg-[#FAF4E6] border border-[#B8925A]/30 rounded-lg p-3 sm:p-3.5">
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="font-bold text-[#2C4A3B] text-sm sm:text-base">Monday to Sunday (All 7 Days)</span>
-                      <span className="text-[11px] bg-[#2C4A3B]/10 text-[#2C4A3B] font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">
-                        Open All Days
-                      </span>
-                    </div>
-                    <p className="text-[#3E2C22] text-sm font-medium">
-                      {openingHours ? (
-                        openingHours.includes(':') && !openingHours.toLowerCase().includes('mon')
-                          ? `10:00 AM – 8:00 PM`
-                          : openingHours
-                      ) : '10:00 AM – 8:00 PM'}
+                    <p className="text-[#2C4A3B] font-semibold text-sm sm:text-base whitespace-pre-line">
+                      {openingHours || 'Monday to Saturday : 10:00 AM TO 8:00 PM'}
                     </p>
                   </div>
                 </div>

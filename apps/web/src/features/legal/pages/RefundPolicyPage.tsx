@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { useBusinessSettingsContext } from '@/contexts/BusinessSettingsContext';
+import { formatDisplayPhone } from '@/lib/whatsapp';
 
 export default function RefundPolicyPage() {
   const { phone, email, address, fssaiNumber } = useBusinessSettingsContext();
@@ -69,7 +70,7 @@ export default function RefundPolicyPage() {
             <h3 className="font-playfair text-xl font-bold text-[#2C4A3B] mb-3">1. Order Cancellation</h3>
             <div className="space-y-3 text-sm sm:text-base">
               <p>
-                <strong>Daily / Standard Orders:</strong> Once an order is confirmed, preparation begins shortly thereafter to guarantee freshness. Cancellations can be requested by calling or messaging us on WhatsApp (+91 {phone || '9841207516'}) prior to the dispatch of preparation.
+                <strong>Daily / Standard Orders:</strong> Once an order is confirmed, preparation begins shortly thereafter to guarantee freshness. Cancellations can be requested by calling or messaging us on WhatsApp ({formatDisplayPhone(phone)}) prior to the dispatch of preparation.
               </p>
               <p>
                 <strong>Bulk, Corporate & Festival Pre-Orders:</strong> For large orders requiring dedicated ingredient sourcing (e.g., Modakam boxes, corporate celebration packs), cancellations must be communicated at least <strong>24 hours</strong> before the scheduled delivery date for a full refund or date rescheduling.
@@ -116,7 +117,7 @@ export default function RefundPolicyPage() {
             <div className="bg-[#FAF4E6] p-4 rounded-xl text-sm space-y-1">
               <p><strong>Grandma's Ladle</strong></p>
               <p>Address: {address}</p>
-              <p>WhatsApp / Call: +91 {phone || '9841207516'}</p>
+              <p>WhatsApp / Call: {formatDisplayPhone(phone)}</p>
               <p>Email: <a href={`mailto:${email}`} className="text-brand-green underline">{email}</a></p>
               <p>FSSAI Registration No.: {displayFssai}</p>
             </div>

@@ -12,7 +12,8 @@ export function Footer() {
     address, 
     fssaiNumber, 
     instagramUrl, 
-    tagline
+    tagline,
+    openingHours
   } = useBusinessSettingsContext();
   
   const currentYear = new Date().getFullYear();
@@ -77,8 +78,8 @@ export function Footer() {
               <li className="pt-2 text-warm-cream/80 whitespace-pre-line">
                 {address}
               </li>
-              <li className="pt-1 text-antique-brass text-xs font-medium">
-                Open All 7 Days: 10:00 AM – 8:00 PM
+              <li className="pt-1 text-antique-brass text-xs font-medium whitespace-pre-line">
+                {openingHours || 'Monday to Saturday : 10:00 AM TO 8:00 PM'}
               </li>
             </ul>
           </div>

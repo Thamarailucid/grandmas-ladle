@@ -1,12 +1,18 @@
 import { config } from '@/config/env';
 
 export function formatWhatsAppNumber(phone?: string): string {
-  if (!phone) return config.whatsappNumber;
+  if (!phone) return '+919841207516';
   const digits = phone.replace(/[^0-9]/g, '');
   if (digits.length === 10) {
-    return `91${digits}`;
+    return `+91${digits}`;
   }
-  return digits || config.whatsappNumber;
+  if (digits.length === 12 && digits.startsWith('91')) {
+    return `+${digits}`;
+  }
+  if (digits.length > 0) {
+    return digits.startsWith('+') ? digits : `+${digits}`;
+  }
+  return '+919841207516';
 }
 
 export function formatPhoneTel(phone?: string): string {

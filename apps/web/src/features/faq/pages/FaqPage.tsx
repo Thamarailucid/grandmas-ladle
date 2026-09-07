@@ -5,7 +5,7 @@ import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { BrandButton } from '@/components/common/BrandButton';
 import { useBusinessSettingsContext } from '@/contexts/BusinessSettingsContext';
-import { createWhatsAppUrl } from '@/lib/whatsapp';
+import { createWhatsAppUrl, formatPhoneTel } from '@/lib/whatsapp';
 
 const faqs = [
   {
@@ -111,7 +111,7 @@ export default function FaqPage() {
               </BrandButton>
               <BrandButton
                 variant="outline"
-                href={`tel:${phone}`}
+                href={`tel:${formatPhoneTel(phone)}`}
               >
                 Call Us
               </BrandButton>
