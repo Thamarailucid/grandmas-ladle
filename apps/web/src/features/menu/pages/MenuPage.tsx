@@ -14,6 +14,25 @@ import toast from 'react-hot-toast';
 import { MinimalLoader } from '@/components/common/MinimalLoader';
 import { ProductDetailModal } from '@/components/common/ProductDetailModal';
 
+import traditionalSnacksImg from '@/assets/traditional_snacks.jpg';
+import ladoosImg from '@/assets/ladoos.jpg';
+import sundalImg from '@/assets/sundal.jpg';
+import modakamImg from '@/assets/modakam.jpg';
+import milletFoodsImg from '@/assets/millet_foods.jpg';
+import festivalOrdersImg from '@/assets/festival_orders.jpg';
+
+function getProductFallbackImage(item: any): string {
+  if (item.imageUrl) return item.imageUrl;
+  const name = (item.name || '').toLowerCase();
+  const slug = (item.slug || '').toLowerCase();
+  if (name.includes('modak') || name.includes('kozhukattai') || slug.includes('modak')) return modakamImg;
+  if (name.includes('ladoo') || name.includes('urundai') || slug.includes('ladoo')) return ladoosImg;
+  if (name.includes('sundal') || slug.includes('sundal')) return sundalImg;
+  if (name.includes('ragi') || name.includes('kanji') || name.includes('millet')) return milletFoodsImg;
+  if (name.includes('box') || name.includes('festival') || name.includes('combo')) return festivalOrdersImg;
+  return traditionalSnacksImg;
+}
+
 const fetchCategories = async (): Promise<ProductCategory[]> => {
   const response = await apiClient.get<ApiListResponse<ProductCategory>>('/ProductCategory/GetPublicProductCategories');
   return response.data.data;
@@ -150,11 +169,11 @@ export default function MenuPage() {
                           className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center cursor-pointer group isolate"
                           onClick={() => setSelectedProduct(item)}
                         >
-                          {item.imageUrl ? (
-                            <img src={item.imageUrl} alt={item.name} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!isOrderable ? 'grayscale opacity-70' : ''}`} />
-                          ) : (
-                            <span className="text-[11px] sm:text-xs text-[#6b6259] italic text-center px-2">Image of {item.name}</span>
-                          )}
+                          <img 
+                            src={getProductFallbackImage(item)} 
+                            alt={item.name} 
+                            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!isOrderable ? 'grayscale opacity-70' : ''}`} 
+                          />
                           {/* 45° Diagonal Sale Ribbon (Figma Design) */}
                           {(item.isOnSale || item.saleStatus === 'LIVE') && (
                             <div className="absolute -left-[26px] -top-[22px] sm:-left-[29px] sm:-top-[25px] w-[95px] sm:w-[114px] h-[95px] sm:h-[114px] flex items-center justify-center pointer-events-none z-10">
@@ -280,12 +299,21 @@ export default function MenuPage() {
               </span>
             </div>
 
-            {activeCategoryObj?.name.includes('Festival') || activeCategoryObj?.slug.includes('festival') ? (
-              <div className="text-center py-12 bg-[#faf6ee] rounded-[14px] border border-[rgba(35,31,26,0.08)] shadow-sm">
-                <h3 className="text-xl text-[#3E2C22] mb-4">See our festival specials</h3>
-                <BrandButton variant="primary" to="/festivals">View Festival Specials</BrandButton>
+            {(activeCategoryObj?.name.includes('Festival') || activeCategoryObj?.slug.includes('festival')) && (
+              <div className="mb-6 p-4 sm:p-6 bg-[#FAF4E6] border border-[#B8925A]/40 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                <div>
+                  <h4 className="font-serif text-lg sm:text-xl font-bold text-[#2C4A3B]">Ganesh Chaturthi Festive Specials</h4>
+                  <p className="text-xs sm:text-sm text-[#3E2C22]/80 mt-1">
+                    Pre-order our handcrafted Modakams, Kozhukattai, and festive sweets for your home pooja and celebrations.
+                  </p>
+                </div>
+                <BrandButton variant="primary" to="/festivals" className="whitespace-nowrap flex-shrink-0 text-xs sm:text-sm">
+                  VIEW FESTIVAL SPECIALS
+                </BrandButton>
               </div>
-            ) : isLoadingProducts ? (
+            )}
+
+            {isLoadingProducts ? (
               <MinimalLoader text="Loading Products..." />
             ) : displayedItems.length === 0 ? (
               <div className="text-center py-12 text-gray-500 bg-[#faf6ee] rounded-[14px] border border-[rgba(35,31,26,0.08)] shadow-sm">
@@ -317,11 +345,11 @@ export default function MenuPage() {
                     className="bg-[#e7e1d2] rounded-[10px] overflow-hidden relative aspect-square flex items-center justify-center cursor-pointer group isolate"
                     onClick={() => setSelectedProduct(item)}
                   >
-                    {item.imageUrl ? (
-                      <img src={item.imageUrl} alt={item.name} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!isOrderable ? 'grayscale opacity-70' : ''}`} />
-                    ) : (
-                      <span className="text-[11px] sm:text-xs text-[#6b6259] italic text-center px-2">Image of {item.name}</span>
-                    )}
+                    <img 
+                      src={getProductFallbackImage(item)} 
+                      alt={item.name} 
+                      className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!isOrderable ? 'grayscale opacity-70' : ''}`} 
+                    />
                     {/* 45° Diagonal Sale Ribbon (Figma Design) */}
                     {(item.isOnSale || item.saleStatus === 'LIVE') && (
                       <div className="absolute -left-[26px] -top-[22px] sm:-left-[29px] sm:-top-[25px] w-[95px] sm:w-[114px] h-[95px] sm:h-[114px] flex items-center justify-center pointer-events-none z-10">

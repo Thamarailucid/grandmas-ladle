@@ -13,6 +13,8 @@ const FestivalsPage = lazy(() => import('@/features/festivals/pages/FestivalsPag
 const VisitUsPage = lazy(() => import('@/features/visitUs/pages/VisitUsPage'));
 const ContactPage = lazy(() => import('@/features/contact/pages/ContactPage'));
 const FaqPage = lazy(() => import('@/features/faq/pages/FaqPage'));
+const PrivacyPolicyPage = lazy(() => import('@/features/legal/pages/PrivacyPolicyPage'));
+const RefundPolicyPage = lazy(() => import('@/features/legal/pages/RefundPolicyPage'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -37,6 +39,8 @@ export function AppRoutes() {
           <Route path="/visit-us" element={<VisitUsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
         </Route>
       </Routes>
     </Suspense>

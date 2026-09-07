@@ -1,9 +1,10 @@
 import { WhatsAppOutlined } from '@ant-design/icons';
 import { useBusinessSettingsContext } from '../../contexts/BusinessSettingsContext';
+import { formatWhatsAppNumber } from '@/lib/whatsapp';
 
 export function WhatsAppFAB() {
   const { whatsapp } = useBusinessSettingsContext();
-  const waLink = `https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`;
+  const waLink = `https://wa.me/${formatWhatsAppNumber(whatsapp)}`;
 
   return (
     <a

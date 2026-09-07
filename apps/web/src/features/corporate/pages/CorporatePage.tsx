@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import { Form, Input, InputNumber, DatePicker, Select, Button, message } from 'antd';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
@@ -117,11 +118,17 @@ export default function CorporatePage() {
               <Form.Item name="specialRequirements" label="Special requirements">
                 <TextArea rows={3} placeholder="Any dietary requirements or special instructions?" />
               </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit" className="w-full bg-[#B85C3E] hover:bg-[#a04e33] border-none h-10 text-white font-bold">
+              <Form.Item className="mb-2">
+                <Button type="primary" htmlType="submit" className="w-full bg-[#B85C3E] hover:bg-[#a04e33] border-none h-11 text-white font-bold tracking-wide shadow-md">
                   REQUEST A QUOTE
                 </Button>
               </Form.Item>
+              <p className="text-center text-xs text-gray-500 mt-2">
+                We respect your privacy. Details provided are strictly used to coordinate your catering quote. Read our{' '}
+                <Link to="/privacy-policy" className="text-[#2C4A3B] underline hover:text-[#B85C3E] font-medium">
+                  Privacy Policy
+                </Link>.
+              </p>
             </Form>
           </div>
         </div>

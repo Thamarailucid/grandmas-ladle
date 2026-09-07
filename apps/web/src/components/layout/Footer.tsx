@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useBusinessSettingsContext } from '../../contexts/BusinessSettingsContext';
-import { InstagramOutlined, FacebookOutlined, WhatsAppOutlined, PhoneOutlined } from '@ant-design/icons';
+import { InstagramOutlined, WhatsAppOutlined, PhoneOutlined } from '@ant-design/icons';
+import { formatWhatsAppNumber, formatPhoneTel } from '@/lib/whatsapp';
 import logoImg from '@/assets/logo.jpg';
 
 export function Footer() {
@@ -11,11 +12,13 @@ export function Footer() {
     address, 
     fssaiNumber, 
     instagramUrl, 
-    facebookUrl,
     tagline
   } = useBusinessSettingsContext();
   
   const currentYear = new Date().getFullYear();
+  const displayFssai = fssaiNumber || '21226010006642';
+  const waUrl = `https://wa.me/${formatWhatsAppNumber(whatsapp)}`;
+  const telUrl = `tel:${formatPhoneTel(phone)}`;
 
   return (
     <footer className="bg-brand-green text-warm-cream pt-16 pb-28 md:pb-12">
@@ -49,6 +52,7 @@ export function Footer() {
               <li><Link to="/festivals" className="hover:text-antique-brass transition-colors">Festivals</Link></li>
               <li><Link to="/visit-us" className="hover:text-antique-brass transition-colors">Visit Us</Link></li>
               <li><Link to="/contact" className="hover:text-antique-brass transition-colors">Contact</Link></li>
+              <li><Link to="/faq" className="hover:text-antique-brass transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
@@ -57,13 +61,13 @@ export function Footer() {
             <h3 className="text-lg font-serif mb-4 text-antique-brass">Order & Contact</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-antique-brass transition-colors">
+                <a href={waUrl} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-antique-brass transition-colors">
                   <WhatsAppOutlined className="mr-2 text-lg" /> Order on WhatsApp
                 </a>
               </li>
               <li>
-                <a href={`tel:${phone}`} className="flex items-center hover:text-antique-brass transition-colors">
-                  <PhoneOutlined className="mr-2" /> {phone}
+                <a href={telUrl} className="flex items-center hover:text-antique-brass transition-colors">
+                  <PhoneOutlined className="mr-2" /> {phone || '9841207516'}
                 </a>
               </li>
               <li className="pt-2">
@@ -79,12 +83,15 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-serif mb-4 text-antique-brass">Follow Us</h3>
             <div className="flex space-x-4">
-              <a href={instagramUrl || '#'} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-antique-brass transition-colors">
-                <InstagramOutlined />
-              </a>
-              <a href={facebookUrl || '#'} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-antique-brass transition-colors">
-                <FacebookOutlined />
-              </a>
+              {instagramUrl && instagramUrl !== '#' ? (
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-antique-brass transition-colors" aria-label="Instagram">
+                  <InstagramOutlined />
+                </a>
+              ) : (
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-antique-brass transition-colors" aria-label="Instagram">
+                  <InstagramOutlined />
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -92,17 +99,28 @@ export function Footer() {
         <div className="border-t border-warm-cream/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-warm-cream/60 gap-4 md:gap-0 text-center md:text-left">
           {/* Left: FSSAI & Udyam */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left gap-0.5">
-            <span className="font-medium text-warm-cream/80">FSSAI Reg. No. {fssaiNumber}</span>
+            <span className="font-medium text-warm-cream/90">FSSAI Reg. No. {displayFssai}</span>
             <span className="text-[11px] text-warm-cream/50">Udyam (MSME) Registered</span>
           </div>
 
-          {/* Center: Attribution */}
-          <p>
-            Designed & Developed by{' '}
-            <a href="https://novacodex.in" target="_blank" rel="noopener noreferrer" className="hover:text-antique-brass transition-colors font-medium">
-              NovaCodex
-            </a>
-          </p>
+          {/* Center: Legal Policies & Attribution */}
+          <div className="flex flex-col items-center gap-1.5 text-center">
+            <div className="flex items-center gap-3">
+              <Link to="/privacy-policy" className="hover:text-antique-brass transition-colors underline-offset-2 hover:underline">
+                Privacy Policy
+              </Link>
+              <span>•</span>
+              <Link to="/refund-policy" className="hover:text-antique-brass transition-colors underline-offset-2 hover:underline">
+                Refund & Cancellation
+              </Link>
+            </div>
+            <p className="text-[11px] text-warm-cream/50">
+              Designed & Developed by{' '}
+              <a href="https://novacodex.in" target="_blank" rel="noopener noreferrer" className="hover:text-antique-brass transition-colors font-medium">
+                NovaCodex
+              </a>
+            </p>
+          </div>
 
           {/* Right: Copyright (with buffer from floating WhatsApp button) */}
           <div className="text-center md:text-right md:pr-20 lg:pr-24">

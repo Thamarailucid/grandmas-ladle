@@ -24,64 +24,6 @@ interface ReviewStats {
   ratingBreakdown: Record<string, number>;
 }
 
-const FALLBACK_REVIEWS: ReviewItem[] = [
-  {
-    id: '1',
-    customerName: 'Ananya Sundaram',
-    customerLocation: 'Indiranagar, Bengaluru',
-    rating: 5,
-    isVerified: true,
-    productNames: ['Kai Murukku', 'Ribbon Pakoda'],
-    content: 'The Kai Murukku and Ribbon Pakoda remind me exactly of my grandmother’s kitchen in Thanjavur. Crisp, authentic aroma of pure butter, and zero oily aftertaste.',
-    createdAt: '2026-09-02T10:30:00Z',
-    adminReply: 'Thank you Ananya! Preserving that authentic grandmother taste is our greatest mission.'
-  },
-  {
-    id: '2',
-    customerName: 'Rahul Menon',
-    customerLocation: 'Koramangala, Bengaluru',
-    rating: 5,
-    isVerified: true,
-    productNames: ['Corporate Gift Snack Box'],
-    content: 'Ordered 15 corporate snack gift boxes for our team celebration. Everyone was stunned by the taste and packaging quality. Delivered right on schedule!',
-    createdAt: '2026-08-28T14:15:00Z',
-    adminReply: null
-  },
-  {
-    id: '3',
-    customerName: 'Kavitha Ramachandran',
-    customerLocation: 'Jayanagar, Bengaluru',
-    rating: 5,
-    isVerified: true,
-    productNames: ['Besan Ladoo', 'Nei Urundai'],
-    content: 'The Besan Ladoos and Nei Urundai melt effortlessly in your mouth. Pure country ghee aroma! Truly feels like home.',
-    createdAt: '2026-08-25T09:45:00Z',
-    adminReply: 'Warm gratitude Kavitha! We use only traditional A2 bilona ghee in all our sweets.'
-  },
-  {
-    id: '4',
-    customerName: 'Siddharth Iyer',
-    customerLocation: 'Malleshwaram, Bengaluru',
-    rating: 5,
-    isVerified: true,
-    productNames: ['Seedai', 'South Indian Mixture'],
-    content: 'The Seedai and Mixture are simply unmatched in Bengaluru. Perfectly balanced spices and fresh crunch in every single bite.',
-    createdAt: '2026-08-20T16:20:00Z',
-    adminReply: null
-  },
-  {
-    id: '5',
-    customerName: 'Deepa Varma',
-    customerLocation: 'HSR Layout, Bengaluru',
-    rating: 5,
-    isVerified: true,
-    productNames: ['Pepper Thattai'],
-    content: 'Our family has become addicted to the Pepper Thattai! Authentic taste, wholesome ingredients, and wonderful customer service.',
-    createdAt: '2026-08-15T11:10:00Z',
-    adminReply: null
-  }
-];
-
 export function CustomerReviewsSection() {
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
@@ -104,14 +46,21 @@ export function CustomerReviewsSection() {
     value: p.name
   }));
 
-  const reviews: ReviewItem[] = reviewsResponse?.data && reviewsResponse.data.length > 0
-    ? reviewsResponse.data
-    : FALLBACK_REVIEWS;
+  const reviews: ReviewItem[] = reviewsResponse?.data || [];
+
+  // Hide the reviews section completely if loading is finished and there are no published reviews yet
+  if (!isLoading && reviews.length === 0) {
+    return null;
+  }
+
+  const calculatedAvg = reviews.length > 0
+    ? (reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / reviews.length).toFixed(1)
+    : '5.0';
 
   const stats: ReviewStats = reviewsResponse?.stats || {
-    averageRating: '4.9',
+    averageRating: calculatedAvg,
     totalReviews: reviews.length,
-    ratingBreakdown: { '5': 42, '4': 6, '3': 1, '2': 0, '1': 0 }
+    ratingBreakdown: {}
   };
 
   // Submit review mutation

@@ -1,7 +1,28 @@
 import { config } from '@/config/env';
 
-export function createWhatsAppUrl(message?: string): string {
-  const base = `https://wa.me/${config.whatsappNumber}`;
+export function formatWhatsAppNumber(phone?: string): string {
+  if (!phone) return config.whatsappNumber;
+  const digits = phone.replace(/[^0-9]/g, '');
+  if (digits.length === 10) {
+    return `91${digits}`;
+  }
+  return digits || config.whatsappNumber;
+}
+
+export function formatPhoneTel(phone?: string): string {
+  if (!phone) return '+919841207516';
+  const clean = phone.replace(/[^0-9+]/g, '');
+  if (clean.startsWith('+')) return clean;
+  const digits = phone.replace(/[^0-9]/g, '');
+  if (digits.length === 10) {
+    return `+91${digits}`;
+  }
+  return `+${digits}`;
+}
+
+export function createWhatsAppUrl(message?: string, customPhone?: string): string {
+  const num = formatWhatsAppNumber(customPhone || config.whatsappNumber);
+  const base = `https://wa.me/${num}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
