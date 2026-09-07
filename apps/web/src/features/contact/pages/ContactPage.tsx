@@ -60,6 +60,30 @@ export default function ContactPage() {
         <meta property="og:description" content="Get in touch for orders, corporate enquiries or feedback — call, WhatsApp or visit our Bengaluru kitchen." />
         <meta property="og:url" content="https://grandma.novacodex.in/contact" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* ContactPage Structured Data for Google AI & Search */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact Grandma's Ladle",
+            "url": "https://grandma.novacodex.in/contact",
+            "mainEntity": {
+              "@type": "Restaurant",
+              "name": "Grandma's Ladle",
+              "telephone": "+91-9841207516",
+              "email": "grandmasladle1269@gmail.com",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "No.26/2, 4th Cross, Sawmill Road, New Thippasandra",
+                "addressLocality": "Bengaluru",
+                "addressRegion": "Karnataka",
+                "postalCode": "560075",
+                "addressCountry": "IN"
+              }
+            }
+          })}
+        </script>
       </Helmet>
 
       <SectionContainer bgColor="cream">

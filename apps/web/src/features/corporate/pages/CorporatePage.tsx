@@ -60,6 +60,34 @@ export default function CorporatePage() {
         <meta property="og:url" content="https://grandma.novacodex.in/corporate" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
         <meta property="og:site_name" content="Grandma's Ladle" />
+
+        {/* CateringService Structured Data for Google Search & AI Overviews */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FoodService",
+            "name": "Corporate & Bulk Traditional Snacks Catering - Grandma's Ladle",
+            "provider": {
+              "@type": "Restaurant",
+              "name": "Grandma's Ladle",
+              "telephone": "+91-9841207516",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "No.26/2, 4th Cross, Sawmill Road, New Thippasandra",
+                "addressLocality": "Bengaluru",
+                "addressRegion": "Karnataka",
+                "postalCode": "560075",
+                "addressCountry": "IN"
+              }
+            },
+            "serviceType": "Traditional South Indian Workplace Snacks & Catering",
+            "areaServed": {
+              "@type": "City",
+              "name": "Bengaluru"
+            },
+            "description": "Wholesome traditional snacks, festival gift boxes, sundal and sweets for office meetings, employee celebrations, and corporate gifting."
+          })}
+        </script>
       </Helmet>
       
       <SectionContainer bgColor="cream">

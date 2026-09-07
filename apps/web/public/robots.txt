@@ -11,11 +11,37 @@ Allow: /contact
 Allow: /faq
 Allow: /privacy-policy
 Allow: /refund-policy
+Allow: /llms.txt
 Disallow: /api/
+
+# AI Search Assistants & LLM Crawlers (Google AI Overviews, OpenAI, Anthropic, Perplexity)
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
 
 # Author & Developer Credits
 # Developer: NovaCodex Technologies (https://novacodex.in)
 # Lead Developer: Thamaraiselvan A
+
+# Knowledge Base for AI Search Assistants
+# LLM Context: https://grandma.novacodex.in/llms.txt
 
 # XML Sitemap Index
 Sitemap: https://grandma.novacodex.in/sitemap.xml

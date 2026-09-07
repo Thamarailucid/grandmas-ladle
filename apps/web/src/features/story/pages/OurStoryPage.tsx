@@ -16,6 +16,32 @@ export default function OurStoryPage() {
         <meta property="og:description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
         <meta property="og:url" content="https://grandma.novacodex.in/our-story" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* AboutPage & Brand Heritage Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": "The Story Behind Grandma's Ladle",
+            "url": "https://grandma.novacodex.in/our-story",
+            "description": "A story of two grandmothers, a thousand little efforts, and one silver glass — the heritage of honest work and traditional South Indian cooking.",
+            "mainEntity": {
+              "@type": "Organization",
+              "name": "Grandma's Ladle",
+              "url": "https://grandma.novacodex.in/",
+              "foundingLocation": {
+                "@type": "Place",
+                "name": "New Thippasandra, Bengaluru, Karnataka, India"
+              },
+              "knowsAbout": [
+                "South Indian Traditional Snacks",
+                "Traditional Sweets and Ladoos",
+                "Pure Ghee Food Preparation",
+                "Heritage Family Recipes"
+              ]
+            }
+          })}
+        </script>
       </Helmet>
 
       {/* Page Header */}

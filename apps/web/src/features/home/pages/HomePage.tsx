@@ -29,6 +29,31 @@ export default function HomePage() {
           name="description" 
           content="Traditional South Indian snacks, ladoos, sundal & festive sweets made the way grandma did. Order online or visit our New Thippasandra kitchen." 
         />
+        <link rel="canonical" href="https://grandma.novacodex.in/" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Grandma's Ladle | Traditional Homemade Snacks & Sweets, Bengaluru" />
+        <meta property="og:description" content="Traditional South Indian snacks, ladoos, sundal & festive sweets made the way grandma did." />
+        <meta property="og:url" content="https://grandma.novacodex.in/" />
+        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* Site Navigation BreadcrumbList Schema for Google Search Snippets */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://grandma.novacodex.in/" },
+              { "@type": "ListItem", "position": 2, "name": "Menu", "item": "https://grandma.novacodex.in/menu" },
+              { "@type": "ListItem", "position": 3, "name": "Our Story", "item": "https://grandma.novacodex.in/our-story" },
+              { "@type": "ListItem", "position": 4, "name": "Corporate Catering", "item": "https://grandma.novacodex.in/corporate" },
+              { "@type": "ListItem", "position": 5, "name": "Festivals", "item": "https://grandma.novacodex.in/festivals" },
+              { "@type": "ListItem", "position": 6, "name": "Visit Us", "item": "https://grandma.novacodex.in/visit-us" },
+              { "@type": "ListItem", "position": 7, "name": "FAQ", "item": "https://grandma.novacodex.in/faq" },
+              { "@type": "ListItem", "position": 8, "name": "Contact", "item": "https://grandma.novacodex.in/contact" }
+            ]
+          })}
+        </script>
       </Helmet>
 
       <HeroSlider />

@@ -110,6 +110,103 @@ export default function MenuPage() {
         <meta property="og:description" content="Browse our menu of traditional homemade snacks, ladoos, sundal and festive specials." />
         <meta property="og:url" content="https://grandma.novacodex.in/menu" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* Menu & Traditional Foods Structured Data for Google AI & Rich Results */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Menu",
+            "name": "Grandma's Ladle Traditional Food Menu",
+            "url": "https://grandma.novacodex.in/menu",
+            "inLanguage": "en-IN",
+            "hasMenuSection": [
+              {
+                "@type": "MenuSection",
+                "name": "Traditional Snacks",
+                "description": "Handcrafted traditional South Indian savoury snacks made fresh with authentic ingredients.",
+                "hasMenuItem": [
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kai Murukku",
+                    "description": "Traditional handmade spiral snack with a crisp, delicate texture, made with rice flour, roasted gram and pure butter.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kuzhi Paniyaram",
+                    "description": "Comforting South Indian favourite prepared fresh, ideal for morning or evening snacking.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Modakam / Kozhukattai",
+                    "description": "Traditional steamed dumplings available in sweet coconut-jaggery and spicy savoury variations.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  }
+                ]
+              },
+              {
+                "@type": "MenuSection",
+                "name": "Ladoos & Sweet Bites",
+                "description": "Nutrient-dense traditional sweets prepared with pure ghee, dates, jaggery and roasted nuts.",
+                "hasMenuItem": [
+                  {
+                    "@type": "MenuItem",
+                    "name": "Peanut & Dates Ladoo",
+                    "description": "Naturally sweetened with wholesome dates, packed with roasted peanuts and zero refined sugar.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Sesame Ladoo (Ellu Urundai)",
+                    "description": "Traditional sesame sweet with rich roasted aroma, made with pure jaggery.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Multiseed Ladoo",
+                    "description": "Wholesome super-seed bite crafted with pumpkin seeds, melon seeds, and sesame.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  }
+                ]
+              },
+              {
+                "@type": "MenuSection",
+                "name": "Traditional & Wholesome",
+                "description": "Everyday nourishing foods and millet-based beverages.",
+                "hasMenuItem": [
+                  {
+                    "@type": "MenuItem",
+                    "name": "Sundal",
+                    "description": "Protein-rich traditional South Indian snack made from freshly boiled legumes, tempered with mustard, curry leaves and coconut.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Ragi Malt",
+                    "description": "Nourishing traditional finger millet beverage prepared for everyday vitality.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Ulundhu Kanji",
+                    "description": "Nutritious traditional lentil and black gram preparation.",
+                    "suitableForDiet": "https://schema.org/VegetarianDiet",
+                    "offers": { "@type": "Offer", "priceCurrency": "INR" }
+                  }
+                ]
+              }
+            ]
+          })}
+        </script>
       </Helmet>
       
       <SectionContainer bgColor="cream" className="py-16 md:py-15">

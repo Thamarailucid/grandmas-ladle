@@ -65,6 +65,22 @@ export default function FaqPage() {
         <meta property="og:description" content="Frequently asked questions about orders, deliveries, and traditional recipes." />
         <meta property="og:url" content="https://grandma.novacodex.in/faq" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* FAQPage Structured Data for Google AI Overviews & Rich Snippets */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqs.map(faq => ({
+              "@type": "Question",
+              "name": faq.label,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.children
+              }
+            }))
+          })}
+        </script>
       </Helmet>
 
       <SectionContainer bgColor="white">

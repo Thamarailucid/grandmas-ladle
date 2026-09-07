@@ -39,9 +39,42 @@ export default function VisitUsPage() {
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Visit Us | Grandma's Ladle, New Thippasandra, Bengaluru" />
-        <meta property="og:description" content="Find us at New Thippasandra, Bengaluru. Opening hours, directions, phone and WhatsApp ordering." />
         <meta property="og:url" content="https://grandma.novacodex.in/visit-us" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* Local Place & Kitchen Structured Data for Google Maps & Local AI */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FoodEstablishment",
+            "name": "Grandma's Ladle - Kitchen & Store",
+            "url": "https://grandma.novacodex.in/visit-us",
+            "telephone": "+91-9841207516",
+            "servesCuisine": "South Indian Traditional",
+            "hasMap": "https://maps.google.com/maps?q=12.9750239,77.6540696",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "No.26/2, 4th Cross, Sawmill Road, New Thippasandra",
+              "addressLocality": "Bengaluru",
+              "addressRegion": "Karnataka",
+              "postalCode": "560075",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 12.9750239,
+              "longitude": 77.6540696
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "10:00",
+                "closes": "20:00"
+              }
+            ]
+          })}
+        </script>
       </Helmet>
 
       <SectionContainer bgColor="cream">
