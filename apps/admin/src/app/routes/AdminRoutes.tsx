@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AdminLayout } from '@/components/layout/AdminLayout';
-import { ProtectedRoute } from '@/components/common/ProtectedRoute';
+import { PrivateRoute, ProtectedRoute } from '@/components/common/PrivateRoute';
+import { PublicRoute, PublicOnlyRoute } from '@/components/common/PublicRoute';
 
 import LoginPage from '@/features/auth/pages/LoginPage';
 import DashboardPage from '@/features/dashboard/pages/DashboardPage';
@@ -20,9 +21,18 @@ import ProfilePage from '@/features/profile/pages/ProfilePage';
 export function AdminRoutes() {
   return (
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        {/* Public-only route: Logged-in users will be bounced back to dashboard */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
         
-        <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+        {/* Protected / Private route: Unauthenticated users are redirected to /login */}
+        <Route element={<PrivateRoute><AdminLayout /></PrivateRoute>}>
           <Route index element={<DashboardPage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="categories" element={<CategoriesPage />} />

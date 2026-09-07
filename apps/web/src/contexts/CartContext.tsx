@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { Product, ApiListResponse } from '@grandmas-ladle/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
+import { secureStorage } from '@/lib/secureStorage';
 
 export interface CartItem {
   product: Product;
@@ -22,12 +23,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('grandmas_cart');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
+    return secureStorage.getItem<CartItem[]>('grandmas_cart') || [];
   });
 
   // Fetch live products on load to sync cart prices without repeated calls
@@ -79,7 +75,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [liveProducts]);
 
   useEffect(() => {
-    localStorage.setItem('grandmas_cart', JSON.stringify(items));
+    secureStorage.setItem('grandmas_cart', items);
   }, [items]);
 
   const addToCart = (product: Product) => {

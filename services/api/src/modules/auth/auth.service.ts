@@ -11,13 +11,13 @@ export const generateTokens = (user: any) => {
   const accessToken = jwt.sign(
     { id: user.id, role: user.role, email: user.email },
     env.JWT_ACCESS_SECRET!,
-    { expiresIn: env.JWT_ACCESS_EXPIRES_IN as any }
+    { expiresIn: (JWT_EXPIRES_IN || '7d') as any }
   );
   
   const refreshToken = jwt.sign(
     { id: user.id },
     env.JWT_REFRESH_SECRET!,
-    { expiresIn: env.JWT_REFRESH_EXPIRES_IN as any }
+    { expiresIn: (REFRESH_EXPIRES_IN || '7d') as any }
   );
   return { accessToken, refreshToken };
 };

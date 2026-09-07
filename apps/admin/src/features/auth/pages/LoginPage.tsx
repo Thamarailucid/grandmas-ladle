@@ -1,14 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Form, Input, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { setAuth } from '@/stores/authStore';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { setAuth, isAuthenticated } from '@/stores/authStore';
 import { apiClient } from '@/lib/apiClient';
 import loginBg from '@/assets/login-bg.jpg';
 import logoImg from '@/assets/logo.jpg';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
+
+  const from = (location.state as any)?.from?.pathname || '/';
+
+  // If already logged in, redirect immediately to target or dashboard
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate(from, { replace: true });
+    }
+  }, [navigate, from]);
 
   const onFinish = async (values: any) => {
     try {
@@ -18,7 +28,7 @@ export default function LoginPage() {
         const { accessToken, user } = response.data.data;
         setAuth(accessToken, user);
         message.success('Logged in successfully');
-        navigate('/');
+        navigate(from, { replace: true });
       }
     } catch (error: any) {
       message.error(error.response?.data?.message || 'Login failed. Please check your credentials.');

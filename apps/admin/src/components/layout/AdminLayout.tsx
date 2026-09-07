@@ -39,7 +39,7 @@ export function AdminLayout() {
 
   const handleLogout = () => {
     clearAuth();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   const handleMenuClick = () => {
