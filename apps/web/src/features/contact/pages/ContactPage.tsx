@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Form, Input, Button } from 'antd';
 import {
@@ -24,10 +24,17 @@ export default function ContactPage() {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const isSubmittingRef = useRef(false);
 
   const onFinish = async (values: any) => {
+    // Multi-click block: strictly drop any second click or duplicate trigger
+    if (isSubmittingRef.current || submitting) {
+      return;
+    }
+    isSubmittingRef.current = true;
+    setSubmitting(true);
+
     try {
-      setSubmitting(true);
       await apiClient.post('/ContactEnquiry/CreateContactEnquiry', values);
       toast.success('Thank you! Your message has been sent successfully.');
       form.resetFields();
@@ -36,6 +43,7 @@ export default function ContactPage() {
       const errMsg = error.response?.data?.message || 'Failed to send message. Please try again later.';
       toast.error(errMsg);
     } finally {
+      isSubmittingRef.current = false;
       setSubmitting(false);
     }
   };
@@ -135,6 +143,7 @@ export default function ContactPage() {
                   layout="vertical"
                   onFinish={onFinish}
                   requiredMark={false}
+                  disabled={submitting}
                 >
                   <Form.Item
                     name="name"
@@ -183,7 +192,8 @@ export default function ContactPage() {
                       htmlType="submit"
                       loading={submitting}
                       disabled={submitting}
-                      className="w-full bg-[#2C4A3B] hover:bg-[#1f3429] text-[#FAF4E6] h-12 rounded-lg font-semibold text-base shadow border-none transition-all duration-300 flex items-center justify-center"
+                      style={{ pointerEvents: submitting ? 'none' : 'auto' }}
+                      className="w-full bg-[#2C4A3B] hover:bg-[#1f3429] text-[#FAF4E6] h-12 rounded-lg font-semibold text-base shadow border-none transition-all duration-300 flex items-center justify-center cursor-pointer"
                     >
                       {submitting ? 'Sending Message...' : 'Send Message'}
                     </Button>

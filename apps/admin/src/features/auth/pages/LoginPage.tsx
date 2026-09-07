@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { setAuth, isAuthenticated } from '@/stores/authStore';
@@ -10,6 +10,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
+  const isSubmittingRef = useRef(false);
 
   const from = (location.state as any)?.from?.pathname || '/';
 
@@ -21,6 +22,8 @@ export default function LoginPage() {
   }, [navigate, from]);
 
   const onFinish = async (values: any) => {
+    if (isSubmittingRef.current || loading) return;
+    isSubmittingRef.current = true;
     try {
       setLoading(true);
       const response = await apiClient.post('/Auth/Login', values);
@@ -33,6 +36,7 @@ export default function LoginPage() {
     } catch (error: any) {
       message.error(error.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
+      isSubmittingRef.current = false;
       setLoading(false);
     }
   };
@@ -67,7 +71,7 @@ export default function LoginPage() {
             <div className="w-16 h-0.5 bg-[#B8925A] mx-auto mt-3" />
           </div>
 
-          <Form layout="vertical" onFinish={onFinish} size="large">
+          <Form layout="vertical" onFinish={onFinish} size="large" disabled={loading}>
             <Form.Item
               label={<span className="text-[#2C4A3B] font-medium">Email</span>}
               name="email"
@@ -98,10 +102,12 @@ export default function LoginPage() {
                 type="primary" 
                 htmlType="submit" 
                 loading={loading} 
+                disabled={loading}
                 className="w-full h-12 rounded-lg text-base font-semibold tracking-wide shadow-md hover:shadow-lg transition-all duration-300"
                 style={{ 
                   backgroundColor: '#2C4A3B', 
                   borderColor: '#2C4A3B',
+                  pointerEvents: loading ? 'none' : 'auto'
                 }}
               >
                 {loading ? 'Signing In...' : 'Sign In'}

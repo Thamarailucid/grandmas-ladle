@@ -79,6 +79,7 @@ export function CustomerReviewsSection() {
   };
 
   const handleFormSubmit = async () => {
+    if (submitMutation.isPending) return;
     try {
       const values = await form.validateFields();
       submitMutation.mutate(values);
@@ -203,7 +204,8 @@ export function CustomerReviewsSection() {
             color: '#FFFFFF',
             borderRadius: '8px',
             padding: '0 24px',
-            height: '40px'
+            height: '40px',
+            pointerEvents: submitMutation.isPending ? 'none' : 'auto'
           }
         }}
         cancelButtonProps={{
@@ -217,7 +219,12 @@ export function CustomerReviewsSection() {
           Your authentic feedback helps other families discover genuine traditional snacks. All reviews are vetted to ensure authenticity.
         </p>
 
-        <Form form={form} layout="vertical" initialValues={{ rating: 5, productNames: [] }}>
+        <Form 
+          form={form} 
+          layout="vertical" 
+          disabled={submitMutation.isPending} 
+          initialValues={{ rating: 5, productNames: [] }}
+        >
           <Form.Item
             name="rating"
             label={<span className="font-medium text-brand-dark-brown">Your Rating</span>}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Form, Input, InputNumber, DatePicker, Button, message } from 'antd';
@@ -15,10 +15,17 @@ export default function CorporatePage() {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const isSubmittingRef = useRef(false);
 
   const onFinish = async (values: any) => {
+    // Multi-click block: strictly drop any second click or duplicate trigger
+    if (isSubmittingRef.current || submitting) {
+      return;
+    }
+    isSubmittingRef.current = true;
+    setSubmitting(true);
+
     try {
-      setSubmitting(true);
       const payload = { ...values };
       if (payload.dateRequired) {
         payload.dateRequired = payload.dateRequired.format('YYYY-MM-DD');
@@ -31,6 +38,7 @@ export default function CorporatePage() {
       const errMsg = error.response?.data?.message || 'Failed to send quote request. Please try again.';
       message.error(errMsg);
     } finally {
+      isSubmittingRef.current = false;
       setSubmitting(false);
     }
   };
@@ -111,6 +119,7 @@ export default function CorporatePage() {
                   form={form}
                   layout="vertical"
                   onFinish={onFinish}
+                  disabled={submitting}
                 >
                   <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter your name' }]}>
                     <Input placeholder="Your Name" size="large" />
@@ -151,7 +160,8 @@ export default function CorporatePage() {
                       htmlType="submit" 
                       loading={submitting}
                       disabled={submitting}
-                      className="w-full bg-[#B85C3E] hover:bg-[#a04e33] border-none h-12 text-white font-bold tracking-wide shadow-md text-base rounded-lg flex items-center justify-center transition-all duration-300"
+                      style={{ pointerEvents: submitting ? 'none' : 'auto' }}
+                      className="w-full bg-[#B85C3E] hover:bg-[#a04e33] border-none h-12 text-white font-bold tracking-wide shadow-md text-base rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer"
                     >
                       {submitting ? 'SUBMITTING QUOTE REQUEST...' : 'REQUEST A QUOTE'}
                     </Button>
