@@ -122,10 +122,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-white/60 text-xs mt-6">
-          © {new Date().getFullYear()} Grandma's Ladle · Powered by{' '}
-          <a href="https://novacodex.in" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white underline">
-            NovaCodex
-          </a>
+          © {new Date().getFullYear()} Grandma's Ladle. All rights reserved.
         </p>
       </div>
     </div>

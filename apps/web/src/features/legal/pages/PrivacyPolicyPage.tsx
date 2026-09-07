@@ -16,22 +16,22 @@ export default function PrivacyPolicyPage() {
           name="description" 
           content="Privacy Policy for Grandma's Ladle. How we handle and protect customer and corporate inquiry data with strict confidentiality and zero spam." 
         />
-        <link rel="canonical" href="https://grandma.novacodex.in/privacy-policy" />
+        <link rel="canonical" href="https://grandmasladle.com/privacy-policy" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         
         {/* Open Graph */}
         <meta property="og:type" content="article" />
         <meta property="og:title" content="Privacy Policy | Grandma's Ladle" />
         <meta property="og:description" content="Privacy Policy for Grandma's Ladle. How we handle and protect customer and corporate inquiry data." />
-        <meta property="og:url" content="https://grandma.novacodex.in/privacy-policy" />
+        <meta property="og:url" content="https://grandmasladle.com/privacy-policy" />
         <meta property="og:site_name" content="Grandma's Ladle" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Privacy Policy | Grandma's Ladle" />
         <meta name="twitter:description" content="Privacy Policy for Grandma's Ladle traditional sweets and snacks." />
-        <meta name="twitter:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta name="twitter:image" content="https://grandmasladle.com/logo.jpg" />
 
         {/* Structured Data */}
         <script type="application/ld+json">
@@ -39,12 +39,12 @@ export default function PrivacyPolicyPage() {
             "@context": "https://schema.org",
             "@type": "WebPage",
             "name": "Privacy Policy - Grandma's Ladle",
-            "url": "https://grandma.novacodex.in/privacy-policy",
+            "url": "https://grandmasladle.com/privacy-policy",
             "description": "Privacy Policy and data protection commitments of Grandma's Ladle.",
             "publisher": {
               "@type": "Organization",
               "name": "Grandma's Ladle",
-              "url": "https://grandma.novacodex.in/"
+              "url": "https://grandmasladle.com/"
             }
           })}
         </script>

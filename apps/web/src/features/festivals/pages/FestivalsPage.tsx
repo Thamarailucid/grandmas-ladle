@@ -19,13 +19,13 @@ export default function FestivalsPage() {
       <Helmet>
         <title>Festival Specials | Grandma's Ladle</title>
         <meta name="description" content="Modakam, murukku, sundal and festive sweets for Ganesh Chaturthi, Navaratri, Diwali and Pongal. Pre-book your festive order." />
-        <link rel="canonical" href="https://grandma.novacodex.in/festivals" />
+        <link rel="canonical" href="https://grandmasladle.com/festivals" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Festival Specials | Grandma's Ladle" />
         <meta property="og:description" content="Modakam, murukku, sundal and festive sweets for Ganesh Chaturthi, Navaratri, Diwali and Pongal. Pre-book your festive order." />
-        <meta property="og:url" content="https://grandma.novacodex.in/festivals" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:url" content="https://grandmasladle.com/festivals" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
       </Helmet>
 
       <SectionContainer bgColor="cream">

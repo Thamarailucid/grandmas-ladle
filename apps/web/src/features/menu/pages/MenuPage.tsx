@@ -103,13 +103,13 @@ export default function MenuPage() {
       <Helmet>
         <title>Menu | Traditional Snacks, Ladoos & Sundal — Grandma's Ladle</title>
         <meta name="description" content="Browse our menu of traditional homemade snacks, ladoos, sundal and festive specials. Order online or via WhatsApp." />
-        <link rel="canonical" href="https://grandma.novacodex.in/menu" />
+        <link rel="canonical" href="https://grandmasladle.com/menu" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Menu | Grandma's Ladle" />
         <meta property="og:description" content="Browse our menu of traditional homemade snacks, ladoos, sundal and festive specials." />
-        <meta property="og:url" content="https://grandma.novacodex.in/menu" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:url" content="https://grandmasladle.com/menu" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
 
         {/* Menu & Traditional Foods Structured Data for Google AI & Rich Results */}
         <script type="application/ld+json">
@@ -117,7 +117,7 @@ export default function MenuPage() {
             "@context": "https://schema.org",
             "@type": "Menu",
             "name": "Grandma's Ladle Traditional Food Menu",
-            "url": "https://grandma.novacodex.in/menu",
+            "url": "https://grandmasladle.com/menu",
             "inLanguage": "en-IN",
             "hasMenuSection": [
               {

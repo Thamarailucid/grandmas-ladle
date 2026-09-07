@@ -105,7 +105,7 @@ JWT_REFRESH_SECRET=change-this-to-a-different-random-64-char-string
 JWT_REFRESH_EXPIRES_IN=7d
 
 # CORS (Allowed Frontends)
-CORS_ORIGINS=https://grandma.novacodex.in,https://grandmadashboard.novacodex.in,http://localhost:5173,http://localhost:5174
+CORS_ORIGINS=https://grandmasladle.com,https://admin.grandmasladle.com,http://localhost:5173,http://localhost:5174
 
 # Email (SMTP)
 BUSINESS_EMAIL=grandmasladle1269@gmail.com

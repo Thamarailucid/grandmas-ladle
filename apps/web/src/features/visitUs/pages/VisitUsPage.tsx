@@ -35,12 +35,12 @@ export default function VisitUsPage() {
       <Helmet>
         <title>Visit Us | Grandma's Ladle, New Thippasandra, Bengaluru</title>
         <meta name="description" content="Find us at New Thippasandra, Bengaluru. Opening hours, directions, phone and WhatsApp ordering." />
-        <link rel="canonical" href="https://grandma.novacodex.in/visit-us" />
+        <link rel="canonical" href="https://grandmasladle.com/visit-us" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Visit Us | Grandma's Ladle, New Thippasandra, Bengaluru" />
-        <meta property="og:url" content="https://grandma.novacodex.in/visit-us" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:url" content="https://grandmasladle.com/visit-us" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
 
         {/* Local Place & Kitchen Structured Data for Google Maps & Local AI */}
         <script type="application/ld+json">
@@ -48,7 +48,7 @@ export default function VisitUsPage() {
             "@context": "https://schema.org",
             "@type": "FoodEstablishment",
             "name": "Grandma's Ladle - Kitchen & Store",
-            "url": "https://grandma.novacodex.in/visit-us",
+            "url": "https://grandmasladle.com/visit-us",
             "telephone": "+91-9841207516",
             "servesCuisine": "South Indian Traditional",
             "hasMap": "https://maps.google.com/maps?q=12.9750239,77.6540696",

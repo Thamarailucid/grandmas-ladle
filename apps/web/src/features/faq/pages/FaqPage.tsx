@@ -58,13 +58,13 @@ export default function FaqPage() {
       <Helmet>
         <title>FAQ | Grandma's Ladle — Frequently Asked Questions</title>
         <meta name="description" content="Frequently asked questions about Grandma's Ladle orders, delivery, ingredients, and shelf life in Bengaluru." />
-        <link rel="canonical" href="https://grandma.novacodex.in/faq" />
+        <link rel="canonical" href="https://grandmasladle.com/faq" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="FAQ | Grandma's Ladle" />
         <meta property="og:description" content="Frequently asked questions about orders, deliveries, and traditional recipes." />
-        <meta property="og:url" content="https://grandma.novacodex.in/faq" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:url" content="https://grandmasladle.com/faq" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
 
         {/* FAQPage Structured Data for Google AI Overviews & Rich Snippets */}
         <script type="application/ld+json">

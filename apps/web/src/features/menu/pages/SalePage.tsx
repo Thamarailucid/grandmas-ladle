@@ -39,13 +39,13 @@ export default function SalePage() {
       <Helmet>
         <title>Special Sale | Grandma's Ladle — Traditional Snacks & Sweets</title>
         <meta name="description" content="Shop our limited-time special sale items made the authentic traditional way with pure ghee and wholesome ingredients." />
-        <link rel="canonical" href="https://grandma.novacodex.in/sale" />
+        <link rel="canonical" href="https://grandmasladle.com/sale" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Special Sale | Grandma's Ladle" />
         <meta property="og:description" content="Limited-time offers on authentic South Indian snacks and sweets." />
-        <meta property="og:url" content="https://grandma.novacodex.in/sale" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:url" content="https://grandmasladle.com/sale" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
       </Helmet>
       
       <SectionContainer bgColor="cream" className="py-16 md:py-15">

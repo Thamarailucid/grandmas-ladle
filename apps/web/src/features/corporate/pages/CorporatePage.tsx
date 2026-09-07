@@ -52,13 +52,13 @@ export default function CorporatePage() {
       <Helmet>
         <title>Corporate & Bulk Orders | Grandma's Ladle</title>
         <meta name="description" content="Traditional snacks and sweets for your office, team celebration or corporate gifting. Request a quote for bulk orders." />
-        <link rel="canonical" href="https://grandma.novacodex.in/corporate" />
+        <link rel="canonical" href="https://grandmasladle.com/corporate" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Corporate & Bulk Orders | Grandma's Ladle" />
         <meta property="og:description" content="Traditional snacks and sweets for your office, team celebration or corporate gifting. Request a quote for bulk orders." />
-        <meta property="og:url" content="https://grandma.novacodex.in/corporate" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:url" content="https://grandmasladle.com/corporate" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
         <meta property="og:site_name" content="Grandma's Ladle" />
 
         {/* CateringService Structured Data for Google Search & AI Overviews */}

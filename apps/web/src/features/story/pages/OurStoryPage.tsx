@@ -9,13 +9,13 @@ export default function OurStoryPage() {
       <Helmet>
         <title>Our Story | Grandma's Ladle — Two Grandmothers, One Legacy</title>
         <meta name="description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
-        <link rel="canonical" href="https://grandma.novacodex.in/our-story" />
+        <link rel="canonical" href="https://grandmasladle.com/our-story" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Our Story | Grandma's Ladle — Two Grandmothers, One Legacy" />
         <meta property="og:description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
-        <meta property="og:url" content="https://grandma.novacodex.in/our-story" />
-        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:url" content="https://grandmasladle.com/our-story" />
+        <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
 
         {/* AboutPage & Brand Heritage Structured Data */}
         <script type="application/ld+json">
@@ -23,12 +23,12 @@ export default function OurStoryPage() {
             "@context": "https://schema.org",
             "@type": "AboutPage",
             "name": "The Story Behind Grandma's Ladle",
-            "url": "https://grandma.novacodex.in/our-story",
+            "url": "https://grandmasladle.com/our-story",
             "description": "A story of two grandmothers, a thousand little efforts, and one silver glass — the heritage of honest work and traditional South Indian cooking.",
             "mainEntity": {
               "@type": "Organization",
               "name": "Grandma's Ladle",
-              "url": "https://grandma.novacodex.in/",
+              "url": "https://grandmasladle.com/",
               "foundingLocation": {
                 "@type": "Place",
                 "name": "New Thippasandra, Bengaluru, Karnataka, India"

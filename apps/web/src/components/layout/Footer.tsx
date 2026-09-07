@@ -118,10 +118,7 @@ export function Footer() {
               </Link>
             </div>
             <p className="text-[11px] text-warm-cream/50">
-              Designed & Developed by{' '}
-              <a href="https://novacodex.in" target="_blank" rel="noopener noreferrer" className="hover:text-antique-brass transition-colors font-medium">
-                NovaCodex
-              </a>
+              Traditional Goodness, From Our Kitchen to Yours
             </p>
           </div>
 
