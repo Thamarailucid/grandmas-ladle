@@ -34,7 +34,14 @@ export default function VisitUsPage() {
     <>
       <Helmet>
         <title>Visit Us | Grandma's Ladle, New Thippasandra, Bengaluru</title>
-        <meta name="description" content="Come visit Grandma's Kitchen in New Thippasandra, Bengaluru. Authentic traditional homemade snacks, sweets, and festival savouries." />
+        <meta name="description" content="Come visit Grandma's Kitchen in New Thippasandra, Bengaluru. Authentic traditional homemade snacks, sweets, and festival savouries made fresh." />
+        <link rel="canonical" href="https://grandma.novacodex.in/visit-us" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Visit Us | Grandma's Ladle, New Thippasandra, Bengaluru" />
+        <meta property="og:description" content="Come visit Grandma's Kitchen in New Thippasandra, Bengaluru. Authentic South Indian sweets and snacks." />
+        <meta property="og:url" content="https://grandma.novacodex.in/visit-us" />
+        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
       </Helmet>
 
       <SectionContainer bgColor="cream">

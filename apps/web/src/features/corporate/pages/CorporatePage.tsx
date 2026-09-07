@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Form, Input, InputNumber, DatePicker, Button, message } from 'antd';
+import { Form, Input, InputNumber, DatePicker, TimePicker, Button, message } from 'antd';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
@@ -31,6 +31,9 @@ export default function CorporatePage() {
       if (payload.dateRequired) {
         payload.dateRequired = payload.dateRequired.format('YYYY-MM-DD');
       }
+      if (payload.preferredDeliveryPickupTime && typeof payload.preferredDeliveryPickupTime.format === 'function') {
+        payload.preferredDeliveryPickupTime = payload.preferredDeliveryPickupTime.format('h:mm A');
+      }
       await apiClient.post('/CorporateEnquiry/CreateCorporateEnquiry', payload);
       message.success('Quote request sent successfully! We will get back to you soon.');
       form.resetFields();
@@ -48,7 +51,15 @@ export default function CorporatePage() {
     <>
       <Helmet>
         <title>Corporate & Bulk Orders | Grandma's Ladle</title>
-        <meta name="description" content="Bring something familiar, wholesome and memorable to your next meeting, team celebration or office gathering." />
+        <meta name="description" content="Bring something familiar, wholesome and memorable to your next meeting, team celebration or office gathering. Authentic South Indian traditional catering in Bengaluru." />
+        <link rel="canonical" href="https://grandma.novacodex.in/corporate" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Corporate & Bulk Orders | Grandma's Ladle" />
+        <meta property="og:description" content="Wholesome and authentic traditional South Indian snacks and sweets for corporate events and team celebrations." />
+        <meta property="og:url" content="https://grandma.novacodex.in/corporate" />
+        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+        <meta property="og:site_name" content="Grandma's Ladle" />
       </Helmet>
       
       <SectionContainer bgColor="cream">
@@ -70,7 +81,6 @@ export default function CorporatePage() {
               <li>Festive celebrations</li>
               <li>Client gifting</li>
               <li>Employee welcome kits</li>
-              <li>Offsite gatherings</li>
               <li>Custom corporate packages</li>
             </ul>
 
@@ -164,7 +174,15 @@ export default function CorporatePage() {
                     />
                   </Form.Item>
                   <Form.Item name="preferredDeliveryPickupTime" label="Preferred delivery/pickup time">
-                    <Input placeholder="e.g. 10:00 AM" size="large" />
+                    <TimePicker 
+                      use12Hours 
+                      format="h:mm A" 
+                      minuteStep={15}
+                      size="large"
+                      className="w-full"
+                      placeholder="Select preferred time (e.g. 10:30 AM)"
+                      needConfirm={false}
+                    />
                   </Form.Item>
                   <Form.Item name="itemsInterestedIn" label="Items interested in">
                     <TextArea rows={3} placeholder="e.g. Sundal, Mini Murukku, Modakam" />

@@ -8,7 +8,14 @@ export default function OurStoryPage() {
     <>
       <Helmet>
         <title>Our Story | Grandma's Ladle — Two Grandmothers, One Legacy</title>
-        <meta name="description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
+        <meta name="description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional South Indian snacks and sweets in Bengaluru." />
+        <link rel="canonical" href="https://grandma.novacodex.in/our-story" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Our Story | Grandma's Ladle — Two Grandmothers, One Legacy" />
+        <meta property="og:description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and traditional family recipes." />
+        <meta property="og:url" content="https://grandma.novacodex.in/our-story" />
+        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
       </Helmet>
 
       {/* Page Header */}

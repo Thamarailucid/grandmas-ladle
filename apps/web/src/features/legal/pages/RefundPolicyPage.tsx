@@ -11,8 +11,43 @@ export default function RefundPolicyPage() {
   return (
     <>
       <Helmet>
-        <title>Cancellation & Refund Policy | Grandma's Ladle</title>
-        <meta name="description" content="Cancellation and refund policy for freshly made traditional snacks and festival sweets at Grandma's Ladle." />
+        <title>Cancellation & Refund Policy | Grandma's Ladle — Traditional Snacks & Sweets</title>
+        <meta 
+          name="description" 
+          content="Cancellation and refund policy for freshly made traditional snacks and festival sweets at Grandma's Ladle. Quality guarantee and transparent refund procedures." 
+        />
+        <link rel="canonical" href="https://grandma.novacodex.in/refund-policy" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="Cancellation & Refund Policy | Grandma's Ladle" />
+        <meta property="og:description" content="Cancellation and refund policy for freshly made traditional snacks and festival sweets at Grandma's Ladle." />
+        <meta property="og:url" content="https://grandma.novacodex.in/refund-policy" />
+        <meta property="og:site_name" content="Grandma's Ladle" />
+        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Cancellation & Refund Policy | Grandma's Ladle" />
+        <meta name="twitter:description" content="Cancellation and refund policy for Grandma's Ladle traditional sweets and snacks." />
+        <meta name="twitter:image" content="https://grandma.novacodex.in/logo.jpg" />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Cancellation & Refund Policy - Grandma's Ladle",
+            "url": "https://grandma.novacodex.in/refund-policy",
+            "description": "Cancellation and refund policy for Grandma's Ladle traditional foods.",
+            "publisher": {
+              "@type": "Organization",
+              "name": "Grandma's Ladle",
+              "url": "https://grandma.novacodex.in/"
+            }
+          })}
+        </script>
       </Helmet>
 
       <SectionContainer bgColor="cream" className="py-16 md:py-24">

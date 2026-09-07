@@ -102,7 +102,14 @@ export default function MenuPage() {
     <>
       <Helmet>
         <title>Menu | Traditional Snacks, Ladoos & Sundal — Grandma's Ladle</title>
-        <meta name="description" content="Explore our menu of traditional snacks, ladoos, sundal and festival specials made the way grandma did." />
+        <meta name="description" content="Explore our menu of traditional snacks, ladoos, sundal and festival specials made the way grandma did. Handcrafted daily with pure ingredients." />
+        <link rel="canonical" href="https://grandma.novacodex.in/menu" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Menu | Grandma's Ladle" />
+        <meta property="og:description" content="Explore our authentic menu of traditional snacks, ladoos, and festival sweets." />
+        <meta property="og:url" content="https://grandma.novacodex.in/menu" />
+        <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
       </Helmet>
       
       <SectionContainer bgColor="cream" className="py-16 md:py-15">

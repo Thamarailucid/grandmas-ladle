@@ -19,6 +19,7 @@ export const create = async (data: any) => {
       <p><strong>Phone:</strong> ${data.phone}</p>
       <p><strong>Number of People:</strong> ${data.numberOfPeople}</p>
       <p><strong>Date Required:</strong> ${data.dateRequired ? dayjs(data.dateRequired).format('DD MMM YYYY') : 'N/A'}</p>
+      <p><strong>Preferred Delivery/Pickup Time:</strong> ${data.preferredDeliveryPickupTime || 'N/A'}</p>
       <p><strong>Budget per Person:</strong> ₹${data.budgetPerPerson || 'N/A'}</p>
       <p><strong>Items Interested In:</strong></p>
       <blockquote style="background: #f9f9f9; padding: 10px; border-left: 4px solid #ccc;">${data.itemsInterestedIn || 'N/A'}</blockquote>

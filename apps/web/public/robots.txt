@@ -1,9 +1,21 @@
+# Robots.txt for Grandma's Ladle (https://grandma.novacodex.in)
 User-agent: *
 Allow: /
+Allow: /our-story
+Allow: /menu
+Allow: /sale
+Allow: /corporate
+Allow: /festivals
+Allow: /visit-us
+Allow: /contact
+Allow: /faq
+Allow: /privacy-policy
+Allow: /refund-policy
 Disallow: /api/
 
 # Author & Developer Credits
 # Developer: NovaCodex Technologies (https://novacodex.in)
 # Lead Developer: Thamaraiselvan A
 
+# XML Sitemap Index
 Sitemap: https://grandma.novacodex.in/sitemap.xml
