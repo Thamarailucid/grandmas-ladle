@@ -118,7 +118,24 @@ export function Footer() {
               </Link>
             </div>
             <p className="text-[11px] text-warm-cream/50">
-              Traditional Goodness, From Our Kitchen to Yours
+              Designed & Developed by{' '}
+              <a 
+                href="https://novacodex.in" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-antique-brass transition-colors font-medium underline-offset-2 hover:underline"
+              >
+                NovaCodex Technologies
+              </a>
+              {' '}(Lead Developer:{' '}
+              <a 
+                href="https://www.linkedin.com/in/a-thamaraiselvan" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-antique-brass transition-colors font-medium underline-offset-2 hover:underline"
+              >
+                Thamaraiselvan A
+              </a>)
             </p>
           </div>
 

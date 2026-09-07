@@ -111,8 +111,15 @@ export function AdminLayout() {
         <Content className="m-2 p-2 sm:m-6 sm:p-6 bg-white rounded-lg shadow-sm overflow-x-hidden min-h-[calc(100vh-140px)]">
           <Outlet />
         </Content>
-        <Layout.Footer className="text-center text-gray-400 bg-transparent py-4 text-xs">
-          © {new Date().getFullYear()} Grandma's Ladle Management Portal
+        <Layout.Footer className="text-center text-gray-500 bg-transparent py-4 text-xs">
+          © {new Date().getFullYear()} Grandma's Ladle · Designed & Developed by{' '}
+          <a href="https://novacodex.in" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 font-medium">
+            NovaCodex Technologies
+          </a>
+          {' '}(Lead Developer:{' '}
+          <a href="https://www.linkedin.com/in/a-thamaraiselvan" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-700 font-medium">
+            Thamaraiselvan A
+          </a>)
         </Layout.Footer>
       </Layout>
     </Layout>

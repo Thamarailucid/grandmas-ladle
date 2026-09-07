@@ -122,7 +122,14 @@ export default function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-white/60 text-xs mt-6">
-          © {new Date().getFullYear()} Grandma's Ladle. All rights reserved.
+          © {new Date().getFullYear()} Grandma's Ladle · Developed by{' '}
+          <a href="https://novacodex.in" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white underline">
+            NovaCodex Technologies
+          </a>
+          {' '}(Lead Developer:{' '}
+          <a href="https://www.linkedin.com/in/a-thamaraiselvan" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white underline">
+            Thamaraiselvan A
+          </a>)
         </p>
       </div>
     </div>

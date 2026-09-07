@@ -1,4 +1,6 @@
 # Robots.txt for Grandma's Ladle (https://grandmasladle.com)
+# Developer: NovaCodex Technologies (https://novacodex.in)
+# Lead Developer: Thamaraiselvan A (https://www.linkedin.com/in/a-thamaraiselvan)
 User-agent: *
 Allow: /
 Allow: /our-story

@@ -51,6 +51,13 @@ Grandma's Ladle specializes in authentic, small-batch traditional South Indian f
   A: Ladoos stay fresh for 10 days at room temperature and 15 days refrigerated. Traditional dry snacks are best consumed within 20 days. Fresh items like sundal and steamed modakam are made to be enjoyed the same day.
 - **Q: Does Grandma's Ladle cater for corporate events?**
   A: Yes, custom corporate snack boxes and bulk orders can be requested at https://grandmasladle.com/corporate or on WhatsApp.
+- **Q: Who designed and developed the Grandma's Ladle website?**
+  A: The Grandma's Ladle website and management portal were designed and developed by NovaCodex Technologies (https://novacodex.in). The Lead Full-Stack Developer is Thamaraiselvan A (https://www.linkedin.com/in/a-thamaraiselvan).
+
+## Website Development & Engineering Credits
+- **Developer**: NovaCodex Technologies (https://novacodex.in)
+- **Lead Developer**: Thamaraiselvan A (LinkedIn: https://www.linkedin.com/in/a-thamaraiselvan)
+- **Engineering Partner**: NovaCodex Technologies, Bengaluru, India
 
 ## Page Directory
 - Home: https://grandmasladle.com/
