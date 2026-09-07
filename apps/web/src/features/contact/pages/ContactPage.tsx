@@ -51,13 +51,13 @@ export default function ContactPage() {
   return (
     <>
       <Helmet>
-        <title>Contact Us | Grandma's Ladle — Traditional Homemade Food Bengaluru</title>
-        <meta name="description" content="Get in touch with Grandma's Ladle for orders, catering, corporate enquiries, or festive requirements in Bengaluru." />
+        <title>Contact | Grandma's Ladle</title>
+        <meta name="description" content="Get in touch for orders, corporate enquiries or feedback — call, WhatsApp or visit our Bengaluru kitchen." />
         <link rel="canonical" href="https://grandma.novacodex.in/contact" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Contact Us | Grandma's Ladle" />
-        <meta property="og:description" content="Contact Grandma's Ladle for orders, catering, and enquiries." />
+        <meta property="og:title" content="Contact | Grandma's Ladle" />
+        <meta property="og:description" content="Get in touch for orders, corporate enquiries or feedback — call, WhatsApp or visit our Bengaluru kitchen." />
         <meta property="og:url" content="https://grandma.novacodex.in/contact" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
       </Helmet>

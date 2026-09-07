@@ -17,13 +17,13 @@ export default function FestivalsPage() {
   return (
     <>
       <Helmet>
-        <title>Festival Specials | Grandma's Ladle — Traditional Festive Sweets & Delicacies</title>
-        <meta name="description" content="Traditional food has always been part of the occasions that bring families together. Explore seasonal festive boxes and authentic South Indian delicacies." />
+        <title>Festival Specials | Grandma's Ladle</title>
+        <meta name="description" content="Modakam, murukku, sundal and festive sweets for Ganesh Chaturthi, Navaratri, Diwali and Pongal. Pre-book your festive order." />
         <link rel="canonical" href="https://grandma.novacodex.in/festivals" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Festival Specials | Grandma's Ladle" />
-        <meta property="og:description" content="Celebrate festivals with authentic homemade delicacies, festive boxes and traditional savouries." />
+        <meta property="og:description" content="Modakam, murukku, sundal and festive sweets for Ganesh Chaturthi, Navaratri, Diwali and Pongal. Pre-book your festive order." />
         <meta property="og:url" content="https://grandma.novacodex.in/festivals" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
       </Helmet>

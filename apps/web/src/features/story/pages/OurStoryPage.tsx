@@ -8,12 +8,12 @@ export default function OurStoryPage() {
     <>
       <Helmet>
         <title>Our Story | Grandma's Ladle — Two Grandmothers, One Legacy</title>
-        <meta name="description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional South Indian snacks and sweets in Bengaluru." />
+        <meta name="description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
         <link rel="canonical" href="https://grandma.novacodex.in/our-story" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Our Story | Grandma's Ladle — Two Grandmothers, One Legacy" />
-        <meta property="og:description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and traditional family recipes." />
+        <meta property="og:description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
         <meta property="og:url" content="https://grandma.novacodex.in/our-story" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
       </Helmet>
@@ -168,7 +168,104 @@ export default function OurStoryPage() {
         </div>
       </SectionContainer>
 
-      {/* Section 6: Final Closure */}
+      {/* Section 6: Meet the Grandmas */}
+      <SectionContainer bgColor="white" className="py-16 md:py-24 text-[#3E2C22]">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeading 
+            title="TWO GRANDMOTHERS. TWO LIVES. ONE LEGACY." 
+            subtitle="Their hands made many things. Their lives made us who we are."
+            centered 
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+            {/* Grandma 1 */}
+            <div className="bg-[#FAF4E6] p-8 md:p-10 rounded-2xl border border-[#B8925A]/30 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="inline-block px-3 py-1 bg-[#2C4A3B] text-[#FAF4E6] text-xs font-medium uppercase tracking-widest rounded-full mb-4">
+                  The Determination
+                </div>
+                <h3 className="font-playfair text-2xl font-bold text-[#2C4A3B] mb-2">
+                  Our Grandmother (Paternal)
+                </h3>
+                <p className="font-playfair italic text-[#B85C3E] text-base mb-6">
+                  "No honest work is too small."
+                </p>
+                
+                <div className="space-y-4 text-sm md:text-base font-inter text-[#3E2C22]/90 leading-relaxed">
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">Personal Story</h4>
+                    <p>
+                      A woman of quiet grit and extraordinary dignity. Even around 85 years of age, she patiently strung fragrant jasmine flower garlands every morning and gave them to a local vendor to sell.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">Things She Made & Sold</h4>
+                    <p>
+                      Jasmine flower garlands, stitched clothes, crochet work, soft toys, papad, and homemade savouries.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">One Lesson She Taught</h4>
+                    <p className="italic">
+                      "I earned this by myself. Keep it safely." — That dignity and self-reliance lie in every rupee earned honestly.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">A Favourite Memory</h4>
+                    <p>
+                      The proud day she gifted the keepsake silver glass, purchased purely with her own flower-weaving earnings.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Grandma 2 */}
+            <div className="bg-[#FAF4E6] p-8 md:p-10 rounded-2xl border border-[#B8925A]/30 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="inline-block px-3 py-1 bg-[#B85C3E] text-[#FAF4E6] text-xs font-medium uppercase tracking-widest rounded-full mb-4">
+                  The Kitchen & Nourishment
+                </div>
+                <h3 className="font-playfair text-2xl font-bold text-[#2C4A3B] mb-2">
+                  Our Grandmother (Maternal)
+                </h3>
+                <p className="font-playfair italic text-[#B85C3E] text-base mb-6">
+                  "Feeding someone is the simplest way to show love."
+                </p>
+                
+                <div className="space-y-4 text-sm md:text-base font-inter text-[#3E2C22]/90 leading-relaxed">
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">Personal Story</h4>
+                    <p>
+                      The warmth and culinary heart of the family. Her kitchen was an open sanctuary where the aroma of roasting sesame, pure ghee, and freshly pounded spices welcomed anyone who walked through the door.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">Things She Made & Sold</h4>
+                    <p>
+                      Crisp kai murukku, nutritious sundal, festive modakam, sesame ladoos, kuzhi paniyaram, and wholesome traditional meals.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">One Lesson She Taught</h4>
+                    <p className="italic">
+                      "Food prepared with patience and pure heart brings people together like nothing else in this world."
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">A Favourite Memory</h4>
+                    <p>
+                      The rhythmic sound of her brass ladle against the pot during festivals, and her immediate question to every visitor: "Have you eaten?"
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </SectionContainer>
+
+      {/* Section 7: Final Closure */}
       <SectionContainer bgColor="cream" className="py-16 md:py-24 text-lg md:text-xl font-inter text-[#3E2C22] leading-relaxed space-y-6">
         <div className="max-w-4xl mx-auto">
           <SectionHeading title="From Our Grandmothers' Hands to Your Table" centered />

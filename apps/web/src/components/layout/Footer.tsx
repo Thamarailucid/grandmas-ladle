@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useBusinessSettingsContext } from '../../contexts/BusinessSettingsContext';
-import { InstagramOutlined, WhatsAppOutlined, PhoneOutlined } from '@ant-design/icons';
+import { InstagramOutlined, FacebookOutlined, WhatsAppOutlined, PhoneOutlined } from '@ant-design/icons';
 import { formatWhatsAppNumber, formatPhoneTel } from '@/lib/whatsapp';
 import logoImg from '@/assets/logo.jpg';
 
@@ -92,6 +92,9 @@ export function Footer() {
                   <InstagramOutlined />
                 </a>
               )}
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-antique-brass transition-colors" aria-label="Facebook">
+                <FacebookOutlined />
+              </a>
             </div>
           </div>
         </div>

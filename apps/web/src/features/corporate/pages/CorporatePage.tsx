@@ -51,12 +51,12 @@ export default function CorporatePage() {
     <>
       <Helmet>
         <title>Corporate & Bulk Orders | Grandma's Ladle</title>
-        <meta name="description" content="Bring something familiar, wholesome and memorable to your next meeting, team celebration or office gathering. Authentic South Indian traditional catering in Bengaluru." />
+        <meta name="description" content="Traditional snacks and sweets for your office, team celebration or corporate gifting. Request a quote for bulk orders." />
         <link rel="canonical" href="https://grandma.novacodex.in/corporate" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Corporate & Bulk Orders | Grandma's Ladle" />
-        <meta property="og:description" content="Wholesome and authentic traditional South Indian snacks and sweets for corporate events and team celebrations." />
+        <meta property="og:description" content="Traditional snacks and sweets for your office, team celebration or corporate gifting. Request a quote for bulk orders." />
         <meta property="og:url" content="https://grandma.novacodex.in/corporate" />
         <meta property="og:image" content="https://grandma.novacodex.in/logo.jpg" />
         <meta property="og:site_name" content="Grandma's Ladle" />
@@ -75,22 +75,23 @@ export default function CorporatePage() {
           <div>
             <h3 className="text-2xl font-bold text-[#2C4A3B] mb-6">We can cater for</h3>
             <ul className="list-disc pl-6 mb-8 text-[#3E2C22] space-y-2">
-              <li>Team lunches</li>
-              <li>Office meetings</li>
-              <li>Corporate events</li>
-              <li>Festive celebrations</li>
-              <li>Client gifting</li>
-              <li>Employee welcome kits</li>
-              <li>Custom corporate packages</li>
+              <li>Evening office snacks</li>
+              <li>Team meetings</li>
+              <li>Employee celebrations</li>
+              <li>Festival orders</li>
+              <li>Corporate gifting</li>
+              <li>Bulk snack boxes</li>
+              <li>Traditional sweets and savouries</li>
+              <li>Small events and gatherings</li>
             </ul>
 
             <h3 className="text-2xl font-bold text-[#2C4A3B] mb-6">How it works</h3>
             <ol className="list-decimal pl-6 text-[#3E2C22] space-y-3">
-              <li>Submit your requirements using the form.</li>
-              <li>We will get in touch to discuss the menu and options.</li>
-              <li>Receive a customized quote and tasting samples (on request).</li>
-              <li>Confirm your order and delivery details.</li>
-              <li>Enjoy wholesome traditional snacks at your workplace.</li>
+              <li>Tell us your date and number of people.</li>
+              <li>Choose from available snacks and sweets.</li>
+              <li>We confirm the menu, quantity and price.</li>
+              <li>We prepare and pack the order.</li>
+              <li>Pickup or delivery as agreed.</li>
             </ol>
 
             <div className="mt-12 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
