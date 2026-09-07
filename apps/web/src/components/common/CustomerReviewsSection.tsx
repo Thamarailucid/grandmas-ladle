@@ -41,6 +41,21 @@ export function CustomerReviewsSection() {
     queryFn: () => apiClient.get('/Product/GetPublicProducts').then(res => res.data.data || []),
   });
 
+  // Submit review mutation (declared with all hooks before any early returns)
+  const submitMutation = useMutation({
+    mutationFn: (values: any) => apiClient.post('/Review/SubmitCustomerReview', values),
+    onSuccess: () => {
+      message.success('Thank you! Your review has been submitted and will be visible after approval.');
+      setIsModalOpen(false);
+      form.resetFields();
+      queryClient.invalidateQueries({ queryKey: ['PublishedReviews'] });
+    },
+    onError: (err: any) => {
+      const msg = err.response?.data?.message || 'Failed to submit review. Please try again.';
+      message.error(msg);
+    },
+  });
+
   const productOptions = (productsData || []).map((p: any) => ({
     label: p.name,
     value: p.name
@@ -62,21 +77,6 @@ export function CustomerReviewsSection() {
     totalReviews: reviews.length,
     ratingBreakdown: {}
   };
-
-  // Submit review mutation
-  const submitMutation = useMutation({
-    mutationFn: (values: any) => apiClient.post('/Review/SubmitCustomerReview', values),
-    onSuccess: () => {
-      message.success('Thank you! Your review has been submitted and will be visible after approval.');
-      setIsModalOpen(false);
-      form.resetFields();
-      queryClient.invalidateQueries({ queryKey: ['PublishedReviews'] });
-    },
-    onError: (err: any) => {
-      const msg = err.response?.data?.message || 'Failed to submit review. Please try again.';
-      message.error(msg);
-    },
-  });
 
   const handleFormSubmit = async () => {
     try {
@@ -208,7 +208,7 @@ export function CustomerReviewsSection() {
           style: { borderRadius: '8px', height: '40px' }
         }}
         width={560}
-        destroyOnClose
+        destroyOnHidden
       >
         <p className="text-xs text-brand-dark-brown/70 mb-5">
           Your authentic feedback helps other families discover genuine traditional snacks. All reviews are vetted to ensure authenticity.

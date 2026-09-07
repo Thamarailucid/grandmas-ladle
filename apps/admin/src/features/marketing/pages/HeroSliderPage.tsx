@@ -224,7 +224,7 @@ export default function HeroSliderPage() {
         onOk={handleSubmit}
         onCancel={handleCancel}
         width={700}
-        destroyOnClose
+        destroyOnHidden
         confirmLoading={createMutation.isPending || updateMutation.isPending}
       >
         <Form 
