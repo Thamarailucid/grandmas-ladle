@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { BrandButton } from '@/components/common/BrandButton';
-import { createWhatsAppUrl, formatPhoneTel } from '@/lib/whatsapp';
+import { createWhatsAppUrl, formatPhoneTel, formatDisplayPhone } from '@/lib/whatsapp';
 import { useBusinessSettingsContext } from '@/contexts/BusinessSettingsContext';
 
 const DEFAULT_MAPS_EMBED = 'https://maps.google.com/maps?q=12.9750239,77.6540696&hl=en&z=17&output=embed';
@@ -101,7 +101,7 @@ export default function VisitUsPage() {
 
                 <div className="mb-4">
                   <h4 className="font-bold text-[#B85C3E]">Contact:</h4>
-                  <p className="text-[#3E2C22]">Phone: <a href={telUrl} className="text-[#2C4A3B] font-semibold underline">{phone || '9841207516'}</a></p>
+                  <p className="text-[#3E2C22]">Phone: <a href={telUrl} className="text-[#2C4A3B] font-semibold underline">{formatDisplayPhone(phone)}</a></p>
                   <p className="text-[#3E2C22]">Email: <a href={`mailto:${email}`} className="text-[#2C4A3B] underline">{email}</a></p>
                 </div>
 

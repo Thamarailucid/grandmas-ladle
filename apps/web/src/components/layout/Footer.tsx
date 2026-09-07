@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useBusinessSettingsContext } from '../../contexts/BusinessSettingsContext';
 import { InstagramOutlined, FacebookOutlined, WhatsAppOutlined, PhoneOutlined } from '@ant-design/icons';
-import { formatWhatsAppNumber, formatPhoneTel } from '@/lib/whatsapp';
+import { formatWhatsAppNumber, formatPhoneTel, formatDisplayPhone } from '@/lib/whatsapp';
 import logoImg from '@/assets/logo.jpg';
 
 export function Footer() {
@@ -17,6 +17,7 @@ export function Footer() {
   
   const currentYear = new Date().getFullYear();
   const displayFssai = fssaiNumber || '21226010006642';
+  const displayPhone = formatDisplayPhone(whatsapp || phone);
   const waUrl = `https://wa.me/${formatWhatsAppNumber(whatsapp)}`;
   const telUrl = `tel:${formatPhoneTel(phone)}`;
 
@@ -62,12 +63,12 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <a href={waUrl} target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-antique-brass transition-colors">
-                  <WhatsAppOutlined className="mr-2 text-lg" /> Order on WhatsApp
+                  <WhatsAppOutlined className="mr-2 text-lg text-[#25D366]" /> Order on WhatsApp: {displayPhone}
                 </a>
               </li>
               <li>
                 <a href={telUrl} className="flex items-center hover:text-antique-brass transition-colors">
-                  <PhoneOutlined className="mr-2" /> {phone || '9841207516'}
+                  <PhoneOutlined className="mr-2" /> {displayPhone}
                 </a>
               </li>
               <li className="pt-2">
@@ -125,17 +126,8 @@ export function Footer() {
                 rel="noopener noreferrer" 
                 className="hover:text-antique-brass transition-colors font-medium underline-offset-2 hover:underline"
               >
-                NovaCodex Technologies
+                NovaCodex
               </a>
-              {' '}(Lead Developer:{' '}
-              <a 
-                href="https://www.linkedin.com/in/a-thamaraiselvan" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-antique-brass transition-colors font-medium underline-offset-2 hover:underline"
-              >
-                Thamaraiselvan A
-              </a>)
             </p>
           </div>
 

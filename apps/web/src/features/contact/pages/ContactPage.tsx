@@ -13,7 +13,7 @@ import { toast } from 'react-hot-toast';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { useBusinessSettingsContext } from '@/contexts/BusinessSettingsContext';
-import { createWhatsAppUrl } from '@/lib/whatsapp';
+import { createWhatsAppUrl, formatPhoneTel, formatDisplayPhone } from '@/lib/whatsapp';
 
 import { apiClient } from '@/lib/apiClient';
 
@@ -102,7 +102,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#2C4A3B] mb-1">Call Us</h3>
-                <a href={`tel:${phone}`} className="text-gray-700 hover:text-[#B85C3E] transition-colors">{phone}</a>
+                <a href={`tel:${formatPhoneTel(phone)}`} className="text-gray-700 hover:text-[#B85C3E] transition-colors">{formatDisplayPhone(phone)}</a>
               </div>
             </div>
 
@@ -112,7 +112,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#2C4A3B] mb-1">WhatsApp Us</h3>
-                <a href={createWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#B85C3E] transition-colors">{whatsapp}</a>
+                <a href={createWhatsAppUrl(undefined, whatsapp)} target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#B85C3E] transition-colors">{formatDisplayPhone(whatsapp || phone)}</a>
               </div>
             </div>
 

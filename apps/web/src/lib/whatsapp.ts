@@ -20,6 +20,21 @@ export function formatPhoneTel(phone?: string): string {
   return `+${digits}`;
 }
 
+export function formatDisplayPhone(phone?: string): string {
+  if (!phone) return '+91 9841207516';
+  const digits = phone.replace(/[^0-9]/g, '');
+  if (digits.length === 10) {
+    return `+91 ${digits}`;
+  }
+  if (digits.length === 12 && digits.startsWith('91')) {
+    return `+91 ${digits.slice(2)}`;
+  }
+  if (digits.length > 0) {
+    return `+91 ${digits}`;
+  }
+  return '+91 9841207516';
+}
+
 export function createWhatsAppUrl(message?: string, customPhone?: string): string {
   const num = formatWhatsAppNumber(customPhone || config.whatsappNumber);
   const base = `https://wa.me/${num}`;
