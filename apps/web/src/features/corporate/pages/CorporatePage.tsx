@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Form, Input, InputNumber, DatePicker, Select, Button, message } from 'antd';
+import { Form, Input, InputNumber, DatePicker, Button, message } from 'antd';
+import { CheckCircleFilled } from '@ant-design/icons';
 import { SectionContainer } from '@/components/common/SectionContainer';
 import { SectionHeading } from '@/components/common/SectionHeading';
 import { BrandButton } from '@/components/common/BrandButton';
@@ -12,9 +13,12 @@ const { TextArea } = Input;
 
 export default function CorporatePage() {
   const [form] = Form.useForm();
+  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onFinish = async (values: any) => {
     try {
+      setSubmitting(true);
       const payload = { ...values };
       if (payload.dateRequired) {
         payload.dateRequired = payload.dateRequired.format('YYYY-MM-DD');
@@ -22,8 +26,12 @@ export default function CorporatePage() {
       await apiClient.post('/CorporateEnquiry/CreateCorporateEnquiry', payload);
       message.success('Quote request sent successfully! We will get back to you soon.');
       form.resetFields();
-    } catch (error) {
-      message.error('Failed to send quote request. Please try again.');
+      setIsSubmitted(true);
+    } catch (error: any) {
+      const errMsg = error.response?.data?.message || 'Failed to send quote request. Please try again.';
+      message.error(errMsg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -79,57 +87,84 @@ export default function CorporatePage() {
           </div>
 
           <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100">
-            <h3 className="text-xl font-bold text-[#2C4A3B] mb-6">Request a Quote</h3>
-            <Form
-              form={form}
-              layout="vertical"
-              onFinish={onFinish}
-            >
-              <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter your name' }]}>
-                <Input placeholder="Your Name" />
-              </Form.Item>
-              <Form.Item name="company" label="Company" rules={[{ required: true, message: 'Please enter company name' }]}>
-                <Input placeholder="Company Name" />
-              </Form.Item>
-              <Form.Item name="designation" label="Designation">
-                <Input placeholder="Your Designation" />
-              </Form.Item>
-              <Form.Item name="phone" label="Phone" rules={[{ required: true, message: 'Please enter phone number' }]}>
-                <Input placeholder="Phone Number" />
-              </Form.Item>
-              <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Please enter valid email' }]}>
-                <Input placeholder="Email Address" />
-              </Form.Item>
-              <Form.Item name="numberOfPeople" label="Number of people" rules={[{ required: true, message: 'Please enter number of people' }]}>
-                <InputNumber min={1} className="w-full" placeholder="e.g. 50" />
-              </Form.Item>
-              <Form.Item name="dateRequired" label="Date required" rules={[{ required: true, message: 'Please select date' }]}>
-                <DatePicker className="w-full" />
-              </Form.Item>
-              <Form.Item name="preferredDeliveryPickupTime" label="Preferred delivery/pickup time">
-                <Input placeholder="e.g. 10:00 AM" />
-              </Form.Item>
-              <Form.Item name="itemsInterestedIn" label="Items interested in">
-                <TextArea rows={3} placeholder="e.g. Sundal, Mini Murukku" />
-              </Form.Item>
-              <Form.Item name="budgetPerPerson" label="Budget per person">
-                <InputNumber min={0} className="w-full" placeholder="e.g. 200" prefix="₹" />
-              </Form.Item>
-              <Form.Item name="specialRequirements" label="Special requirements">
-                <TextArea rows={3} placeholder="Any dietary requirements or special instructions?" />
-              </Form.Item>
-              <Form.Item className="mb-2">
-                <Button type="primary" htmlType="submit" className="w-full bg-[#B85C3E] hover:bg-[#a04e33] border-none h-11 text-white font-bold tracking-wide shadow-md">
-                  REQUEST A QUOTE
+            {isSubmitted ? (
+              <div className="text-center py-10 px-4">
+                <div className="w-16 h-16 bg-[#2C4A3B]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircleFilled className="text-4xl text-[#2C4A3B]" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2C4A3B] mb-2 font-serif">Quote Request Received!</h3>
+                <p className="text-[#3E2C22] max-w-md mx-auto mb-6 text-base leading-relaxed">
+                  Thank you! We have successfully received your corporate order enquiry. Our catering coordinator will review your requirements and reach out within 24 hours.
+                </p>
+                <Button 
+                  type="primary"
+                  onClick={() => setIsSubmitted(false)}
+                  className="bg-[#2C4A3B] hover:bg-[#1f3429] h-11 px-6 rounded-lg font-semibold text-white shadow"
+                >
+                  Submit Another Enquiry
                 </Button>
-              </Form.Item>
-              <p className="text-center text-xs text-gray-500 mt-2">
-                We respect your privacy. Details provided are strictly used to coordinate your catering quote. Read our{' '}
-                <Link to="/privacy-policy" className="text-[#2C4A3B] underline hover:text-[#B85C3E] font-medium">
-                  Privacy Policy
-                </Link>.
-              </p>
-            </Form>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-xl font-bold text-[#2C4A3B] mb-6">Request a Quote</h3>
+                <Form
+                  form={form}
+                  layout="vertical"
+                  onFinish={onFinish}
+                >
+                  <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter your name' }]}>
+                    <Input placeholder="Your Name" size="large" />
+                  </Form.Item>
+                  <Form.Item name="company" label="Company" rules={[{ required: true, message: 'Please enter company name' }]}>
+                    <Input placeholder="Company Name" size="large" />
+                  </Form.Item>
+                  <Form.Item name="designation" label="Designation">
+                    <Input placeholder="Your Designation" size="large" />
+                  </Form.Item>
+                  <Form.Item name="phone" label="Phone" rules={[{ required: true, message: 'Please enter phone number' }]}>
+                    <Input placeholder="Phone Number" size="large" />
+                  </Form.Item>
+                  <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Please enter valid email' }]}>
+                    <Input placeholder="Email Address" size="large" />
+                  </Form.Item>
+                  <Form.Item name="numberOfPeople" label="Number of people" rules={[{ required: true, message: 'Please enter number of people' }]}>
+                    <InputNumber min={1} className="w-full" placeholder="e.g. 50" size="large" />
+                  </Form.Item>
+                  <Form.Item name="dateRequired" label="Date required" rules={[{ required: true, message: 'Please select date' }]}>
+                    <DatePicker className="w-full" size="large" />
+                  </Form.Item>
+                  <Form.Item name="preferredDeliveryPickupTime" label="Preferred delivery/pickup time">
+                    <Input placeholder="e.g. 10:00 AM" size="large" />
+                  </Form.Item>
+                  <Form.Item name="itemsInterestedIn" label="Items interested in">
+                    <TextArea rows={3} placeholder="e.g. Sundal, Mini Murukku, Modakam" />
+                  </Form.Item>
+                  <Form.Item name="budgetPerPerson" label="Budget per person">
+                    <InputNumber min={0} className="w-full" placeholder="e.g. 200" prefix="₹" size="large" />
+                  </Form.Item>
+                  <Form.Item name="specialRequirements" label="Special requirements">
+                    <TextArea rows={3} placeholder="Any dietary requirements or special instructions?" />
+                  </Form.Item>
+                  <Form.Item className="mb-2">
+                    <Button 
+                      type="primary" 
+                      htmlType="submit" 
+                      loading={submitting}
+                      disabled={submitting}
+                      className="w-full bg-[#B85C3E] hover:bg-[#a04e33] border-none h-12 text-white font-bold tracking-wide shadow-md text-base rounded-lg flex items-center justify-center transition-all duration-300"
+                    >
+                      {submitting ? 'SUBMITTING QUOTE REQUEST...' : 'REQUEST A QUOTE'}
+                    </Button>
+                  </Form.Item>
+                  <p className="text-center text-xs text-gray-500 mt-2">
+                    We respect your privacy. Details provided are strictly used to coordinate your catering quote. Read our{' '}
+                    <Link to="/privacy-policy" className="text-[#2C4A3B] underline hover:text-[#B85C3E] font-medium">
+                      Privacy Policy
+                    </Link>.
+                  </p>
+                </Form>
+              </>
+            )}
           </div>
         </div>
       </SectionContainer>

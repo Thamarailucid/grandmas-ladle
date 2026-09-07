@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Form, Input } from 'antd';
+import { Form, Input, Button } from 'antd';
 import {
   PhoneOutlined,
   WhatsAppOutlined,
   MailOutlined,
   InstagramOutlined,
-  EnvironmentOutlined
+  EnvironmentOutlined,
+  CheckCircleFilled
 } from '@ant-design/icons';
 import { toast } from 'react-hot-toast';
 import { SectionContainer } from '@/components/common/SectionContainer';
@@ -21,14 +22,21 @@ const { TextArea } = Input;
 export default function ContactPage() {
   const { phone, whatsapp, email, address, instagramUrl } = useBusinessSettingsContext();
   const [form] = Form.useForm();
+  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onFinish = async (values: any) => {
     try {
+      setSubmitting(true);
       await apiClient.post('/ContactEnquiry/CreateContactEnquiry', values);
       toast.success('Thank you! Your message has been sent successfully.');
       form.resetFields();
-    } catch (error) {
-      toast.error('Failed to send message. Please try again later.');
+      setIsSubmitted(true);
+    } catch (error: any) {
+      const errMsg = error.response?.data?.message || 'Failed to send message. Please try again later.';
+      toast.error(errMsg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -102,63 +110,87 @@ export default function ContactPage() {
 
           {/* Contact Form */}
           <div className="bg-white p-8 rounded-lg shadow-sm border border-[#FAF4E6]">
-            <h3 className="text-2xl font-bold text-[#2C4A3B] mb-6">Send a Message</h3>
-            <Form
-              form={form}
-              layout="vertical"
-              onFinish={onFinish}
-              requiredMark={false}
-            >
-              <Form.Item
-                name="name"
-                label={<span className="text-[#3E2C22] font-medium">Name</span>}
-                rules={[{ required: true, message: 'Please enter your name' }]}
-              >
-                <Input size="large" placeholder="Your Name" />
-              </Form.Item>
-
-              <Form.Item
-                name="email"
-                label={<span className="text-[#3E2C22] font-medium">Email</span>}
-                rules={[
-                  { required: true, message: 'Please enter your email' },
-                  { type: 'email', message: 'Please enter a valid email' }
-                ]}
-              >
-                <Input size="large" placeholder="your.email@example.com" />
-              </Form.Item>
-
-              <Form.Item
-                name="phone"
-                label={<span className="text-[#3E2C22] font-medium">Phone Number (Optional)</span>}
-              >
-                <Input size="large" placeholder="Your Phone Number" />
-              </Form.Item>
-
-              <Form.Item
-                name="subject"
-                label={<span className="text-[#3E2C22] font-medium">Subject (Optional)</span>}
-              >
-                <Input size="large" placeholder="What is this regarding?" />
-              </Form.Item>
-
-              <Form.Item
-                name="message"
-                label={<span className="text-[#3E2C22] font-medium">Message</span>}
-                rules={[{ required: true, message: 'Please enter your message' }]}
-              >
-                <TextArea rows={4} size="large" placeholder="How can we help you?" />
-              </Form.Item>
-
-              <Form.Item className="mb-0 mt-6">
-                <button
-                  type="submit"
-                  className="w-full bg-[#2C4A3B] text-[#FAF4E6] py-3 px-6 rounded font-semibold hover:bg-[#1f3429] transition-colors"
+            {isSubmitted ? (
+              <div className="text-center py-10 px-4">
+                <div className="w-16 h-16 bg-[#2C4A3B]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircleFilled className="text-4xl text-[#2C4A3B]" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#2C4A3B] mb-2 font-serif">Message Sent!</h3>
+                <p className="text-[#3E2C22] max-w-md mx-auto mb-6 text-base leading-relaxed">
+                  Thank you for reaching out to Grandma's Ladle! We have received your message and will respond as soon as possible.
+                </p>
+                <Button 
+                  type="primary"
+                  onClick={() => setIsSubmitted(false)}
+                  className="bg-[#2C4A3B] hover:bg-[#1f3429] h-11 px-6 rounded-lg font-semibold text-white shadow"
                 >
-                  Send Message
-                </button>
-              </Form.Item>
-            </Form>
+                  Send Another Message
+                </Button>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-2xl font-bold text-[#2C4A3B] mb-6">Send a Message</h3>
+                <Form
+                  form={form}
+                  layout="vertical"
+                  onFinish={onFinish}
+                  requiredMark={false}
+                >
+                  <Form.Item
+                    name="name"
+                    label={<span className="text-[#3E2C22] font-medium">Name</span>}
+                    rules={[{ required: true, message: 'Please enter your name' }]}
+                  >
+                    <Input size="large" placeholder="Your Name" />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="email"
+                    label={<span className="text-[#3E2C22] font-medium">Email</span>}
+                    rules={[
+                      { required: true, message: 'Please enter your email' },
+                      { type: 'email', message: 'Please enter a valid email' }
+                    ]}
+                  >
+                    <Input size="large" placeholder="your.email@example.com" />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="phone"
+                    label={<span className="text-[#3E2C22] font-medium">Phone Number (Optional)</span>}
+                  >
+                    <Input size="large" placeholder="Your Phone Number" />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="subject"
+                    label={<span className="text-[#3E2C22] font-medium">Subject (Optional)</span>}
+                  >
+                    <Input size="large" placeholder="What is this regarding?" />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="message"
+                    label={<span className="text-[#3E2C22] font-medium">Message</span>}
+                    rules={[{ required: true, message: 'Please enter your message' }]}
+                  >
+                    <TextArea rows={4} size="large" placeholder="How can we help you?" />
+                  </Form.Item>
+
+                  <Form.Item className="mb-0 mt-6">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={submitting}
+                      disabled={submitting}
+                      className="w-full bg-[#2C4A3B] hover:bg-[#1f3429] text-[#FAF4E6] h-12 rounded-lg font-semibold text-base shadow border-none transition-all duration-300 flex items-center justify-center"
+                    >
+                      {submitting ? 'Sending Message...' : 'Send Message'}
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </>
+            )}
           </div>
         </div>
       </SectionContainer>

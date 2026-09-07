@@ -190,11 +190,13 @@ export function CustomerReviewsSection() {
           </div>
         }
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => !submitMutation.isPending && setIsModalOpen(false)}
         onOk={handleFormSubmit}
         confirmLoading={submitMutation.isPending}
-        okText="Submit Review"
+        okText={submitMutation.isPending ? "Submitting Review..." : "Submit Review"}
         okButtonProps={{
+          loading: submitMutation.isPending,
+          disabled: submitMutation.isPending,
           style: {
             background: '#2C4A3B',
             borderColor: '#2C4A3B',
@@ -205,6 +207,7 @@ export function CustomerReviewsSection() {
           }
         }}
         cancelButtonProps={{
+          disabled: submitMutation.isPending,
           style: { borderRadius: '8px', height: '40px' }
         }}
         width={560}
