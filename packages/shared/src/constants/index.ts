@@ -17,7 +17,7 @@ export const BUSINESS_DEFAULTS = {
   whatsapp: '919841207516',
   email: 'grandmasladle1269@gmail.com',
   address: 'No.26/2, 4th Cross, Sawmill Road, New Thippasandra, Bangalore-560075',
-  openingHours: '10:00 AM TO 8:00 PM',
+  openingHours: 'Monday to Sunday: 10:00 AM TO 8:00 PM',
   fssaiNumber: '21226010006642',
   googleMapsUrl: 'https://maps.google.com/maps?q=12.9750239,77.6540696&hl=en&z=17&output=embed',
   googleMapsPlaceUrl: 'https://www.google.com/maps/place/12%C2%B058\'30.1%22N+77%C2%B039\'14.7%22E/@12.9750239,77.6540696,17z',

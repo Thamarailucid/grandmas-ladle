@@ -113,7 +113,7 @@ export default function SettingsPage() {
               </Form.Item>
 
               <Form.Item name="openingHours" label="Opening Hours" className="sm:col-span-2">
-                <Input placeholder="e.g., 9:00 AM - 9:00 PM" />
+                <Input placeholder="e.g., Monday - Sunday: 10:00 AM - 8:00 PM" />
               </Form.Item>
               
               <Form.Item name="instagramUrl" label="Instagram URL">

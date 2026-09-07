@@ -143,6 +143,9 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-xl font-bold text-[#2C4A3B] mb-1">Visit Us</h3>
                 <p className="text-gray-700 whitespace-pre-line">{address}</p>
+                <p className="text-[#2C4A3B] font-medium text-xs sm:text-sm mt-1.5 bg-[#FAF4E6] px-2.5 py-1 rounded inline-block border border-[#B8925A]/20">
+                  Open All 7 Days: 10:00 AM – 8:00 PM
+                </p>
               </div>
             </div>
           </div>

@@ -77,6 +77,9 @@ export function Footer() {
               <li className="pt-2 text-warm-cream/80 whitespace-pre-line">
                 {address}
               </li>
+              <li className="pt-1 text-antique-brass text-xs font-medium">
+                Open All 7 Days: 10:00 AM – 8:00 PM
+              </li>
             </ul>
           </div>
 
