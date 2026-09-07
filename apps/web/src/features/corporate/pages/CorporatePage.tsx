@@ -8,6 +8,7 @@ import { SectionHeading } from '@/components/common/SectionHeading';
 import { BrandButton } from '@/components/common/BrandButton';
 import { createWhatsAppUrl } from '@/lib/whatsapp';
 import { apiClient } from '@/lib/apiClient';
+import dayjs from 'dayjs';
 
 const { TextArea } = Input;
 
@@ -139,8 +140,28 @@ export default function CorporatePage() {
                   <Form.Item name="numberOfPeople" label="Number of people" rules={[{ required: true, message: 'Please enter number of people' }]}>
                     <InputNumber min={1} className="w-full" placeholder="e.g. 50" size="large" />
                   </Form.Item>
-                  <Form.Item name="dateRequired" label="Date required" rules={[{ required: true, message: 'Please select date' }]}>
-                    <DatePicker className="w-full" size="large" />
+                  <Form.Item 
+                    name="dateRequired" 
+                    label="Date required" 
+                    rules={[
+                      { required: true, message: 'Please select date required' },
+                      {
+                        validator: (_, value) => {
+                          if (!value || value.isSame(dayjs(), 'day') || value.isAfter(dayjs(), 'day')) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('Date cannot be in the past. Please select today or a future date.'));
+                        }
+                      }
+                    ]}
+                  >
+                    <DatePicker 
+                      className="w-full" 
+                      size="large" 
+                      format="DD MMM YYYY"
+                      placeholder="Select date required"
+                      disabledDate={(current) => current && current < dayjs().startOf('day')}
+                    />
                   </Form.Item>
                   <Form.Item name="preferredDeliveryPickupTime" label="Preferred delivery/pickup time">
                     <Input placeholder="e.g. 10:00 AM" size="large" />
