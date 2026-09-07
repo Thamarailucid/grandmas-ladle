@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage() {
           <div>
             <p className="text-sm text-gray-500 mb-6">Last updated: September 2026</p>
             <p>
-              At <strong>Grandma's Ladle</strong> ("we", "our", or "us"), we value the trust you place in us when sharing your personal details. This Privacy Policy describes how we collect, use, and protect information submitted via our website (<a href="https://grandmasladle.com" className="text-brand-green underline">grandmasladle.com</a>), including our Corporate Enquiry and Contact forms.
+              At <strong>Grandma's Ladle</strong>, we value the trust you place in us when sharing your personal details. This Privacy Policy describes how we collect, use, and protect information submitted via our website (<a href="https://grandmasladle.com" className="text-brand-green underline">grandmasladle.com</a>), including our Corporate Enquiry and Contact forms.
             </p>
           </div>
 
