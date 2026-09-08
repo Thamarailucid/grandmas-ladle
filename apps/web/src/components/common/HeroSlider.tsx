@@ -5,7 +5,7 @@ import { BrandButton } from './BrandButton';
 import { apiClient } from '@/lib/apiClient';
 import { ApiListResponse, HeroSlide } from '@grandmas-ladle/shared';
 
-import defaultHeroImg from '@/assets/hero_grandmas_ladle.jpg';
+import defaultHeroImg from '@/assets/hero_grand_opening.jpg';
 
 const fetchHeroSlides = async (): Promise<HeroSlide[]> => {
   const response = await apiClient.get<ApiListResponse<HeroSlide>>('/HeroSlide/GetPublicHeroSlides');
@@ -29,7 +29,7 @@ export function HeroSlider() {
     return () => clearInterval(interval);
   }, [slides.length]);
 
-  const containerClasses = "relative w-full aspect-[16/9] md:aspect-auto md:h-[calc(100dvh-var(--header-height,80px))] md:min-h-[500px] md:max-h-[920px] overflow-hidden bg-[#1a1612]";
+  const containerClasses = "relative w-full aspect-[16/9] md:aspect-[16/7] overflow-hidden bg-[#1a1612]";
 
   if (isLoading) {
     return <div className={`${containerClasses} bg-[#F9F6F0] animate-pulse`} />;
@@ -41,24 +41,15 @@ export function HeroSlider() {
       <div className={containerClasses}>
         <img
           src={defaultHeroImg}
-          alt="Grandma's Ladle Authentic Spread"
+          alt="Grandma's Ladle Grand Opening 14.09.2026"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-4 sm:px-6">
-          <div className="flex flex-col items-center max-w-4xl">
-            <h1 className="text-xl sm:text-3xl md:text-6xl font-bold font-serif text-white mb-2 md:mb-6 drop-shadow-lg tracking-wide uppercase">
-              GRANDMA'S LADLE
-            </h1>
-            <p className="hidden sm:block text-xs sm:text-base md:text-xl text-white mb-3 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
-              Traditional goodness, from our kitchen to yours.
-            </p>
-            <div className="flex gap-2 sm:gap-3 scale-90 sm:scale-100">
-              <BrandButton variant="primary" size="sm" to="/menu">ORDER NOW</BrandButton>
-              <BrandButton variant="outline" size="sm" to="/our-story" className="text-white border-white hover:bg-white hover:text-brand-green">
-                OUR STORY
-              </BrandButton>
-            </div>
+        <div className="absolute inset-0 z-10 flex items-end justify-center md:justify-end p-4 sm:p-6 md:p-8 lg:p-12">
+          <div className="flex gap-2 sm:gap-3 scale-90 sm:scale-100 bg-black/40 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/20 shadow-lg">
+            <BrandButton variant="primary" size="sm" to="/menu">ORDER NOW</BrandButton>
+            <BrandButton variant="outline" size="sm" to="/our-story" className="text-white border-white hover:bg-white hover:text-brand-green">
+              OUR STORY
+            </BrandButton>
           </div>
         </div>
       </div>
