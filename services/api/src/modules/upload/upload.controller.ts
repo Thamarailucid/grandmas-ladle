@@ -8,15 +8,46 @@ import { AppError } from '../../errors/AppError.js';
 import { env } from '../../config/env.js';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
-// Setup AWS S3 Client
-// If the environment variables are not set, it won't break unless you try to upload to S3
-const s3Client = env.AWS_REGION && env.AWS_ACCESS_KEY_ID ? new S3Client({
-  region: env.AWS_REGION,
-  credentials: {
-    accessKeyId: env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: env.AWS_SECRET_ACCESS_KEY!,
-  }
-}) : null;
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Helper to check if an AWS key is a template placeholder or empty
+const isPlaceholderKey = (key?: string) => {
+  if (!key) return true;
+  const lower = key.toLowerCase().trim();
+  return (
+    lower.length === 0 ||
+    lower.includes('your-access-key') ||
+    lower.includes('your-secret-key') ||
+    lower.includes('change-this') ||
+    lower === 'undefined' ||
+    lower === 'null'
+  );
+};
+
+// S3 is only active if running in production with real, non-placeholder credentials
+const isS3Configured = Boolean(
+  env.NODE_ENV === 'production' &&
+  env.AWS_REGION &&
+  env.AWS_BUCKET_NAME &&
+  env.AWS_ACCESS_KEY_ID &&
+  env.AWS_SECRET_ACCESS_KEY &&
+  !isPlaceholderKey(env.AWS_ACCESS_KEY_ID) &&
+  !isPlaceholderKey(env.AWS_SECRET_ACCESS_KEY)
+);
+
+// Setup AWS S3 Client only when valid credentials exist
+const s3Client = isS3Configured
+  ? new S3Client({
+      region: env.AWS_REGION,
+      credentials: {
+        accessKeyId: env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: env.AWS_SECRET_ACCESS_KEY!,
+      },
+    })
+  : null;
 
 // Configure multer to store in memory first so we can process with sharp
 const storage = multer.memoryStorage();
@@ -52,31 +83,36 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
       .toBuffer();
 
     let imageUrl = '';
+    let uploadedToS3 = false;
 
-    // 2. Upload Strategy: AWS S3 (Production) vs Local Disk (Development)
-    if (s3Client && env.AWS_BUCKET_NAME) {
-      // PRODUCTION: Upload to AWS S3
-      const command = new PutObjectCommand({
-        Bucket: env.AWS_BUCKET_NAME,
-        Key: `uploads/${filename}`,
-        Body: processedImageBuffer,
-        ContentType: 'image/webp',
-        // Optional: ACL: 'public-read' - usually handled by Bucket Policies now
-      });
+    // 2. Upload Strategy: AWS S3 (Production with valid credentials)
+    if (isS3Configured && s3Client && env.AWS_BUCKET_NAME) {
+      try {
+        const command = new PutObjectCommand({
+          Bucket: env.AWS_BUCKET_NAME,
+          Key: `uploads/${filename}`,
+          Body: processedImageBuffer,
+          ContentType: 'image/webp',
+        });
 
-      await s3Client.send(command);
-      // Construct the public S3 URL or CloudFront URL
-      imageUrl = `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/uploads/${filename}`;
-    } else {
-      // DEVELOPMENT: Save to local disk
-      const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+        await s3Client.send(command);
+        imageUrl = `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/uploads/${filename}`;
+        uploadedToS3 = true;
+      } catch (s3Error) {
+        console.warn('⚠️ AWS S3 upload failed, falling back to local disk storage:', s3Error);
+      }
+    }
+
+    // 3. Fallback: Save to Local Disk (Development mode or when S3 is unavailable)
+    if (!uploadedToS3) {
+      const uploadDir = path.resolve(__dirname, '../../../public/uploads');
       const filepath = path.join(uploadDir, filename);
 
       await fs.mkdir(uploadDir, { recursive: true });
       await fs.writeFile(filepath, processedImageBuffer);
 
-      const host = req.get('host');
-      const protocol = req.protocol;
+      const protocol = req.get('x-forwarded-proto') || req.protocol;
+      const host = req.get('host') || `localhost:${env.PORT}`;
       imageUrl = `${protocol}://${host}/uploads/${filename}`;
     }
 
