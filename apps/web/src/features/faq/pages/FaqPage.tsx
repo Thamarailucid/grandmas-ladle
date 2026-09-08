@@ -10,45 +10,56 @@ import { createWhatsAppUrl, formatPhoneTel } from '@/lib/whatsapp';
 const faqs = [
   {
     key: '1',
-    label: 'How do I place an order?',
-    children: 'You can order directly through WhatsApp, by phone, or using the Order Now button on this website.'
+    label: 'How do I order?',
+    children: 'WhatsApp or call us on +91 98412 07516. We\'ll confirm your items, price and pickup or delivery time.'
   },
   {
     key: '2',
-    label: 'Do you deliver, or is it pickup only?',
-    children: 'Delivery in and around New Thippasandra, for other areas the freight services should be borne by the customers.'
+    label: 'Can I change or cancel my order?',
+    children: 'Of course, just let us know before we start cooking, usually within a couple of hours of confirming. Everything is made fresh to order, so we can\'t cancel once preparation has begun.'
   },
   {
     key: '3',
-    label: 'How far in advance should I order?',
-    children: 'For everyday snacks - depends on requirement - one to ten days. For festival and bulk/corporate orders, we recommend booking at least 15 days in advance and pay ¾th of the amount.'
+    label: 'What if something isn\'t right?',
+    children: 'Tell us within a few hours and we\'ll replace it on our next run or refund you. We\'re a family kitchen and we\'d rather fix it than argue about it.'
   },
   {
     key: '4',
+    label: 'Festival and bulk orders - how far in advance should I order?',
+    children: 'Please give us 2-3 days\' notice. For large orders we ask for an advance to cover ingredients.'
+  },
+  {
+    key: '5',
+    label: 'Do you deliver, or is it pickup only?',
+    children: 'Delivery is available in and around New Thippasandra. For other areas across Bengaluru, freight services and courier costs are borne by the customer.'
+  },
+  {
+    key: '6',
     label: 'Do you cater for corporate or bulk orders?',
     children: 'Yes - see our Corporate & Bulk Orders page, or WhatsApp us with your requirements.'
   },
   {
-    key: '5',
-    label: 'Can I customise a festival box?',
-    children: 'Yes on demand'
-  },
-  {
-    key: '6',
-    label: 'What payment methods do you accept?',
-    children: 'UPI or cash'
-  },
-  {
     key: '7',
-    label: 'Do your products contain nuts, dairy or gluten?',
-    children: 'Not all products, kindly speak to us for any specifications'
+    label: 'Can I customise a festival box?',
+    children: 'Yes, festival gift boxes can be customised on demand.'
   },
   {
     key: '8',
+    label: 'What payment methods do you accept?',
+    children: 'UPI or cash on delivery/pickup.'
+  },
+  {
+    key: '9',
+    label: 'Do your products contain nuts, dairy or gluten?',
+    children: 'Not all products contain allergens. Kindly speak to us or message us for specific dietary preferences.'
+  },
+  {
+    key: '10',
     label: 'How should I store what I\'ve ordered, and how long does it stay fresh?',
-    children: '10 days out refrigerator and 15 days if kept inside fridge for ladoos. Snacks are best before 20 days. Other day in and day out products has to be consumed on the same day'
+    children: 'Ladoos stay fresh for 10 days at room temperature and 15 days refrigerated. Traditional snacks are best before 20 days. Daily freshly made items should be consumed on the same day.'
   }
 ];
+
 
 export default function FaqPage() {
   const { phone } = useBusinessSettingsContext();

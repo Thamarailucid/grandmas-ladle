@@ -113,15 +113,9 @@ export function Footer() {
 
           {/* Center: Legal Policies & Attribution */}
           <div className="flex flex-col items-center gap-1.5 text-center">
-            <div className="flex items-center gap-3">
-              <Link to="/privacy-policy" className="hover:text-antique-brass transition-colors underline-offset-2 hover:underline">
-                Privacy Policy
-              </Link>
-              <span>•</span>
-              <Link to="/refund-policy" className="hover:text-antique-brass transition-colors underline-offset-2 hover:underline">
-                Refund & Cancellation
-              </Link>
-            </div>
+            <Link to="/privacy-policy" className="hover:text-antique-brass transition-colors underline-offset-2 hover:underline">
+              Privacy Policy
+            </Link>
             <p className="text-[11px] text-warm-cream/50">
               Designed & Developed by{' '}
               <a 

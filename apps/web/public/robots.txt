@@ -12,7 +12,6 @@ Allow: /visit-us
 Allow: /contact
 Allow: /faq
 Allow: /privacy-policy
-Allow: /refund-policy
 Allow: /llms.txt
 Disallow: /api/
 

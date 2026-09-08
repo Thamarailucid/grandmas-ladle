@@ -16,6 +16,7 @@ import { useBusinessSettingsContext } from '@/contexts/BusinessSettingsContext';
 import { createWhatsAppUrl, formatPhoneTel, formatDisplayPhone } from '@/lib/whatsapp';
 
 import { apiClient } from '@/lib/apiClient';
+import { BrandButton } from '@/components/common/BrandButton';
 
 const { TextArea } = Input;
 
@@ -236,6 +237,78 @@ export default function ContactPage() {
               </>
             )}
           </div>
+        </div>
+      </SectionContainer>
+
+      {/* Ordering & Delivery Information */}
+      <SectionContainer bgColor="white" className="py-16 md:py-20 border-t border-[#B8925A]/15">
+        <SectionHeading
+          title="ORDERING & DELIVERY"
+          subtitle="Everything is made fresh in small batches at our family kitchen. Here is how ordering, changes, and care work."
+          centered
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mt-12">
+          {/* How do I order? */}
+          <div className="bg-[#FAF4E6]/50 p-6 sm:p-8 rounded-2xl border border-[#B8925A]/25 hover:border-[#B8925A]/40 transition-colors">
+            <h3 className="text-xl font-bold font-playfair text-[#2C4A3B] mb-2">
+              How do I order?
+            </h3>
+            <p className="text-[#3E2C22] text-base leading-relaxed">
+              WhatsApp or call us on{' '}
+              <a href={`tel:${formatPhoneTel(phone)}`} className="text-brand-green font-semibold hover:underline">
+                {formatDisplayPhone(phone || '+91 98412 07516')}
+              </a>
+              . We'll confirm your items, price and pickup or delivery time.
+            </p>
+          </div>
+
+          {/* Can I change or cancel my order? */}
+          <div className="bg-[#FAF4E6]/50 p-6 sm:p-8 rounded-2xl border border-[#B8925A]/25 hover:border-[#B8925A]/40 transition-colors">
+            <h3 className="text-xl font-bold font-playfair text-[#2C4A3B] mb-2">
+              Can I change or cancel my order?
+            </h3>
+            <p className="text-[#3E2C22] text-base leading-relaxed">
+              Of course, just let us know before we start cooking, usually within a couple of hours of confirming. Everything is made fresh to order, so we can't cancel once preparation has begun.
+            </p>
+          </div>
+
+          {/* What if something isn't right? */}
+          <div className="bg-[#FAF4E6]/50 p-6 sm:p-8 rounded-2xl border border-[#B8925A]/25 hover:border-[#B8925A]/40 transition-colors">
+            <h3 className="text-xl font-bold font-playfair text-[#2C4A3B] mb-2">
+              What if something isn't right?
+            </h3>
+            <p className="text-[#3E2C22] text-base leading-relaxed">
+              Tell us within a few hours and we'll replace it on our next run or refund you. We're a family kitchen and we'd rather fix it than argue about it.
+            </p>
+          </div>
+
+          {/* Festival and bulk orders */}
+          <div className="bg-[#FAF4E6]/50 p-6 sm:p-8 rounded-2xl border border-[#B8925A]/25 hover:border-[#B8925A]/40 transition-colors">
+            <h3 className="text-xl font-bold font-playfair text-[#2C4A3B] mb-2">
+              Festival and bulk orders
+            </h3>
+            <p className="text-[#3E2C22] text-base leading-relaxed">
+              Please give us 2-3 days' notice. For large orders we ask for an advance to cover ingredients.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4 text-center">
+          <BrandButton
+            variant="secondary"
+            href={createWhatsAppUrl("Hello Grandma's Ladle! I would like to order.", whatsapp)}
+            size="md"
+          >
+            <WhatsAppOutlined className="mr-2" /> Order on WhatsApp
+          </BrandButton>
+          <BrandButton
+            variant="outline"
+            href={`tel:${formatPhoneTel(phone)}`}
+            size="md"
+          >
+            <PhoneOutlined className="mr-2" /> Call {formatDisplayPhone(phone || '+91 98412 07516')}
+          </BrandButton>
         </div>
       </SectionContainer>
     </>

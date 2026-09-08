@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { PublicLayout } from '../../components/layout/PublicLayout';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -14,7 +14,6 @@ const VisitUsPage = lazy(() => import('@/features/visitUs/pages/VisitUsPage'));
 const ContactPage = lazy(() => import('@/features/contact/pages/ContactPage'));
 const FaqPage = lazy(() => import('@/features/faq/pages/FaqPage'));
 const PrivacyPolicyPage = lazy(() => import('@/features/legal/pages/PrivacyPolicyPage'));
-const RefundPolicyPage = lazy(() => import('@/features/legal/pages/RefundPolicyPage'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -40,7 +39,8 @@ export function AppRoutes() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-          <Route path="/refund-policy" element={<RefundPolicyPage />} />
+          <Route path="/refund-policy" element={<Navigate to="/contact" replace />} />
+          <Route path="/cancellation-policy" element={<Navigate to="/contact" replace />} />
         </Route>
       </Routes>
     </Suspense>
