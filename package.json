@@ -2,7 +2,7 @@
   "name": "grandmas-ladle",
   "version": "1.0.0",
   "private": true,
-  "description": "Grandma's Ladle — Traditional goodness, from our kitchen to yours.",
+  "description": "Grandma's Ladle - Traditional goodness, from our kitchen to yours.",
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",

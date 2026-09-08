@@ -37,7 +37,7 @@ export default function SalePage() {
   return (
     <>
       <Helmet>
-        <title>Special Sale | Grandma's Ladle — Traditional Snacks & Sweets</title>
+        <title>Special Sale | Grandma's Ladle - Traditional Snacks & Sweets</title>
         <meta name="description" content="Shop our limited-time special sale items made the authentic traditional way with pure ghee and wholesome ingredients." />
         <link rel="canonical" href="https://grandmasladle.com/sale" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />

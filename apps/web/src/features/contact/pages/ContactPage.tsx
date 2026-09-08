@@ -52,12 +52,12 @@ export default function ContactPage() {
     <>
       <Helmet>
         <title>Contact | Grandma's Ladle</title>
-        <meta name="description" content="Get in touch for orders, corporate enquiries or feedback — call, WhatsApp or visit our Bengaluru kitchen." />
+        <meta name="description" content="Get in touch for orders, corporate enquiries or feedback - call, WhatsApp or visit our Bengaluru kitchen." />
         <link rel="canonical" href="https://grandmasladle.com/contact" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Contact | Grandma's Ladle" />
-        <meta property="og:description" content="Get in touch for orders, corporate enquiries or feedback — call, WhatsApp or visit our Bengaluru kitchen." />
+        <meta property="og:description" content="Get in touch for orders, corporate enquiries or feedback - call, WhatsApp or visit our Bengaluru kitchen." />
         <meta property="og:url" content="https://grandmasladle.com/contact" />
         <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
 

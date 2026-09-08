@@ -58,7 +58,7 @@ export default function HomePage() {
 
       <HeroSlider />
 
-      {/* 2. Intro — Two Grandmothers Section */}
+      {/* 2. Intro - Two Grandmothers Section */}
       <SectionContainer bgColor="cream">
         <SectionHeading 
           title="TWO GRANDMOTHERS. ONE LEGACY."
@@ -66,7 +66,7 @@ export default function HomePage() {
         />
         <div className="max-w-3xl mx-auto text-center font-inter space-y-6 text-brand-dark-brown/90 text-lg leading-relaxed mb-10">
           <p>
-            Grandma's Ladle was inspired by two women who built their lives with their hands — making, cooking, stitching, creating and selling whatever they could to make life a little better.
+            Grandma's Ladle was inspired by two women who built their lives with their hands - making, cooking, stitching, creating and selling whatever they could to make life a little better.
           </p>
           <p>
             Their recipes, their resilience and their love for feeding people live on in what we make today.

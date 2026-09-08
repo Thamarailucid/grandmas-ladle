@@ -101,7 +101,7 @@ export default function MenuPage() {
   return (
     <>
       <Helmet>
-        <title>Menu | Traditional Snacks, Ladoos & Sundal — Grandma's Ladle</title>
+        <title>Menu | Traditional Snacks, Ladoos & Sundal - Grandma's Ladle</title>
         <meta name="description" content="Browse our menu of traditional homemade snacks, ladoos, sundal and festive specials. Order online or via WhatsApp." />
         <link rel="canonical" href="https://grandmasladle.com/menu" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -571,7 +571,7 @@ export default function MenuPage() {
           </>
         )}
 
-        {/* What Goes Into Our Kitchen — Ingredients & Sourcing */}
+        {/* What Goes Into Our Kitchen - Ingredients & Sourcing */}
         <div className="mt-16 max-w-4xl mx-auto bg-white/90 p-8 sm:p-10 rounded-2xl border border-[#B8925A]/30 shadow-sm">
           <h3 className="font-playfair text-2xl font-bold text-[#2C4A3B] mb-2 text-center">
             WHAT GOES INTO OUR KITCHEN
@@ -582,7 +582,7 @@ export default function MenuPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left text-sm sm:text-base font-inter text-[#3E2C22]">
             <div className="p-4 bg-[#FAF4E6] rounded-xl border border-[#B8925A]/20">
               <h4 className="font-bold text-[#2C4A3B] mb-1.5">Sourced with Care</h4>
-              <p className="text-gray-700">Ingredients sourced with the same care our grandmothers used — nothing more complicated than that.</p>
+              <p className="text-gray-700">Ingredients sourced with the same care our grandmothers used - nothing more complicated than that.</p>
             </div>
             <div className="p-4 bg-[#FAF4E6] rounded-xl border border-[#B8925A]/20">
               <h4 className="font-bold text-[#2C4A3B] mb-1.5">Small Batches</h4>
@@ -590,7 +590,7 @@ export default function MenuPage() {
             </div>
             <div className="p-4 bg-[#FAF4E6] rounded-xl border border-[#B8925A]/20">
               <h4 className="font-bold text-[#2C4A3B] mb-1.5">Traditional Methods</h4>
-              <p className="text-gray-700">Recipes stay close to the traditional method — no shortcuts, artificial essences, or preservatives that change what the food actually is.</p>
+              <p className="text-gray-700">Recipes stay close to the traditional method - no shortcuts, artificial essences, or preservatives that change what the food actually is.</p>
             </div>
           </div>
         </div>

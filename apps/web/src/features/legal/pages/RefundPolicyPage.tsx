@@ -12,7 +12,7 @@ export default function RefundPolicyPage() {
   return (
     <>
       <Helmet>
-        <title>Cancellation & Refund Policy | Grandma's Ladle — Traditional Snacks & Sweets</title>
+        <title>Cancellation & Refund Policy | Grandma's Ladle - Traditional Snacks & Sweets</title>
         <meta 
           name="description" 
           content="Cancellation and refund policy for freshly made traditional snacks and festival sweets at Grandma's Ladle. Quality guarantee and transparent refund procedures." 

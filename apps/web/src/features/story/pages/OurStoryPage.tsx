@@ -7,13 +7,13 @@ export default function OurStoryPage() {
   return (
     <>
       <Helmet>
-        <title>Our Story | Grandma's Ladle — Two Grandmothers, One Legacy</title>
-        <meta name="description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
+        <title>Our Story | Grandma's Ladle - Two Grandmothers, One Legacy</title>
+        <meta name="description" content="The story behind Grandma's Ladle - two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
         <link rel="canonical" href="https://grandmasladle.com/our-story" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Our Story | Grandma's Ladle — Two Grandmothers, One Legacy" />
-        <meta property="og:description" content="The story behind Grandma's Ladle — two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
+        <meta property="og:title" content="Our Story | Grandma's Ladle - Two Grandmothers, One Legacy" />
+        <meta property="og:description" content="The story behind Grandma's Ladle - two grandmothers, a silver glass, and a family recipe for traditional Indian snacks and sweets." />
         <meta property="og:url" content="https://grandmasladle.com/our-story" />
         <meta property="og:image" content="https://grandmasladle.com/logo.jpg" />
 
@@ -24,7 +24,7 @@ export default function OurStoryPage() {
             "@type": "AboutPage",
             "name": "The Story Behind Grandma's Ladle",
             "url": "https://grandmasladle.com/our-story",
-            "description": "A story of two grandmothers, a thousand little efforts, and one silver glass — the heritage of honest work and traditional South Indian cooking.",
+            "description": "A story of two grandmothers, a thousand little efforts, and one silver glass - the heritage of honest work and traditional South Indian cooking.",
             "mainEntity": {
               "@type": "Organization",
               "name": "Grandma's Ladle",
@@ -61,7 +61,7 @@ export default function OurStoryPage() {
             Behind Grandma's Ladle is not just a business story. It is a family story.
           </p>
           <p>
-            It began with two grandmothers who may not have had the opportunity for a formal education, but who taught us some of life's most valuable lessons — hard work, dignity, self-reliance, creativity and the joy of feeding others.
+            It began with two grandmothers who may not have had the opportunity for a formal education, but who taught us some of life's most valuable lessons - hard work, dignity, self-reliance, creativity and the joy of feeding others.
           </p>
           <p>
             Throughout their lives, they found ways to earn and contribute, often from their own homes and with whatever skills they had in their hands.
@@ -124,7 +124,7 @@ export default function OurStoryPage() {
             Grandma's Ladle is our way of carrying that spirit forward.
           </p>
           <p>
-            The food we make is inspired by the kind of food that belongs in a grandmother's kitchen — simple, nourishing, traditional and made with care.
+            The food we make is inspired by the kind of food that belongs in a grandmother's kitchen - simple, nourishing, traditional and made with care.
           </p>
           <p>
             Our menu brings together the foods and flavours we grew up loving: sundal, traditional snacks, ladoos, murukku, modakam, ragi-based drinks and other wholesome homemade favourites.
@@ -233,7 +233,7 @@ export default function OurStoryPage() {
                   <div>
                     <h4 className="font-bold text-[#2C4A3B] text-xs uppercase tracking-wider mb-1">One Lesson She Taught</h4>
                     <p className="italic">
-                      "I earned this by myself. Keep it safely." — That dignity and self-reliance lie in every rupee earned honestly.
+                      "I earned this by myself. Keep it safely." - That dignity and self-reliance lie in every rupee earned honestly.
                     </p>
                   </div>
                   <div>
@@ -304,7 +304,7 @@ export default function OurStoryPage() {
               Every ladoo reminds us of their hands. Every traditional recipe reminds us of where we came from.
             </p>
             <p>
-              And that silver glass still sits safely with us — a small object carrying a very big lesson.
+              And that silver glass still sits safely with us - a small object carrying a very big lesson.
             </p>
             
             <p className="font-playfair text-2xl md:text-3xl font-semibold text-[#B85C3E] my-10 py-6 border-y border-[#B8925A]/20 text-center">

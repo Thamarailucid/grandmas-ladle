@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <Helmet>
-        <title>Privacy Policy | Grandma's Ladle — Traditional Snacks & Sweets</title>
+        <title>Privacy Policy | Grandma's Ladle - Traditional Snacks & Sweets</title>
         <meta 
           name="description" 
           content="Privacy Policy for Grandma's Ladle. How we handle and protect customer and corporate inquiry data with strict confidentiality and zero spam." 

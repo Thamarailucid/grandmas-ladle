@@ -21,12 +21,12 @@ const faqs = [
   {
     key: '3',
     label: 'How far in advance should I order?',
-    children: 'For everyday snacks – depends on requirement – one to ten days. For festival and bulk/corporate orders, we recommend booking at least 15 days in advance and pay ¾th of the amount.'
+    children: 'For everyday snacks - depends on requirement - one to ten days. For festival and bulk/corporate orders, we recommend booking at least 15 days in advance and pay ¾th of the amount.'
   },
   {
     key: '4',
     label: 'Do you cater for corporate or bulk orders?',
-    children: 'Yes — see our Corporate & Bulk Orders page, or WhatsApp us with your requirements.'
+    children: 'Yes - see our Corporate & Bulk Orders page, or WhatsApp us with your requirements.'
   },
   {
     key: '5',
@@ -56,7 +56,7 @@ export default function FaqPage() {
   return (
     <>
       <Helmet>
-        <title>FAQ | Grandma's Ladle — Frequently Asked Questions</title>
+        <title>FAQ | Grandma's Ladle - Frequently Asked Questions</title>
         <meta name="description" content="Frequently asked questions about Grandma's Ladle orders, delivery, ingredients, and shelf life in Bengaluru." />
         <link rel="canonical" href="https://grandmasladle.com/faq" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />

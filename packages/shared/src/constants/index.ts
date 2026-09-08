@@ -7,7 +7,7 @@ export const BRAND_COLORS = {
   terracotta: '#B85C3E',
 } as const;
 
-// === Business Defaults (from source brief — confirmed values) ===
+// === Business Defaults (from source brief - confirmed values) ===
 export const BUSINESS_DEFAULTS = {
   name: "Grandma's Ladle",
   tagline: 'Traditional goodness, from our kitchen to yours.',
@@ -69,7 +69,7 @@ export const CACHE_TIMES = {
   businessSettings: 300_000, // 5 minutes
 } as const;
 
-// === Brand Lines / Copy Bank (from source brief — do not modify) ===
+// === Brand Lines / Copy Bank (from source brief - do not modify) ===
 export const BRAND_LINES = {
   tagline: 'Traditional goodness, from our kitchen to yours.',
   silverGlass: 'It started with a silver glass.',
