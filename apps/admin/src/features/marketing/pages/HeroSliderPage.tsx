@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Modal, Form, Input, Switch, InputNumber, Upload, message, Popconfirm, Space, Select, Tag } from 'antd';
+import { Table, Button, Modal, Form, Input, Switch, InputNumber, Upload, message, Popconfirm, Space, Select, Tag, Radio } from 'antd';
 import { PlusOutlined, UploadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/apiClient';
@@ -88,6 +88,7 @@ export default function HeroSliderPage() {
         isImageOnly: Boolean(slide.isImageOnly),
         imageFit: slide.imageFit || 'cover-center',
         isClickable: Boolean(slide.isClickable),
+        contentAlignment: slide.contentAlignment || 'center',
         sortOrder: slide.sortOrder ?? 0,
         isActive: slide.isActive !== false,
       });
@@ -110,6 +111,7 @@ export default function HeroSliderPage() {
         ...values,
         isClickable: Boolean(values.isClickable),
         isImageOnly: Boolean(values.isImageOnly),
+        contentAlignment: values.contentAlignment || 'center',
         isActive: values.isActive !== false,
       };
 
@@ -139,6 +141,18 @@ export default function HeroSliderPage() {
       dataIndex: 'title',
       key: 'title',
       render: (text: string, record: HeroSlide) => record.isImageOnly ? <Tag color="geekblue">Image Only (No Text)</Tag> : (text || <span style={{ color: '#aaa' }}>Untitled</span>),
+    },
+    {
+      title: 'Position',
+      dataIndex: 'contentAlignment',
+      key: 'contentAlignment',
+      render: (align: string, record: HeroSlide) => {
+        if (record.isImageOnly) return <span style={{ color: '#aaa' }}>—</span>;
+        const a = align || 'center';
+        if (a === 'left') return <Tag color="blue">Left</Tag>;
+        if (a === 'right') return <Tag color="purple">Right</Tag>;
+        return <Tag color="default">Center</Tag>;
+      },
     },
     {
       title: 'Active',
@@ -234,6 +248,7 @@ export default function HeroSliderPage() {
             isActive: true,
             isImageOnly: false,
             isClickable: false,
+            contentAlignment: 'center',
             imageFit: 'cover-center',
             sortOrder: 0,
             ctaLink: '/menu'
@@ -330,6 +345,24 @@ export default function HeroSliderPage() {
 
             {!isImageOnly && (
               <>
+                <Form.Item 
+                  name="contentAlignment" 
+                  label={<span style={{ fontWeight: 600 }}>Text & Buttons Position</span>}
+                  tooltip="Position the title, subtitle, and CTA buttons on the Left, Center, or Right side. Perfect for placing text away from the food subject in the image."
+                >
+                  <Radio.Group buttonStyle="solid" style={{ display: 'flex', width: '100%' }}>
+                    <Radio.Button value="left" style={{ flex: 1, textAlign: 'center' }}>
+                      ◀ Left Aligned
+                    </Radio.Button>
+                    <Radio.Button value="center" style={{ flex: 1, textAlign: 'center' }}>
+                      ● Center (Default)
+                    </Radio.Button>
+                    <Radio.Button value="right" style={{ flex: 1, textAlign: 'center' }}>
+                      Right Aligned ▶
+                    </Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+
                 <Form.Item name="title" label="Title">
                   <Input placeholder="e.g. GRANDMA'S LADLE" />
                 </Form.Item>

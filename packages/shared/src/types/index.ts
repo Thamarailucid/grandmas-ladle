@@ -442,6 +442,7 @@ export interface HeroSlide {
   isImageOnly: boolean;
   imageFit?: 'contain' | 'cover-center' | 'cover-top' | 'cover-bottom' | string;
   isClickable?: boolean;
+  contentAlignment?: 'left' | 'center' | 'right' | string;
   sortOrder: number;
   isActive: boolean;
   createdAt: string;

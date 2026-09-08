@@ -424,6 +424,7 @@ WHERE customer_name IN ('Ananya Sundaram', 'Rahul Menon', 'Kavitha Ramachandran'
 
 ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS image_fit VARCHAR(50) DEFAULT 'cover-center';
 ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS is_clickable BOOLEAN DEFAULT FALSE;
+ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS content_alignment VARCHAR(50) DEFAULT 'center';
 
 -- Ensure Business Settings (only creates default row if table is completely empty)
 DO $$

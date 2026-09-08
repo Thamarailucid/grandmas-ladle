@@ -117,19 +117,37 @@ export function HeroSlider() {
             {!s.isImageOnly && <div className="absolute inset-0 bg-black/40"></div>}
 
             {!s.isImageOnly && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center text-center px-4 sm:px-6">
-                <div className="flex flex-col items-center max-w-4xl">
+              <div className={`absolute inset-0 z-10 flex items-center px-6 sm:px-12 md:px-16 lg:px-24 ${
+                s.contentAlignment === 'left'
+                  ? 'justify-start text-left'
+                  : s.contentAlignment === 'right'
+                  ? 'justify-end text-right'
+                  : 'justify-center text-center'
+              }`}>
+                <div className={`flex flex-col ${
+                  s.contentAlignment === 'left'
+                    ? 'items-start text-left max-w-xl lg:max-w-2xl'
+                    : s.contentAlignment === 'right'
+                    ? 'items-end text-right max-w-xl lg:max-w-2xl'
+                    : 'items-center text-center max-w-4xl'
+                }`}>
                   {s.title && (
-                    <h1 className="text-xl sm:text-3xl md:text-6xl font-bold font-serif text-white mb-2 md:mb-6 drop-shadow-lg tracking-wide uppercase">
+                    <h1 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-bold font-serif text-white mb-2 md:mb-5 drop-shadow-lg tracking-wide uppercase">
                       {s.title}
                     </h1>
                   )}
                   {s.subtitle && (
-                    <p className="hidden sm:block text-xs sm:text-base md:text-xl text-white mb-3 md:mb-8 drop-shadow-md font-medium max-w-2xl font-serif leading-relaxed">
+                    <p className="hidden sm:block text-xs sm:text-base md:text-lg lg:text-xl text-white mb-3 md:mb-7 drop-shadow-md font-medium font-serif leading-relaxed">
                       {s.subtitle}
                     </p>
                   )}
-                  <div className="flex gap-2 sm:gap-3 scale-90 sm:scale-100">
+                  <div className={`flex gap-2 sm:gap-3 scale-90 sm:scale-100 ${
+                    s.contentAlignment === 'left'
+                      ? 'justify-start'
+                      : s.contentAlignment === 'right'
+                      ? 'justify-end'
+                      : 'justify-center'
+                  }`}>
                     {s.ctaText && s.ctaLink && (
                       <BrandButton variant="primary" size="sm" to={s.ctaLink}>
                         {s.ctaText}

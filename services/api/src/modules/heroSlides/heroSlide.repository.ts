@@ -7,6 +7,7 @@ async function ensureColumns() {
     await database.query(`
       ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS image_fit VARCHAR(50) DEFAULT 'cover-center';
       ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS is_clickable BOOLEAN DEFAULT FALSE;
+      ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS content_alignment VARCHAR(50) DEFAULT 'center';
     `);
     columnsEnsured = true;
   } catch (err) {
@@ -50,8 +51,8 @@ export const createHeroSlide = async (data: any) => {
   }
 
   const query = `
-    INSERT INTO hero_slides (image_url, title, subtitle, cta_text, cta_link, secondary_cta_text, secondary_cta_link, is_image_only, image_fit, is_clickable, sort_order, is_active)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    INSERT INTO hero_slides (image_url, title, subtitle, cta_text, cta_link, secondary_cta_text, secondary_cta_link, is_image_only, image_fit, is_clickable, content_alignment, sort_order, is_active)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     RETURNING *
   `;
   const values = [
@@ -65,6 +66,7 @@ export const createHeroSlide = async (data: any) => {
     Boolean(data.isImageOnly), 
     data.imageFit ?? 'cover-center',
     Boolean(data.isClickable),
+    data.contentAlignment ?? 'center',
     data.sortOrder ?? 0, 
     data.isActive !== false
   ];
@@ -93,6 +95,7 @@ export const updateHeroSlide = async (id: string, data: any) => {
     isImageOnly: 'is_image_only',
     imageFit: 'image_fit',
     isClickable: 'is_clickable',
+    contentAlignment: 'content_alignment',
     sortOrder: 'sort_order',
     isActive: 'is_active'
   };
@@ -141,6 +144,7 @@ const mapToDTO = (row: any) => ({
   isImageOnly: Boolean(row.is_image_only),
   imageFit: row.image_fit || 'cover-center',
   isClickable: Boolean(row.is_clickable),
+  contentAlignment: row.content_alignment || 'center',
   sortOrder: row.sort_order ?? 0,
   isActive: row.is_active !== false,
   createdAt: row.created_at,

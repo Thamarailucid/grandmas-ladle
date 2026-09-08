@@ -33,3 +33,7 @@ coverage/
 
 # Misc
 *.tsbuildinfo
+
+# Uploads
+services/api/public/uploads/*
+!services/api/public/uploads/.gitkeep
