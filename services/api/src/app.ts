@@ -46,6 +46,11 @@ app.use(
 );
 app.use('/uploads', express.static(path.join(__dirname, '..', 'public', 'uploads')));
 
+// Health check
+app.get(['/health', '/api/health', '/api/v1/health'], (_req, res) => {
+  res.status(200).json({ status: 'ok', message: "Grandma's Ladle API is running", timestamp: new Date().toISOString() });
+});
+
 // Routes
 app.use('/api/v1', routes);
 
