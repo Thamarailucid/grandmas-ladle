@@ -14,8 +14,25 @@ export const app = express();
 app.use(helmet());
 
 // CORS
-const origins = env.CORS_ORIGINS.split(',').map(o => o.trim());
-app.use(cors({ origin: origins, credentials: true }));
+const configuredOrigins = env.CORS_ORIGINS.split(',').map(o => o.trim());
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      configuredOrigins.includes(origin) ||
+      origin.endsWith('.grandmasladle.com') ||
+      origin === 'https://grandmasladle.com' ||
+      origin === 'http://grandmasladle.com' ||
+      origin.includes('.s3-website') ||
+      origin.includes('localhost') ||
+      origin.includes('127.0.0.1')
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
+  credentials: true,
+}));
 
 // Rate limiting
 const limiter = rateLimit({
