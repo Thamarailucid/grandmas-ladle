@@ -46,11 +46,11 @@ export async function seed() {
         [
           uuidv4(),
           "Grandma's Ladle",
-          '9841207516',
-          '+919841207516',
-          'grandmasladle1269@gmail.com',
-          'No.26/2, 4th Cross, Sawmill Road, New Thippasandra, Bangalore-560075',
-          'Monday to Saturday : 10:00 AM TO 8:00 PM',
+          '+91 98412 07516',
+          '+91 98412 07516',
+          'namaste@grandmasladle.com',
+          'No. 26/2, 4th Cross, Sawmill Road, New Thippasandra, Bengaluru 560075',
+          'Monday to Sunday, All 7 Days : 10:00 AM TO 8:00 PM',
           '21226010006642',
           true,
           'https://maps.google.com/maps?q=12.9750239,77.6540696&hl=en&z=17&output=embed'

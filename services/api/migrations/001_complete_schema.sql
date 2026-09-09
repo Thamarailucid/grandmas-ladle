@@ -340,6 +340,7 @@ CREATE TABLE IF NOT EXISTS hero_slides (
     is_image_only BOOLEAN DEFAULT FALSE,
     image_fit VARCHAR(50) DEFAULT 'cover-center',
     is_clickable BOOLEAN DEFAULT FALSE,
+    content_alignment VARCHAR(50) DEFAULT 'center',
     sort_order INTEGER DEFAULT 0,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -368,6 +369,9 @@ CREATE TABLE IF NOT EXISTS sales_campaigns (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+DROP TRIGGER IF EXISTS update_sales_campaigns_updated_at ON sales_campaigns;
+CREATE TRIGGER update_sales_campaigns_updated_at BEFORE UPDATE ON sales_campaigns FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 
 -- ============================================================
 -- MEDIA
@@ -406,27 +410,8 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
 );
 
 -- ============================================================
--- IDEMPOTENT COLUMN UPDATES & DATA SEEDING (Runs safely on restart)
+-- INITIAL DATA SEEDING (Runs safely if empty)
 -- ============================================================
-ALTER TABLE products ADD COLUMN IF NOT EXISTS is_on_sale BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE products ADD COLUMN IF NOT EXISTS is_listed BOOLEAN NOT NULL DEFAULT TRUE;
-ALTER TABLE products ALTER COLUMN is_vegetarian SET DEFAULT TRUE;
-UPDATE products SET is_vegetarian = TRUE WHERE is_vegetarian IS NULL;
-UPDATE products SET is_listed = TRUE WHERE is_listed IS NULL;
-
-ALTER TABLE reviews ADD COLUMN IF NOT EXISTS is_approved BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE reviews ADD COLUMN IF NOT EXISTS is_verified BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE reviews ADD COLUMN IF NOT EXISTS product_names TEXT[] DEFAULT '{}';
-
--- Safely unpublish any placeholder/dummy reviews so unvetted reviews are never published
-UPDATE reviews SET is_published = FALSE, is_approved = FALSE 
-WHERE customer_name IN ('Ananya Sundaram', 'Rahul Menon', 'Kavitha Ramachandran', 'Siddharth Iyer', 'Deepa Varma', 'Ananya S.', 'Rahul M.', 'Kavitha R.');
-
-ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS image_fit VARCHAR(50) DEFAULT 'cover-center';
-ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS is_clickable BOOLEAN DEFAULT FALSE;
-ALTER TABLE hero_slides ADD COLUMN IF NOT EXISTS content_alignment VARCHAR(50) DEFAULT 'center';
-
--- Ensure Business Settings (only creates default row if table is completely empty)
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM business_settings) THEN
@@ -436,20 +421,15 @@ BEGIN
             gen_random_uuid(),
             'Grandma''s Ladle',
             'Traditional goodness, from our kitchen to yours.',
-            '9841207516',
-            '919841207516',
-            'grandmasladle1269@gmail.com',
-            'No.26/2, 4th Cross, Sawmill Road, New Thippasandra, Bangalore-560075',
-            '10:00 AM TO 8:00 PM',
+            '+91 98412 07516',
+            '+91 98412 07516',
+            'namaste@grandmasladle.com',
+            'No. 26/2, 4th Cross, Sawmill Road, New Thippasandra, Bengaluru 560075',
+            'Monday to Sunday, All 7 Days : 10:00 AM TO 8:00 PM',
             '21226010006642',
             TRUE,
             'https://maps.google.com/maps?q=12.9750239,77.6540696&hl=en&z=17&output=embed'
         );
-    ELSE
-        UPDATE business_settings 
-        SET google_maps_url = COALESCE(NULLIF(google_maps_url, ''), 'https://maps.google.com/maps?q=12.9750239,77.6540696&hl=en&z=17&output=embed'),
-            fssai_number = COALESCE(NULLIF(fssai_number, ''), '21226010006642'),
-            whatsapp = COALESCE(NULLIF(whatsapp, ''), '919841207516');
     END IF;
 END $$;
 
