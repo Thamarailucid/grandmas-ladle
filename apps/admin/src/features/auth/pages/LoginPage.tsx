@@ -79,7 +79,7 @@ export default function LoginPage() {
             >
               <Input 
                 type="email" 
-                placeholder="admin@grandmasladle.com"
+                placeholder="Enter your email address"
                 className="rounded-lg"
                 style={{ borderColor: '#d9d9d9', height: 44 }}
               />
