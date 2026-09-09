@@ -37,3 +37,6 @@ coverage/
 # Uploads
 services/api/public/uploads/*
 !services/api/public/uploads/.gitkeep
+
+# Archives
+*.zip
