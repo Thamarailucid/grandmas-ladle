@@ -10,6 +10,9 @@ import { AppError } from './errors/AppError.js';
 
 export const app = express();
 
+// Trust NGINX reverse proxy (required for express-rate-limit & correct client IP detection)
+app.set('trust proxy', 1);
+
 // Security headers
 app.use(helmet());
 
