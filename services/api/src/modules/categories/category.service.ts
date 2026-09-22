@@ -54,8 +54,13 @@ export const deleteCategory = async (id: string) => {
     throw AppError.notFound('Category not found');
   }
 
-  // NOTE: This will fail if there are products associated due to foreign key constraint
-  // Which is expected behavior
-  await categoryRepository.deleteCategory(id);
+  try {
+    await categoryRepository.deleteCategory(id);
+  } catch (error: any) {
+    if (error.code === '23503') {
+      throw AppError.badRequest('Cannot delete this category because it contains products. Please move or delete the products first.');
+    }
+    throw error;
+  }
   return { success: true };
 };
