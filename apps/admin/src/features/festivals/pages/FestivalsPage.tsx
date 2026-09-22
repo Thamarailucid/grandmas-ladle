@@ -93,7 +93,7 @@ export default function FestivalPage() {
       key: 'description', 
       width: 350,
       render: (text: string) => (
-        <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', whiteSpace: 'normal', wordBreak: 'break-word' }}>
+        <div style={{ minWidth: 250, maxWidth: 350, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', whiteSpace: 'normal', wordBreak: 'break-word' }}>
           {text}
         </div>
       )
