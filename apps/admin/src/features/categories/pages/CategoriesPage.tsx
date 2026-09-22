@@ -185,7 +185,7 @@ export default function CategoriesPage() {
         </Button>
       </div>
 
-      <Table scroll={{ x: 'max-content' }}
+      <Table scroll={{ x: 800 }}
         columns={columns}
         dataSource={categories}
         rowKey="id"

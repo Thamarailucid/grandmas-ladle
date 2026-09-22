@@ -122,7 +122,7 @@ export default function FestivalPage() {
         <h2 style={{ margin: 0 }}>Festivals</h2>
         <Button type="primary" onClick={() => showModal()}>Add Festival</Button>
       </div>
-      <Table scroll={{ x: 'max-content' }} columns={columns} dataSource={data || []} rowKey="id" loading={isLoading} />
+      <Table scroll={{ x: 800 }} columns={columns} dataSource={data || []} rowKey="id" loading={isLoading} />
 
       <Modal
         title={editingFestival ? 'Edit Festival' : 'Add Festival'}
