@@ -87,6 +87,11 @@ export const updateCategory = async (id: string, data: any) => {
 };
 
 export const deleteCategory = async (id: string) => {
+  // First, clean up any soft-deleted products in this category 
+  // so they don't block the category deletion
+  await database.query(`DELETE FROM products WHERE category_id = $1 AND is_deleted = TRUE`, [id]);
+  
+  // Then try to delete the category
   const query = `DELETE FROM product_categories WHERE id = $1`;
   await database.query(query, [id]);
 };
