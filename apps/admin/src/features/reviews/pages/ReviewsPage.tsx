@@ -262,8 +262,9 @@ export default function ReviewsPage() {
         return (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
             {record.productNames.map((p, idx) => (
-              <Tag key={idx} color="green" icon={<ShoppingOutlined />} style={{ fontSize: 11, margin: 0 }}>
-                {p}
+              <Tag key={idx} color="green" style={{ fontSize: 11, margin: 0, maxWidth: '100%', display: 'inline-flex', alignItems: 'center', whiteSpace: 'normal', height: 'auto', textAlign: 'left' }}>
+                <ShoppingOutlined style={{ marginRight: 4, flexShrink: 0 }} /> 
+                <span style={{ wordBreak: 'break-word' }}>{p}</span>
               </Tag>
             ))}
           </div>

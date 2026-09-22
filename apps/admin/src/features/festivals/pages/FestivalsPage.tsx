@@ -87,7 +87,17 @@ export default function FestivalPage() {
 
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Description', dataIndex: 'description', key: 'description' },
+    { 
+      title: 'Description', 
+      dataIndex: 'description', 
+      key: 'description', 
+      width: 350,
+      render: (text: string) => (
+        <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', whiteSpace: 'normal', wordBreak: 'break-word' }}>
+          {text}
+        </div>
+      )
+    },
     { title: 'Active', dataIndex: 'isActive', key: 'isActive', render: (val: boolean) => val ? 'Yes' : 'No' },
     {
       title: 'Actions',

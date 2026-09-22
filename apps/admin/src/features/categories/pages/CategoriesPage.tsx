@@ -129,6 +129,12 @@ export default function CategoriesPage() {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+      width: 350,
+      render: (text: string) => (
+        <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', whiteSpace: 'normal', wordBreak: 'break-word' }}>
+          {text}
+        </div>
+      )
     },
     {
       title: 'Sort Order',
